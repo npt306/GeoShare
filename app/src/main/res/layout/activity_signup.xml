@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#101D25">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:id="@+id/signUpLayout"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Join with us"
+            android:textColor="#FFFFFF"
+            android:gravity="center"
+            android:textSize="50sp"
+            android:fontFamily="@font/stackyard"
+            android:letterSpacing="0."
+            android:layout_margin="20px"/>
+        <EditText
+            android:id="@+id/editTextSignUpEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/custom_signin_editext"
+            android:hint="Email"
+            android:layout_marginTop="10px"
+            android:layout_marginRight="30px"
+            android:layout_marginLeft="30px"
+            android:textColorHint="#FFC6C6C6"
+            android:paddingStart="20dp"
+            android:minHeight="48dp" />
+
+        <EditText
+            android:id="@+id/editTextSignUpPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:background="@drawable/custom_signin_editext"
+            android:layout_marginTop="10px"
+            android:layout_marginRight="30px"
+            android:layout_marginLeft="30px"
+            android:textColorHint="#FFC6C6C6"
+            android:paddingStart="20dp"
+            android:inputType="textPassword"
+            android:minHeight="48dp" />
+        <EditText
+            android:id="@+id/editTextSignUpConfirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Confirm Password"
+            android:background="@drawable/custom_signin_editext"
+            android:layout_marginTop="10px"
+            android:layout_marginRight="30px"
+            android:layout_marginLeft="30px"
+            android:inputType="textPassword"
+            android:textColorHint="#FFC6C6C6"
+            android:paddingStart="20dp"
+            android:minHeight="48dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20px"
+            android:gravity="center"
+            >
+            <Button
+                android:id="@+id/btnBackToSignIn"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30px"
+                android:textStyle="bold"
+                android:background="@drawable/custom_signin_button"
+                android:text="BACK"/>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <Button
+                android:id="@+id/btnRegister"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="30px"
+                android:background="@drawable/custom_signup_button"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:text="SIGN UP"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
