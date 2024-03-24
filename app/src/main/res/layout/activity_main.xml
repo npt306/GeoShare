@@ -17,5 +17,21 @@
         android:layout_height="wrap_content"
         android:id="@+id/logout"
         android:text="logout"/>
+    <EditText
+        android:id="@+id/data_test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="data"/>
+    <Button
+        android:id="@+id/send_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send"/>
+    <TextView
+        android:id="@+id/result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Result"/>
+
 
 </LinearLayout>
