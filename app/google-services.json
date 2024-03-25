@@ -1,13 +1,14 @@
 {
   "project_info": {
-    "project_number": "294980761908",
-    "project_id": "geoshare-bad6b",
-    "storage_bucket": "geoshare-bad6b.appspot.com"
+    "project_number": "193330985595",
+    "firebase_url": "https://geosharedb-ff85a-default-rtdb.firebaseio.com",
+    "project_id": "geosharedb-ff85a",
+    "storage_bucket": "geosharedb-ff85a.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:294980761908:android:017ee67a042e618ead4d61",
+        "mobilesdk_app_id": "1:193330985595:android:aaa9eccf59c71dfef540de",
         "android_client_info": {
           "package_name": "com.example.geoshare"
         }
@@ -15,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyD0h7ITGXAyOvzWug-Mt2OWE9kKNrjg0c0"
+          "current_key": "AIzaSyA2anXBj6sl1spc6bSVLbhhfnigDeOExhM"
         }
       ],
       "services": {

@@ -16,16 +16,21 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignUp extends AppCompatActivity {
-    EditText editTextEmail, editTextPassword, editTextConfirmPassword;
+    EditText editTextEmail, editTextPassword, editTextConfirmPassword, editTextUsername;
     Button buttonSignUp, buttonBack;
     private FirebaseAuth mAuth;
     LinearLayout layout;
+    DatabaseReference databaseReference;
 
     @Override
     public void onStart() {
@@ -48,6 +53,7 @@ public class SignUp extends AppCompatActivity {
         editTextEmail = findViewById(R.id.editTextSignUpEmail);
         editTextPassword = findViewById(R.id.editTextSignUpPassword);
         editTextConfirmPassword = findViewById(R.id.editTextSignUpConfirmPassword);
+        editTextUsername = findViewById(R.id.editTextSignUpUsername);
         buttonSignUp = findViewById(R.id.btnRegister);
         layout = findViewById(R.id.signUpLayout);
 
@@ -60,12 +66,17 @@ public class SignUp extends AppCompatActivity {
         buttonSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email, password, confirmPassword;
+                String email, password, confirmPassword, username;
                 email = String.valueOf(editTextEmail.getText());
+                username = String.valueOf(editTextUsername.getText());
                 password = String.valueOf(editTextPassword.getText());
                 confirmPassword = String.valueOf(editTextConfirmPassword.getText());
                 if(TextUtils.isEmpty(email)){
                     show_notification("Enter email");
+                    return;
+                }
+                if(TextUtils.isEmpty(username)){
+                    show_notification("Enter username");
                     return;
                 }
                 if(TextUtils.isEmpty(password)){
@@ -88,10 +99,22 @@ public class SignUp extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     // Sign in success, update UI with the signed-in user's information
-                                    show_notification("Account created");
+                                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    String id = user.getUid();
+                                    DatabaseReference myRef = database.getReference("User").child(id);
+
+                                    Map<String,String> userData = new HashMap<>();
+                                    userData.put("username", username);
+                                    userData.put("imageURL", "default");
+                                    myRef.setValue(userData);
+
+
                                     Intent intent = new Intent(getApplicationContext(), SignIn.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
                                     finish();
+                                    show_notification("Account created");
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     show_notification("Authentication failed");
