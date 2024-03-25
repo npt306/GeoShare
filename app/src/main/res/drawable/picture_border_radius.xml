@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Define the solid color for the background -->
+    <solid android:color="#C28C3A"/> <!-- Replace #yourCustomColor with your color code -->
+
+    <!-- Define the border radius -->
+    <corners android:bottomRightRadius="25dp"
+        android:bottomLeftRadius="10dp"
+        android:topLeftRadius="10dp"
+        android:topRightRadius="10dp"/>
+    <!-- If you want to add border, uncomment the following lines -->
+    <!-- <stroke android:width="2dp" android:color="#yourBorderColor"/> -->
+</shape>
