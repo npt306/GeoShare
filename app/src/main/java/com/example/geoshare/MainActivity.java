@@ -66,9 +66,10 @@ public class MainActivity extends AppCompatActivity {
                 String send_data = String.valueOf(editTextSend.getText());
                 // Write a message to the database
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference("message");
+                DatabaseReference myRef = database.getReference("User");
+                myRef.child(firebaseUser.getUid()).child("status").setValue(send_data)
 
-                myRef.setValue(send_data)
+//                myRef.setValue(send_data)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
