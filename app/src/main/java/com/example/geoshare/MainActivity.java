@@ -1,6 +1,8 @@
 package com.example.geoshare;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -64,9 +66,28 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String send_data = String.valueOf(editTextSend.getText());
+                int batteryLevel = getCurrentBatteryLevel();
                 // Write a message to the database
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference("User");
+                myRef.child(firebaseUser.getUid()).child("batteryLevel").setValue(batteryLevel)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                // Gửi dữ liệu thành công
+                                Log.d("Firebase", "Data sent successfully!");
+                                textViewResult.setText("successfully");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // Gửi dữ liệu thất bại
+                                Log.e("Firebase", "Failed to send data: " + e.getMessage());
+                                // Xử lý nguyên nhân thất bại tại đây
+                                textViewResult.setText(e.getMessage());
+                            }
+                        });
                 myRef.child(firebaseUser.getUid()).child("status").setValue(send_data)
 
 //                myRef.setValue(send_data)
@@ -90,5 +111,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private int getCurrentBatteryLevel() {
+        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        Intent batteryStatus = registerReceiver(null, ifilter);
+
+        int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+        int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+
+        float batteryPct = level / (float)scale;
+
+        return (int)(batteryPct*100);
     }
 }
