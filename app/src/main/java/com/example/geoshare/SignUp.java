@@ -105,6 +105,7 @@ public class SignUp extends AppCompatActivity {
                                     DatabaseReference myRef = database.getReference("User").child(id);
 
                                     Map<String,String> userData = new HashMap<>();
+                                    userData.put("id", id);
                                     userData.put("username", username);
                                     userData.put("imageURL", "default");
                                     myRef.setValue(userData);
