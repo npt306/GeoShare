@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -27,265 +26,82 @@
                 android:background="#101D25"
                 android:layout_marginRight="10dp"/>
             <TextView
+                android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="25dp"
-                android:text="Profile"
+                android:text="Ranking"
                 android:textStyle="bold"
                 android:textColor="#C28C3A"/>
         </LinearLayout>
-        <LinearLayout
-            android:id="@+id/avatar_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="150dp"
-            android:gravity="center"
-            android:layout_below="@+id/back_layout"
-            android:background="@drawable/avatarlayout_border_radius">
-            <FrameLayout
-                android:id="@+id/profile_image_section"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/border_radius">
 
-                <ImageView
-                    android:id="@+id/profile_image"
-                    android:layout_width="110dp"
-                    android:layout_height="110dp"
-                    android:src="@drawable/user"/>
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|end"
-                    android:background="@drawable/picture_border_radius">
-                    <ImageView
-                        android:id="@+id/profile_image_lock"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_gravity="bottom|end"
-                        android:src="@drawable/camera_icon"
-                        android:padding="4dp" />
-                </FrameLayout>
-            </FrameLayout>
-        </LinearLayout>
 
 
         <!-- Mode Toggle -->
         <LinearLayout
-            android:id="@+id/switch_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/avatar_layout"
-            android:orientation="vertical"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Ghost Mode"
-                        android:textSize="18dp"
-                        android:textStyle="bold"
-                        android:textColor="#FFFFFF"/>
-                    <ImageButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/question"
-                        android:background="#101D25"/>
-                </LinearLayout>
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-                <Switch
-                    android:id="@+id/switch_ghost_mode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:thumb="@drawable/switch_thumb"
-                    android:track="@drawable/switch_track"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp">
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Blur Mode"
-                        android:textSize="18dp"
-                        android:textStyle="bold"
-                        android:textColor="#FFFFFF"/>
-                    <ImageButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/question"
-                        android:background="#101D25"/>
-                </LinearLayout>
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-                <Switch
-                    android:id="@+id/switch_blur_mode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:thumb="@drawable/switch_thumb"
-                    android:track="@drawable/switch_track"/>
-            </LinearLayout>
-        </LinearLayout>
-        <LinearLayout
             android:id="@+id/info_layout"
             android:layout_width="fill_parent"
-            android:layout_height="190dp"
+            android:layout_height="600dp"
             android:orientation="vertical"
-            android:layout_below="@+id/switch_layout"
+            android:layout_below="@+id/back_layout"
             android:background="@drawable/avatarlayout_border_radius">
             <LinearLayout
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="25dp"
-                android:layout_marginLeft="15dp">
-                <LinearLayout
+                android:padding="8dp"
+                android:gravity="center"
+                android:background="@drawable/ranking_first_color"> <!-- Drawable that changes color based on rank -->
+
+                <ImageView
+                    android:id="@+id/ranking_ic"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/id_ic"
-                        android:layout_marginRight="20dp"/>
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="ID"
-                            android:textColor="#646F75"
-                            android:textSize="13dp"/>
-                        <TextView
-                            android:id="@+id/user_id"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="13dp"
-                            android:text="12345678"
-                            android:textColor="#FFFFFF"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="15dp"
-                android:layout_marginLeft="15dp">
-                <LinearLayout
+                    android:textSize="24sp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/badge_1"
+                    android:layout_marginRight="20dp"/>
+                <ImageView
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/user_ranking"/>
+                <TextView
+                    android:id="@+id/tvUsername"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center_vertical"
+                    android:text="Thanh Phuong"/>
+                <LinearLayout
+                    android:id="@+id/view_layout"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center">
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.4">
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/name_ic"
-                            android:layout_marginRight="23dp"/>
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Name"
-                                android:textColor="#646F75"
-                                android:textSize="13dp"/>
-                            <TextView
-                                android:id="@+id/user_name"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="13dp"
-                                android:text="Tài Nguyễn"
-                                android:textColor="#FFFFFF"/>
-                        </LinearLayout>
-                    </LinearLayout>
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="0.1" />
-                    <ImageButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/fix_ic"
-                        android:background="#2D383E"
-                        android:layout_marginRight="20dp"/>
-                </LinearLayout>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="15dp"
-                android:layout_marginLeft="15dp"
-                android:gravity="center">
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.4">
+                    android:background="@drawable/view_layout">
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/mail_ic"
-                        android:layout_marginRight="13dp"/>
-                    <LinearLayout
+                        android:src="@drawable/view_fill"
+                        android:layout_marginRight="10dp"/>
+
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Email"
-                            android:textColor="#646F75"
-                            android:textSize="13dp"/>
-                        <TextView
-                            android:id="@+id/user_email"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="13dp"
-                            android:text="nptai212@clc.fitus.edu.vn"
-                            android:textColor="#FFFFFF"/>
-                    </LinearLayout>
+                        android:text="1000"
+                        android:textColor="#FFFFFF"
+                        android:fontFamily="@font/alfa_slab_one"
+                        android:textStyle="bold"/>
                 </LinearLayout>
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="0.1" />
-                <ImageButton
+                <TextView
+                    android:id="@+id/tvViews"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/fix_ic"
-                    android:background="#2D383E"
-                    android:layout_marginRight="20dp"/>
+                    android:textSize="18sp"
+                    android:layout_gravity="center_vertical"/>
             </LinearLayout>
+
         </LinearLayout>
 
         <!-- Repeat the pattern for Name and Email with edit buttons -->

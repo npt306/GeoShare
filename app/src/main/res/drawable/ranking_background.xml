@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:backround="@color/yellow" android:state_selected="true" android:state_first="true"/>
+    <item android:backround="@color/blue" android:state_selected="true" android:state_second="true"/>
+    <item android:backround="@color/red" android:state_selected="true" android:state_third="true"/>
+    <item android:backround="@color/gray"/> <!-- Default color for all other positions -->
+</selector>

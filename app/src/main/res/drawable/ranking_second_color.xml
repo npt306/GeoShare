@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Define the solid color for the background -->
+    <gradient android:startColor="#aff1f7"
+        android:centerColor="#76e6f4"
+        android:endColor="#aff1f7"
+        android:angle="90"/> <!-- Replace #yourCustomColor with your color code -->
+
+    <!-- Define the border radius -->
+    <corners android:radius="10dp"/>
+    <!-- If you want to add border, uncomment the following lines -->
+    <!-- <stroke android:width="2dp" android:color="#yourBorderColor"/> -->
+</shape>
