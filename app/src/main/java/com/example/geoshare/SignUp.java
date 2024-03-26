@@ -102,9 +102,10 @@ public class SignUp extends AppCompatActivity {
                                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     String id = user.getUid();
-                                    DatabaseReference myRef = database.getReference("User").child(id);
+                                    DatabaseReference myRef = database.getReference("Users").child(id);
 
                                     Map<String,String> userData = new HashMap<>();
+                                    userData.put("id", id);
                                     userData.put("username", username);
                                     userData.put("imageURL", "default");
                                     myRef.setValue(userData);
