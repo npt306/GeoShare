@@ -22,7 +22,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SignUp extends AppCompatActivity {
@@ -102,13 +105,21 @@ public class SignUp extends AppCompatActivity {
                                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     String id = user.getUid();
-                                    DatabaseReference myRef = database.getReference("User").child(id);
+                                    DatabaseReference myRef = database.getReference("Users").child(id);
 
-                                    Map<String,String> userData = new HashMap<>();
-                                    userData.put("id", id);
-                                    userData.put("username", username);
-                                    userData.put("imageURL", "default");
-                                    myRef.setValue(userData);
+//                                    Map<String,String> userData = new HashMap<>();
+//                                    userData.put("id", id);
+//                                    userData.put("username", username);
+//                                    userData.put("imageURL", "default");
+//                                    userData.put("status","");
+//                                    userData.put("locLat", "100.123");
+//                                    userData.put("locLong", "100.123");
+//                                    myRef.setValue(userData);
+
+//                                    ArrayList<String> defaultFriendList = new ArrayList<>(Arrays.asList(new String[]{"i0dlD9bphthZkMWOuz6z5yQ28oq1"}));
+                                    ArrayList<String> defaultFriendList = new ArrayList<>(Arrays.asList(new String[]{"empty"}));
+                                    User newUser = new User(id,username,"","default", defaultFriendList,"100.123","100.123");
+                                    myRef.setValue(newUser);
 
 
                                     Intent intent = new Intent(getApplicationContext(), SignIn.class);

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -22,6 +23,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class SignIn extends AppCompatActivity {
     EditText editTextEmail, editTextPassword;
@@ -53,6 +59,7 @@ public class SignIn extends AppCompatActivity {
         textViewForgotPassword = findViewById(R.id.txtForgotPassword);
 
         layout = findViewById(R.id.signInLayout);
+//        getUser();
 
         layout.setOnTouchListener((v, event) -> {
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -117,6 +124,28 @@ public class SignIn extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void getUser()  {
+//        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String uid = "R8UXO2EQ4HMmVJhXxv5o4aC2ore2";
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference uidRef = rootRef.child("User").child(uid);
+        ValueEventListener valueEventListener = new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                show_notification(user.getFriendList().get(0));
+                Log.d("TAG", user.getFriendList().get(0));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("TAG", databaseError.getMessage()); //Don't ignore errors!
+            }
+        };
+        uidRef.addListenerForSingleValueEvent(valueEventListener);
     }
     void show_notification(String message){
         Toast.makeText(SignIn.this, message, Toast.LENGTH_SHORT).show();
