@@ -37,6 +37,9 @@
         <activity android:name=".Invite">
 
         </activity>
+        <activity android:name="Message">
+
+        </activity>
     </application>
 
 </manifest>

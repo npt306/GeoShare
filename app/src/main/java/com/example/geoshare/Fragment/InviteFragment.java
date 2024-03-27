@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.geoshare.Adapter.UserAdapter;
+import com.example.geoshare.Adapter.InviteAdapter;
 import com.example.geoshare.Model.User;
 import com.example.geoshare.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -73,7 +73,7 @@ public class InviteFragment extends Fragment {
     }
 
     private RecyclerView recyclerView;
-    private UserAdapter userAdapter;
+    private InviteAdapter inviteAdapter;
     private List<User> mUsers;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -105,8 +105,8 @@ public class InviteFragment extends Fragment {
                         mUsers.add(user);
                     }
                 }
-                userAdapter = new UserAdapter(getContext(), mUsers);
-                recyclerView.setAdapter(userAdapter);
+                inviteAdapter = new InviteAdapter(getContext(), mUsers);
+                recyclerView.setAdapter(inviteAdapter);
             }
 
             @Override

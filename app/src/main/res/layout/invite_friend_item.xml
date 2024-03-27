@@ -3,31 +3,31 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="10dp">
-<de.hdodenhof.circleimageview.CircleImageView
-    android:layout_width="50dp"
-    android:layout_height="50dp"
-    android:id="@+id/invite_profile_image"
-    android:src="@mipmap/ic_launcher"/>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/invite_friend_profile_image"
+        android:src="@mipmap/ic_launcher"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/invite_username"
+        android:id="@+id/invite_friend_username"
         android:text="Username"
         android:layout_marginLeft="20dp"
-        android:layout_toRightOf="@id/invite_profile_image"
-        android:layout_toEndOf="@id/invite_profile_image"
+        android:layout_toRightOf="@id/invite_friend_profile_image"
+        android:layout_toEndOf="@id/invite_friend_profile_image"
         android:layout_centerVertical="true"
         android:textColor="#FFFFFF"
         android:textSize="18dp"/>
 
     <Button
-        android:id="@+id/invite_button"
+        android:id="@+id/invite_unfriend_button"
         android:layout_width="100dp"
         android:layout_height="40dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:textColor="#FFFFFF"
-        android:background="@drawable/invite_button"
-        android:text="Invite" />
+        android:background="@drawable/invite_unfriend_button"
+        android:text="Unfriend" />
 
 </RelativeLayout>
