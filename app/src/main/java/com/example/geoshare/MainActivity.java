@@ -39,6 +39,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        mAuth = FirebaseAuth.getInstance();
+        firebaseUser = mAuth.getCurrentUser();
+        if(firebaseUser == null){
+            Intent intent = new Intent(getApplicationContext(), SignIn.class);
+            startActivity(intent);
+            finish();
+        }
+
         imageButtonInvite = findViewById(R.id.btnInvite);
         imageButtonProfile =findViewById(R.id.btnProfile);
         imageButtonInvite.setOnClickListener(new View.OnClickListener() {
