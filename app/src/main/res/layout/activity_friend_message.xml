@@ -85,8 +85,5 @@
             android:src="@drawable/ic_send"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Send Image" />
-
-
-
     </LinearLayout>
 </LinearLayout>
