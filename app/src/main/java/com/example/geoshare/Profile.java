@@ -27,6 +27,10 @@ public class Profile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        DataOutput.updateNewLoc(1111,1111);
+        DataOutput.updateNewStatus("tui buon qua mn oiw, huhu");
+        DataOutput.updateNewUsername("troi hoa con mua lang roi ben them");
+
         buttonProfileBack = findViewById(R.id.back_button);
         buttonLogout = findViewById(R.id.btnLogout);
         txtId = findViewById(R.id.user_id);

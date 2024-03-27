@@ -4,8 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,10 +24,12 @@ import com.google.firebase.auth.FirebaseUser;
 public class Invite extends AppCompatActivity {
 
     TextView textViewSelect;
+    EditText editTextInviteID;
     BottomNavigationView navigationView;
     private FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
     ImageButton buttonBack;
+    Button btnFindID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +39,10 @@ public class Invite extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
 
         navigationView = findViewById(R.id.navigation);
+        editTextInviteID = findViewById(R.id.editTextInviteID);
         textViewSelect = findViewById(R.id.txtInviteSelect);
         buttonBack = findViewById(R.id.btnInviteBack);
+        btnFindID = findViewById(R.id.btnFindID);
         navigationView.setOnNavigationItemSelectedListener(selectedListener);
         // When we open the application first
         // time the fragment should be shown to the user
@@ -48,6 +55,16 @@ public class Invite extends AppCompatActivity {
                 finish();
             }
         });
+
+        btnFindID.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String inviteID = String.valueOf(editTextInviteID.getText());
+                DataOutput.addNewFriend(inviteID);
+                Toast.makeText(Invite.this, "Adding new friend", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         InviteFragment fragment = new InviteFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content, fragment, "");
