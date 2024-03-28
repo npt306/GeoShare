@@ -54,10 +54,10 @@ public class Profile extends AppCompatActivity {
             }
         });
 
-    FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
 
-    if (currentUser != null) {
+        if (currentUser != null) {
             String userId = currentUser.getUid();
             String email = currentUser.getEmail();
             txtId.setText(userId);

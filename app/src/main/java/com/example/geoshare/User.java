@@ -1,6 +1,7 @@
 package com.example.geoshare;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class User {
     private String id;
@@ -54,5 +55,24 @@ public class User {
 
     public void setId(String id) {
         this.id = id;
+    }
+    public void addingFriendToList(String newFriendID) {
+        if(this.friendList == null || this.friendList.get(0).equals("empty")) {
+            this.friendList = new ArrayList<String>(Arrays.asList(new String[]{newFriendID}));
+        }else {
+            if(isAlreadyFriend(newFriendID)) {
+                return;
+            }else {
+                this.friendList.add(newFriendID);
+            }
+        }
+    }
+    private boolean isAlreadyFriend(String id) {
+        for(String friendID : this.friendList) {
+            if(friendID.equals(id)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

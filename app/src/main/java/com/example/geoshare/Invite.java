@@ -60,8 +60,13 @@ public class Invite extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String inviteID = String.valueOf(editTextInviteID.getText());
-                DataOutput.addNewFriend(inviteID);
-                Toast.makeText(Invite.this, "Adding new friend", Toast.LENGTH_SHORT).show();
+                if(inviteID.isEmpty()) {
+                    Toast.makeText(Invite.this, "Friend ID cannot be empty", Toast.LENGTH_SHORT).show();
+                }else {
+                    DataOutput.addNewFriend(inviteID);
+                    Toast.makeText(Invite.this, "Adding new friend", Toast.LENGTH_SHORT).show();
+                    editTextInviteID.setText("");
+                }
             }
         });
 
