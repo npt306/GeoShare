@@ -1,5 +1,6 @@
 package com.example.geoshare;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -170,6 +171,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(@NonNull GoogleMap googleMap) {
         maps = googleMap;
 
+        YourBatteryChangeListener batteryChangeListener = new YourBatteryChangeListener();
+        batteryChangeListener.startBatteryChangeListener();
+
         LatLng myLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
 
         // Tạo một marker mới với thông tin từ Firebase và sử dụng Custom Marker Adapter
@@ -217,6 +221,55 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         customMarkerView.draw(canvas);
         return returnedBitmap;
     }
+
+    private class YourBatteryChangeListener {
+        private BroadcastReceiver batteryReceiver;
+
+        public void startBatteryChangeListener() {
+            batteryReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+                    int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+                    float batteryPct = level / (float) scale;
+                    String batteryInfo = String.valueOf((int) (batteryPct * 100)) + "%";
+
+                    // Cập nhật dữ liệu pin lên Firebase
+                    updateBatteryInfo(batteryInfo);
+                }
+            };
+
+            // Đăng ký BroadcastReceiver để lắng nghe sự thay đổi pin
+            registerReceiver(batteryReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        }
+
+        public void stopBatteryChangeListener() {
+            // Ngừng lắng nghe sự thay đổi pin
+            if (batteryReceiver != null) {
+                unregisterReceiver(batteryReceiver);
+            }
+        }
+    }
+
+    // Cập nhật dữ liệu pin lên Firebase
+    private void updateBatteryInfo(String batteryInfo) {
+        DatabaseReference firebaseRef = FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        firebaseRef.child("battery").setValue(batteryInfo)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Firebase", "Dữ liệu pin đã được cập nhật thành công.");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("Firebase", "Lỗi khi cập nhật dữ liệu pin: " + e.getMessage());
+                    }
+                });
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
