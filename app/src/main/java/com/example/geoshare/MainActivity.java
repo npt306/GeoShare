@@ -8,6 +8,12 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.BatteryManager;
@@ -15,8 +21,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,16 +30,16 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -166,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
     public void focusToMyLocation() {
+        getLastLocation();
         CameraPosition camPos = new CameraPosition.Builder()
                 .target(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
                 .zoom(12)
@@ -191,6 +196,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .position(myLocation)
                 .title("My location")
                 .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.mipmap.ic_launcher, "Battery: 100%")));
+//                .icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromImage(R.drawable.avatar)));
 
         // Thêm marker vào bản đồ
         maps.addMarker(markerOptions);
@@ -217,6 +223,43 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
+
+
+    // crop middle circle from a bitmap
+    private Bitmap cropCircleFromBitmap(Bitmap bitmap){
+
+        final int r = bitmap.getHeight();
+        final Bitmap outputBitmap = Bitmap.createBitmap(r, r, Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(outputBitmap);
+
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        // canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+        canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2,
+                bitmap.getWidth() / 2, paint);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        return outputBitmap;
+    }
+
+
+    // support converting image to bitmap, which will be used as marker icon
+    private Bitmap getBitmapFromImage(@DrawableRes int resId){
+
+        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(resId);
+        Bitmap bitmap = bitmapdraw.getBitmap();
+        bitmap = Bitmap.createScaledBitmap(bitmap, 128, 128, false);
+
+        return cropCircleFromBitmap(bitmap);
+    }
+
     private Bitmap getMarkerBitmapFromView(@DrawableRes int resId, String batteryInfo) {
         View customMarkerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.market_custom, null);
         ImageView markerImageView = customMarkerView.findViewById(R.id.avatarImageView);
