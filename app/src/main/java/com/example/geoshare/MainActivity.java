@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     FirebaseAuth mAuth;
     FirebaseUser firebaseUser;
 
-    ImageButton imageButtonProfile, imageButtonInvite, buttonLocation;
+    ImageButton imageButtonProfile, imageButtonInvite, buttonLocation, buttonChat;
     private GoogleMap maps;
     private final int FINE_PERMISSION_CODE = 1;
     Location currentLocation;
@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         imageButtonInvite = findViewById(R.id.btnInvite);
         imageButtonProfile =findViewById(R.id.btnProfile);
         buttonLocation = findViewById(R.id.btnCurrentLocation);
+        buttonChat = findViewById(R.id.btnChat);
         imageButtonInvite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,6 +117,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 focusToMyLocation();
+            }
+        });
+
+        buttonChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), Chat.class);
+                startActivity(intent);
+                finish();
             }
         });
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);

@@ -46,7 +46,7 @@
         <activity android:name=".Invite">
 
         </activity>
-        <activity android:name="Message">
+        <activity android:name=".Chat">
 
         </activity>
     </application>
