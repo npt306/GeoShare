@@ -352,7 +352,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     Integer battery = dataSnapshot.child("battery").getValue(Integer.class);
-                    Toast.makeText(MainActivity.this, String.valueOf(battery),Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MainActivity.this, String.valueOf(battery),Toast.LENGTH_SHORT).show();
                     batteryTextView.setText(battery + "%");
 //                    transfer(battery, batteryPercentage);
                 } else {

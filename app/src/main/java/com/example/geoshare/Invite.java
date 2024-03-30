@@ -39,10 +39,10 @@ public class Invite extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
 
         navigationView = findViewById(R.id.navigation);
-        editTextInviteID = findViewById(R.id.editTextInviteID);
+//        editTextInviteID = findViewById(R.id.editTextInviteID);
         textViewSelect = findViewById(R.id.txtInviteSelect);
         buttonBack = findViewById(R.id.btnInviteBack);
-        btnFindID = findViewById(R.id.btnFindID);
+//        btnFindID = findViewById(R.id.btnFindID);
         navigationView.setOnNavigationItemSelectedListener(selectedListener);
         // When we open the application first
         // time the fragment should be shown to the user
@@ -56,19 +56,19 @@ public class Invite extends AppCompatActivity {
             }
         });
 
-        btnFindID.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String inviteID = String.valueOf(editTextInviteID.getText());
-                if(inviteID.isEmpty()) {
-                    Toast.makeText(Invite.this, "Friend ID cannot be empty", Toast.LENGTH_SHORT).show();
-                }else {
-                    DataOutput.addNewFriend(inviteID);
-                    Toast.makeText(Invite.this, "Adding new friend", Toast.LENGTH_SHORT).show();
-                    editTextInviteID.setText("");
-                }
-            }
-        });
+//        btnFindID.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                String inviteID = String.valueOf(editTextInviteID.getText());
+//                if(inviteID.isEmpty()) {
+//                    Toast.makeText(Invite.this, "Friend ID cannot be empty", Toast.LENGTH_SHORT).show();
+//                }else {
+//                    DataOutput.addNewFriend(inviteID);
+//                    Toast.makeText(Invite.this, "Adding new friend", Toast.LENGTH_SHORT).show();
+//                    editTextInviteID.setText("");
+//                }
+//            }
+//        });
 
         InviteFragment fragment = new InviteFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
