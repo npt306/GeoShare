@@ -111,7 +111,6 @@ public class FriendFragment extends Fragment {
                             }
                             if (mFriends.size() == dataSnapshot.getChildrenCount()) {
                                 // Nếu đã thêm tất cả, hiển thị danh sách bạn bè
-                                showFriendList();
                                 friendListAdapter = new FriendListAdapter(getContext(), mFriends);
                                 recyclerView.setAdapter(friendListAdapter);
                             }
@@ -129,39 +128,30 @@ public class FriendFragment extends Fragment {
             }
         });
     }
-    private void getFriendList1(){
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot datasnapshot) {
-                mFriends.clear();
-                for (DataSnapshot snapshot: datasnapshot.getChildren()){
-                    User user = snapshot.getValue(User.class);
-
-                    if(!user.getId().equals((firebaseUser.getUid()))){
-                        mFriends.add(user);
-                    }
-                }
-                friendListAdapter = new FriendListAdapter(getContext(), mFriends);
-                recyclerView.setAdapter(friendListAdapter);
-                showFriendList();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-    private void showFriendList() {
-        for (User friend : mFriends) {
-            Log.d("FriendList", "UserID: " + friend.getId());
-            Log.d("FriendList", "Image: " + friend.getImageURL());
-            Log.d("FriendList", "Username: " + friend.getUsername());
-            // Ghi thêm các thông tin khác của friend nếu có
-        }
-    }
+//    private void getFriendList1(){
+//        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+//
+//        reference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+//                mFriends.clear();
+//                for (DataSnapshot snapshot: datasnapshot.getChildren()){
+//                    User user = snapshot.getValue(User.class);
+//
+//                    if(!user.getId().equals((firebaseUser.getUid()))){
+//                        mFriends.add(user);
+//                    }
+//                }
+//                friendListAdapter = new FriendListAdapter(getContext(), mFriends);
+//                recyclerView.setAdapter(friendListAdapter);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
 
 }
