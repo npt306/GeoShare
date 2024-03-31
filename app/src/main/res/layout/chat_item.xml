@@ -21,13 +21,13 @@
         android:textSize="18dp"/>
 
     <Button
-        android:id="@+id/invite_button"
+        android:id="@+id/chat_button"
         android:layout_width="100dp"
         android:layout_height="40dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:textColor="#FFFFFF"
         android:background="@drawable/invite_button"
-        android:text="Invite" />
+        android:text="Chat" />
 
 </RelativeLayout>

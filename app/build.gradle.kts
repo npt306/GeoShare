@@ -41,7 +41,20 @@ dependencies {
     implementation(libs.firebase.database)
     implementation(libs.circleimageview)
     implementation(libs.material.v120)
-    implementation("com.github.bumptech.glide:glide:4.14.2")
+    implementation(libs.glide)
+    implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
+    implementation(libs.zxing.android.embedded)
+    implementation(libs.billing)
+    implementation(libs.play.services.ads)
+    //noinspection UseTomlInstead
+    implementation("com.google.firebase:firebase-auth-ktx")
+    // Import the BoM for the Firebase platform
+    implementation(platform(libs.firebase.bom))
+    // Declare the dependency for the Cloud Firestore library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation("com.google.firebase:firebase-firestore")
+    implementation(libs.firebase.firestore)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
