@@ -29,6 +29,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 public class SignIn extends AppCompatActivity {
     EditText editTextEmail, editTextPassword;
     Button buttonSignIn, buttonSignUp;
@@ -52,6 +54,10 @@ public class SignIn extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
+
+        AdView mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         mAuth = FirebaseAuth.getInstance();
         editTextEmail = findViewById(R.id.editTextSignInEmail);

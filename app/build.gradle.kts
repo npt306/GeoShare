@@ -45,6 +45,8 @@ dependencies {
     implementation(libs.play.services.maps)
     implementation(libs.play.services.location)
     implementation(libs.zxing.android.embedded)
+    implementation(libs.billing)
+    implementation(libs.play.services.ads)
     //noinspection UseTomlInstead
     implementation("com.google.firebase:firebase-auth-ktx")
     // Import the BoM for the Firebase platform

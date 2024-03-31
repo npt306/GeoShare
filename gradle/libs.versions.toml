@@ -1,5 +1,6 @@
 [versions]
 agp = "8.3.1"
+billing = "6.2.0"
 circleimageview = "3.1.0"
 firebaseBom = "32.8.0"
 glide = "4.14.2"
@@ -18,8 +19,10 @@ firebaseFirestore = "24.11.0"
 playServicesLocation = "21.1.0"
 playServicesMaps = "18.2.0"
 zxingAndroidEmbedded = "4.3.0"
+playServicesAdsLite = "23.0.0"
 
 [libraries]
+billing = { module = "com.android.billingclient:billing", version.ref = "billing" }
 circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circleimageview" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
@@ -35,9 +38,11 @@ firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
 material-v120 = { module = "com.google.android.material:material", version.ref = "materialVersion" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
+play-services-ads = { module = "com.google.android.gms:play-services-ads", version.ref = "playServicesAdsLite" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
 zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
+play-services-ads-lite = { group = "com.google.android.gms", name = "play-services-ads-lite", version.ref = "playServicesAdsLite" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
