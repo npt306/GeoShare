@@ -1,5 +1,6 @@
 package com.example.geoshare;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,12 +25,13 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class SignUp extends AppCompatActivity {
-    EditText editTextEmail, editTextPassword, editTextConfirmPassword, editTextUsername;
+    EditText editTextEmail,editTextSignUpDob, editTextPassword, editTextConfirmPassword, editTextUsername;
     Button buttonSignUp, buttonBack;
     private FirebaseAuth mAuth;
     LinearLayout layout;
@@ -54,6 +56,7 @@ public class SignUp extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         editTextEmail = findViewById(R.id.editTextSignUpEmail);
+        editTextSignUpDob = findViewById(R.id.editTextSignUpDob);
         editTextPassword = findViewById(R.id.editTextSignUpPassword);
         editTextConfirmPassword = findViewById(R.id.editTextSignUpConfirmPassword);
         editTextUsername = findViewById(R.id.editTextSignUpUsername);
@@ -66,12 +69,41 @@ public class SignUp extends AppCompatActivity {
             return false;
         });
 
+        editTextSignUpDob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // on below line we are getting
+                // the instance of our calendar.
+                final Calendar c = Calendar.getInstance();
+
+                // on below line we are getting
+                // our day, month and year.
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+                int day = c.get(Calendar.DAY_OF_MONTH);
+
+                // on below line we are creating a variable for date picker dialog.
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        // on below line we are passing context.
+                        SignUp.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(android.widget.DatePicker view, int year, int month, int dayOfMonth) {
+                                editTextSignUpDob.setText(dayOfMonth + "-" + (month + 1) + "-" + year);
+                            }
+                        },
+                        year, month, day);
+                datePickerDialog.show();
+            }
+        });
+
         buttonSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email, password, confirmPassword, username;
+                String email, password, confirmPassword, username, dob;
                 email = String.valueOf(editTextEmail.getText());
                 username = String.valueOf(editTextUsername.getText());
+                dob = String.valueOf(editTextSignUpDob.getText());
                 password = String.valueOf(editTextPassword.getText());
                 confirmPassword = String.valueOf(editTextConfirmPassword.getText());
                 if(TextUtils.isEmpty(email)){
@@ -118,7 +150,7 @@ public class SignUp extends AppCompatActivity {
 
 //                                    ArrayList<String> defaultFriendList = new ArrayList<>(Arrays.asList(new String[]{"i0dlD9bphthZkMWOuz6z5yQ28oq1"}));
                                     ArrayList<String> defaultFriendList = new ArrayList<>(Arrays.asList(new String[]{"empty"}));
-                                    User newUser = new User(id,username,"","default", defaultFriendList,"100.123","100.123");
+                                    User newUser = new User(id,username,"","default", dob, defaultFriendList,"100.123","100.123");
                                     myRef.setValue(newUser);
 
 

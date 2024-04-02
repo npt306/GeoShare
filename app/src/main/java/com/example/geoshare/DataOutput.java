@@ -50,6 +50,14 @@ public class DataOutput {
 
         myRef.child("username").setValue(username);
     }
+    public static void updateNewDOB(String DOB) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String id = user.getUid();
+        DatabaseReference myRef = database.getReference("Users").child(id);
+
+        myRef.child("dob").setValue(DOB);
+    }
 
     public static void addNewFriend(String friendId) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();

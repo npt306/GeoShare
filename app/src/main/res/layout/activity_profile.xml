@@ -162,7 +162,7 @@
         <LinearLayout
             android:id="@+id/info_layout"
             android:layout_width="fill_parent"
-            android:layout_height="190dp"
+            android:layout_height="220dp"
             android:layout_below="@+id/switch_layout"
             android:background="@drawable/avatarlayout_border_radius"
             android:orientation="vertical">
@@ -213,66 +213,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="15dp"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.4">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="23dp"
-                            android:src="@drawable/name_ic" />
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Name"
-                                android:textColor="#646F75"
-                                android:textSize="13dp" />
-
-                            <TextView
-                                android:id="@+id/user_name"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Tài Nguyễn"
-                                android:textColor="#FFFFFF"
-                                android:textSize="13dp" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="0.1" />
-
-                    <ImageButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
-                        android:background="#2D383E"
-                        android:src="@drawable/fix_ic" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="15dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -313,8 +253,137 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_weight="0.1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.4">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="23dp"
+                            android:src="@drawable/name_ic" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Name"
+                                android:textColor="#646F75"
+                                android:textSize="13dp" />
+
+                            <TextView
+                                android:id="@+id/user_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tài Nguyễn"
+                                android:textColor="#FFFFFF"
+                                android:textSize="13dp" />
+                        </LinearLayout>
+                        <EditText
+                            android:id="@+id/editTextUser_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColorHint="#FFFFFF"
+                            android:textColor ="#FFFFFF"
+                            android:hint="New name"
+                            android:textSize="13dp"
+                            android:visibility="gone"/>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.1" />
+
+                    <ImageButton
+                        android:id="@+id/btnUser_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dp"
+                        android:background="#2D383E"
+                        android:src="@drawable/fix_ic" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4">
+
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Date of birth"
+                            android:textColor="#646F75"
+                            android:textSize="13dp" />
+
+                        <TextView
+                            android:id="@+id/user_dob"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="31-12-2024"
+                            android:textColor="#FFFFFF"
+                            android:textSize="13dp" />
+                    </LinearLayout>
+                    <EditText
+                        android:id="@+id/editTextUser_dob"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColorHint ="#FFFFFF"
+                        android:textColor ="#FFFFFF"
+                        android:hint="New date of birth"
+                        android:textSize="13dp"
+                        android:inputType="date"
+                        android:clickable="false"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.1" />
 
                 <ImageButton
+                    android:id="@+id/btnUser_dob"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"
@@ -326,6 +395,27 @@
         <!-- Repeat the pattern for Name and Email with edit buttons -->
 
         <Button
+            android:id="@+id/btnUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/info_layout"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/logout_button"
+            android:textColor="#FFFFFF"
+            android:text="Update"
+            android:visibility="gone"/>
+        <Button
+            android:id="@+id/btnCancelUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/info_layout"
+            android:layout_marginTop="65dp"
+            android:background="@drawable/logout_button"
+            android:textColor="#FFFFFF"
+            android:text="Cancel"
+            android:visibility="gone"/>
+
+        <Button
             android:id="@+id/btnLogout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -333,8 +423,8 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/logout_button"
             android:drawableLeft="@drawable/ic_logout"
-            android:textColor="#FFFFFF"
-            android:text="Logout" />
+            android:text="Logout"
+            android:textColor="#FFFFFF" />
 
     </RelativeLayout>
 

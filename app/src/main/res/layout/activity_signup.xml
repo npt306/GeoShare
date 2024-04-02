@@ -33,6 +33,23 @@
             android:paddingStart="20dp"
             android:minHeight="48dp" />
         <EditText
+            android:id="@+id/editTextSignUpDob"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/custom_signin_editext"
+            android:hint="Date of birth"
+            android:inputType="date"
+            android:clickable="false"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:layout_marginTop="10px"
+            android:layout_marginRight="30px"
+            android:layout_marginLeft="30px"
+            android:textColorHint="#FFC6C6C6"
+            android:paddingStart="20dp"
+            android:minHeight="48dp" />
+        <EditText
             android:id="@+id/editTextSignUpEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

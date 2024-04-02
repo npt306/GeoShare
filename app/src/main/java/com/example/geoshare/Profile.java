@@ -1,9 +1,11 @@
 package com.example.geoshare;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -18,24 +20,106 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Calendar;
+
 public class Profile extends AppCompatActivity {
-    ImageButton buttonProfileBack;
-    TextView txtId, txtUsername, txtEmail;
-    Button buttonLogout;
+    ImageButton buttonUser_name, buttonUser_dob, buttonProfileBack;
+    TextView txtId, txtUsername, txtEmail, txtDob;
+    EditText editTextUser_name, editTextUser_dob;
+    Button buttonUpdate, buttonCancelUpdate, buttonLogout;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        DataOutput.updateNewLoc(1111,1111);
-        DataOutput.updateNewStatus("tui buon qua mn oiw, huhu");
-        DataOutput.updateNewUsername("troi hoa con mua lang roi ben them");
-
+        buttonUser_name = findViewById(R.id.btnUser_name);
+        buttonUser_dob = findViewById(R.id.btnUser_dob);
         buttonProfileBack = findViewById(R.id.back_button);
+        buttonUpdate = findViewById(R.id.btnUpdate);
+        buttonCancelUpdate = findViewById(R.id.btnCancelUpdate);
         buttonLogout = findViewById(R.id.btnLogout);
+
+        editTextUser_name = findViewById(R.id.editTextUser_name);
+        editTextUser_dob = findViewById(R.id.editTextUser_dob);
+
         txtId = findViewById(R.id.user_id);
         txtEmail = findViewById(R.id.user_email);
         txtUsername = findViewById(R.id.user_name);
+        txtDob = findViewById(R.id.user_dob);
+
+        editTextUser_dob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // on below line we are getting
+                // the instance of our calendar.
+                final Calendar c = Calendar.getInstance();
+
+                // on below line we are getting
+                // our day, month and year.
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+                int day = c.get(Calendar.DAY_OF_MONTH);
+
+                // on below line we are creating a variable for date picker dialog.
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        // on below line we are passing context.
+                        Profile.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(android.widget.DatePicker view, int year, int month, int dayOfMonth) {
+                                editTextUser_dob.setText(dayOfMonth + "-" + (month + 1) + "-" + year);
+                            }
+                        },
+                        year, month, day);
+                datePickerDialog.show();
+            }
+        });
+        buttonUser_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editTextUser_name.setVisibility(View.VISIBLE);
+                buttonUpdate.setVisibility(View.VISIBLE);
+                buttonCancelUpdate.setVisibility(View.VISIBLE);
+                buttonLogout.setVisibility(View.GONE);
+            }
+        });
+        buttonUser_dob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editTextUser_dob.setVisibility(View.VISIBLE);
+                buttonUpdate.setVisibility(View.VISIBLE);
+                buttonCancelUpdate.setVisibility(View.VISIBLE);
+                buttonLogout.setVisibility(View.GONE);
+            }
+        });
+        buttonUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //handle update profile
+                String newUserName = String.valueOf(editTextUser_name.getText());
+                if(!newUserName.isEmpty()) {
+                    DataOutput.updateNewUsername(newUserName);
+                }
+                String newDob = String.valueOf(editTextUser_dob.getText());
+                if(!newDob.isEmpty()) {
+                    DataOutput.updateNewDOB(newDob);
+                }
+
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+        buttonCancelUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editTextUser_name.setVisibility(View.GONE);
+                editTextUser_dob.setVisibility(View.GONE);
+                buttonUpdate.setVisibility(View.GONE);
+                buttonCancelUpdate.setVisibility(View.GONE);
+                buttonLogout.setVisibility(View.VISIBLE);
+            }
+        });
         buttonProfileBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,6 +155,8 @@ public class Profile extends AppCompatActivity {
                     String username = dataSnapshot.child("username").getValue(String.class);
                     // Sử dụng username ở đây
                     txtUsername.setText(username);
+                    String dob = dataSnapshot.child("dob").getValue(String.class);
+                    txtDob.setText(dob);
                 } else {
                     // Không tìm thấy thông tin người dùng, xử lý tương ứng
                 }

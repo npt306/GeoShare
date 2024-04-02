@@ -8,15 +8,17 @@ public class User {
     private String username;
     private String status;
     private String imageURL;
+    private String dob;
     private ArrayList<String> friendList;
     private String locLat;
     private String locLong;
 
-    public User(String id, String username, String status, String imageURL, ArrayList<String> friendList, String locLat, String locLong) {
+    public User(String id, String username, String status, String imageURL, String dob, ArrayList<String> friendList, String locLat, String locLong) {
         this.id = id;
         this.username = username;
         this.status = status;
         this.imageURL = imageURL;
+        this.dob = dob;
         this.friendList = friendList;
         this.locLat = locLat;
         this.locLong = locLong;
@@ -39,6 +41,9 @@ public class User {
 
     public String getImageURL() {
         return imageURL;
+    }
+    public String getDob() {
+        return dob;
     }
 
     public String getLocLat() {
