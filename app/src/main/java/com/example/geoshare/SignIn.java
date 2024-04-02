@@ -56,8 +56,7 @@ public class SignIn extends AppCompatActivity {
         setContentView(R.layout.activity_signin);
 
         AdView mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        AdManager.loadBannerAd(mAdView);
 
         mAuth = FirebaseAuth.getInstance();
         editTextEmail = findViewById(R.id.editTextSignInEmail);
