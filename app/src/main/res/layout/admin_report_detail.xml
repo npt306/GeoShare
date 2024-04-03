@@ -78,7 +78,7 @@
         <LinearLayout
             android:id="@+id/layout_userInfo"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="380dp"
             android:layout_below="@+id/layout_Avatar"
             android:layout_marginTop="20dp"
             android:background="@drawable/avatarlayout_border_radius"
@@ -131,7 +131,7 @@
 
             <LinearLayout
                 android:id="@+id/layout_Proof"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
@@ -149,28 +149,36 @@
                     android:layout_height="wrap_content"
                     android:fillViewport="true">
 
-                    <LinearLayout
+                    <com.google.android.flexbox.FlexboxLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical">
+                        app:flexWrap="wrap"
+                        app:justifyContent="flex_start"
+                        app:alignItems="center"
+                        app:flexDirection="row">
 
                         <ImageView
                             android:layout_width="150dp"
                             android:layout_height="150dp"
+                            android:layout_marginRight="10dp"
                             android:src="@drawable/reportProof" />
+
                         <ImageView
                             android:layout_width="150dp"
                             android:layout_height="150dp"
+                            android:layout_marginRight="10dp"
                             android:src="@drawable/reportProof" />
+
                         <ImageView
                             android:layout_width="150dp"
                             android:layout_height="150dp"
+                            android:layout_marginRight="10dp"
                             android:src="@drawable/reportProof" />
-                    </LinearLayout>
+
+                    </com.google.android.flexbox.FlexboxLayout>
                 </ScrollView>
+
             </LinearLayout>
-
-
         </LinearLayout>
         <LinearLayout
             android:id="@+id/layout_Action"
