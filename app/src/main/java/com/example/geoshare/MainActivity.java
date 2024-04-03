@@ -55,6 +55,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
 
 import org.json.JSONObject;
 
@@ -72,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     FirebaseAuth mAuth;
     FirebaseUser firebaseUser;
-
     ImageButton imageButtonProfile, imageButtonInvite, buttonLocation, buttonChat;
     private GoogleMap maps;
     private final int FINE_PERMISSION_CODE = 1;
