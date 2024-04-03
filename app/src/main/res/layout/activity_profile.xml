@@ -69,14 +69,17 @@
                     android:layout_gravity="bottom|end"
                     android:background="@drawable/picture_border_radius">
 
-                    <ImageView
-                        android:id="@+id/profile_image_lock"
+                    <ImageButton
+                        android:id="@+id/btnUploadImage"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_gravity="bottom|end"
                         android:padding="4dp"
-                        android:src="@drawable/camera_icon" />
+                        android:text="Upload"
+                        android:textSize="8dp"
+                        android:background="@drawable/camera_icon"/>
                 </FrameLayout>
+
             </FrameLayout>
         </LinearLayout>
 
@@ -404,6 +407,21 @@
             android:textColor="#FFFFFF"
             android:text="Update"
             android:visibility="gone"/>
+<!--        <com.google.android.material.appbar.MaterialToolbar-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="600dp"-->
+<!--            android:id="@+id/toolbar"-->
+<!--            app:titleCentered="true"-->
+<!--            app:titleTextColor="?attr/colorSurface"-->
+<!--            android:background="?attr/colorPrimary"/>-->
+
+<!--        <com.google.android.material.progressindicator.LinearProgressIndicator-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:id="@+id/progress"-->
+<!--            android:layout_below="@id/toolbar"/>-->
+
         <Button
             android:id="@+id/btnCancelUpdate"
             android:layout_width="match_parent"

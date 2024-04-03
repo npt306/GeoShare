@@ -1,11 +1,15 @@
 package com.example.geoshare;
 
+import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -14,13 +18,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 public class DataOutput {
+    private static StorageReference storageReference = FirebaseStorage.getInstance().getReference();
     //Update location of current user
     public static void updateNewLoc(double locLat, double locLong) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -40,6 +50,35 @@ public class DataOutput {
         DatabaseReference myRef = database.getReference("Users").child(id);
 
         myRef.child("status").setValue(status);
+    }
+    public static void updateNewImage(Uri newImage) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String id = user.getUid();
+        DatabaseReference myRef = database.getReference("Users").child(id);
+
+        String imageUUID = UUID.randomUUID().toString();
+        StorageReference reference = storageReference.child("usersAvatar/" + imageUUID);
+        reference.putFile(newImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d("AHUHU", "Upload success");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("AHUHU", "Upload failed");
+            }
+        });
+//                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+//                progress.setMax(Math.toIntExact(snapshot.getTotalByteCount()));
+//                progress.setProgress(Math.toIntExact(snapshot.getBytesTransferred()));
+//            }
+//        });
+
+        myRef.child("imageURL").setValue(imageUUID);
     }
 
     public static void updateNewUsername(String username) {
