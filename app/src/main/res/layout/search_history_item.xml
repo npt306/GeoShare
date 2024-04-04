@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- custom_list_item_with_x.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="20dp"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/historyContent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="#9C9C9C"
+        android:textSize="20sp"
+        android:paddingStart="16dp"
+        android:paddingLeft="20dp"
+        android:paddingEnd="16dp"
+        android:gravity="center_vertical"/>
+
+    <ImageButton
+        android:id="@+id/historyContentDeleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        android:background="?android:attr/selectableItemBackground"
+        android:contentDescription="Delete"/>
+</LinearLayout>
