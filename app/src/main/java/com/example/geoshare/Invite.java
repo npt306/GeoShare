@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.geoshare.Fragment.FriendFragment;
 import com.example.geoshare.Fragment.InviteFragment;
+import com.example.geoshare.Fragment.QRFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

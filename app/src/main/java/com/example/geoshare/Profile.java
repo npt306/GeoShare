@@ -3,9 +3,12 @@ package com.example.geoshare;
 import android.app.DatePickerDialog;
 import android.app.Instrumentation;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +22,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
@@ -38,12 +42,15 @@ import com.google.firebase.storage.StorageReference;
 import java.util.Calendar;
 import java.util.Objects;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class Profile extends AppCompatActivity {
     Uri image;
     ImageButton buttonSelectImage, buttonUser_name, buttonUser_dob, buttonProfileBack;
-    ImageView imageViewUser;
+    CircleImageView imageViewUser;
     TextView txtId, txtUsername, txtEmail, txtDob;
     EditText editTextUser_name, editTextUser_dob;
+    String newUsername = "", newDob ="";
     Button buttonUpdate, buttonCancelUpdate, buttonLogout;
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
@@ -53,6 +60,9 @@ public class Profile extends AppCompatActivity {
                     image = result.getData().getData();
                     imageViewUser = findViewById(R.id.profile_image);
                     Glide.with(getApplicationContext()).load(image).into(imageViewUser);
+                    DataOutput.updateNewImage(image);
+                }
+                else {
                     Toast.makeText(Profile.this, "null con me no roi dm", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -79,11 +89,37 @@ public class Profile extends AppCompatActivity {
         txtUsername = findViewById(R.id.user_name);
         txtDob = findViewById(R.id.user_dob);
 
-        editTextUser_dob.setOnClickListener(new View.OnClickListener() {
+
+        buttonSelectImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                activityResultLauncher.launch(intent);
+
+//                buttonUpdate.setVisibility(View.VISIBLE);
+//                buttonCancelUpdate.setVisibility(View.VISIBLE);
+//                buttonLogout.setVisibility(View.GONE);
+            }
+        });
+        buttonUser_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // on below line we are getting
-                // the instance of our calendar.
+                showUpdateUsernameDialog();
+//                editTextUser_name.setVisibility(View.VISIBLE);
+                buttonUpdate.setVisibility(View.VISIBLE);
+                buttonCancelUpdate.setVisibility(View.VISIBLE);
+                buttonLogout.setVisibility(View.GONE);
+            }
+        });
+        buttonUser_dob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                editTextUser_dob.setVisibility(View.VISIBLE);
+                buttonUpdate.setVisibility(View.VISIBLE);
+                buttonCancelUpdate.setVisibility(View.VISIBLE);
+                buttonLogout.setVisibility(View.GONE);
+
                 final Calendar c = Calendar.getInstance();
 
                 // on below line we are getting
@@ -99,56 +135,27 @@ public class Profile extends AppCompatActivity {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(android.widget.DatePicker view, int year, int month, int dayOfMonth) {
-                                editTextUser_dob.setText(dayOfMonth + "-" + (month + 1) + "-" + year);
+//                                editTextUser_dob.setText(dayOfMonth + "-" + (month + 1) + "-" + year);
+                                newDob = dayOfMonth + "-" + (month + 1) + "-" + year;
                             }
                         },
                         year, month, day);
                 datePickerDialog.show();
             }
         });
-        buttonSelectImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                activityResultLauncher.launch(intent);
-
-                buttonUpdate.setVisibility(View.VISIBLE);
-                buttonCancelUpdate.setVisibility(View.VISIBLE);
-                buttonLogout.setVisibility(View.GONE);
-            }
-        });
-        buttonUser_name.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editTextUser_name.setVisibility(View.VISIBLE);
-                buttonUpdate.setVisibility(View.VISIBLE);
-                buttonCancelUpdate.setVisibility(View.VISIBLE);
-                buttonLogout.setVisibility(View.GONE);
-            }
-        });
-        buttonUser_dob.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editTextUser_dob.setVisibility(View.VISIBLE);
-                buttonUpdate.setVisibility(View.VISIBLE);
-                buttonCancelUpdate.setVisibility(View.VISIBLE);
-                buttonLogout.setVisibility(View.GONE);
-            }
-        });
         buttonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //handle update profile
-                if (image != null) {
-                    DataOutput.updateNewImage(image);
-                }
-                String newUserName = String.valueOf(editTextUser_name.getText());
-                if(!newUserName.isEmpty()) {
-                    DataOutput.updateNewUsername(newUserName);
+//                if (image != null) {
+//                    DataOutput.updateNewImage(image);
+//                }
+//                String newUserName = String.valueOf(editTextUser_name.getText());
+                if(!newUsername.isEmpty()) {
+                    DataOutput.updateNewUsername(newUsername);
                 }
 
-                String newDob = String.valueOf(editTextUser_dob.getText());
+//                String newDob = String.valueOf(editTextUser_dob.getText());
                 if(!newDob.isEmpty()) {
                     DataOutput.updateNewDOB(newDob);
                 }
@@ -232,5 +239,47 @@ public class Profile extends AppCompatActivity {
     else {
             // Người dùng chưa đăng nhập, xử lý tương ứng
         }
+    }
+
+    private void showUpdateUsernameDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_update_username, null);
+        builder.setView(dialogView);
+
+        final EditText etNewUsername = dialogView.findViewById(R.id.etNewUsername);
+        Button btnUpdateUsername = dialogView.findViewById(R.id.btnUpdateUsername);
+        Button btnCancelUpdateUsername = dialogView.findViewById(R.id.btnCancelUpdateUsername);
+
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        btnUpdateUsername.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String enterUsername = etNewUsername.getText().toString().trim();
+                if (!enterUsername.isEmpty()) {
+                    // Cập nhật username ở đây
+//                    updateUsername(newUsername);
+//                    if(!newUsername.isEmpty()) {
+//                        txtUsername.setText(newUsername);
+//                        DataOutput.updateNewUsername(newUsername);
+//                    }
+                    txtUsername.setText(newUsername);
+                    newUsername = enterUsername;
+                    dialog.dismiss();
+                } else {
+                    etNewUsername.setError("Vui lòng nhập username");
+                }
+            }
+        });
+        btnCancelUpdateUsername.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Đóng dialog mà không cập nhật username
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 }

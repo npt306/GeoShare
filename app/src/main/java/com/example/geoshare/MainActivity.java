@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
@@ -30,8 +29,6 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.graphics.drawable.RoundedBitmapDrawable;
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -55,7 +52,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.StorageReference;
 
 import org.json.JSONObject;
 
@@ -73,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     FirebaseAuth mAuth;
     FirebaseUser firebaseUser;
-    ImageButton imageButtonProfile, imageButtonInvite, buttonLocation, buttonChat, buttonSearch;
+    ImageButton buttonProfile, buttonInvite, buttonLocation, buttonChat, buttonSearch;
     private GoogleMap maps;
     private final int FINE_PERMISSION_CODE = 1;
     Location currentLocation;
@@ -92,11 +88,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             finish();
         }
 
-
-
-
-        imageButtonInvite = findViewById(R.id.btnInvite);
-        imageButtonProfile =findViewById(R.id.btnProfile);
+        buttonInvite = findViewById(R.id.btnInvite);
+        buttonProfile =findViewById(R.id.btnProfile);
         buttonLocation = findViewById(R.id.btnCurrentLocation);
         buttonChat = findViewById(R.id.btnChat);
         buttonSearch = findViewById(R.id.btnSearch);
@@ -108,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 finish();
             }
         });
-        imageButtonInvite.setOnClickListener(new View.OnClickListener() {
+        buttonInvite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), Invite.class);
@@ -117,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        imageButtonProfile.setOnClickListener(new View.OnClickListener() {
+        buttonProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), Profile.class);
@@ -374,8 +367,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-
-
         batteryTextView.setText(batteryPercentage + "%");
         customMarkerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         customMarkerView.layout(0, 0, customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight());
@@ -548,10 +539,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 lineOptions.geodesic(true);
 
             }
-
             // Drawing polyline in the Google Map for the i-th route
             maps.addPolyline(lineOptions);
         }
     }
-
 }

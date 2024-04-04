@@ -41,11 +41,14 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+
+        <!-- Mode Toggle -->
         <LinearLayout
             android:id="@+id/avatar_layout"
             android:layout_width="fill_parent"
             android:layout_height="150dp"
             android:layout_below="@+id/back_layout"
+            android:layout_marginTop="20dp"
             android:background="@drawable/avatarlayout_border_radius"
             android:gravity="center">
 
@@ -56,12 +59,14 @@
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/border_radius">
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profile_image"
                     android:layout_width="110dp"
                     android:layout_height="110dp"
                     android:layout_margin="10dp"
-                    android:src="@drawable/user" />
+                    android:src="@drawable/user"
+                    app:civ_border_color="#C28C3A"
+                    app:civ_border_width="2dp" />
 
                 <FrameLayout
                     android:layout_width="wrap_content"
@@ -74,23 +79,21 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_gravity="bottom|end"
+                        android:background="@drawable/camera_icon"
                         android:padding="4dp"
                         android:text="Upload"
-                        android:textSize="8dp"
-                        android:background="@drawable/camera_icon"/>
+                        android:textSize="8dp" />
                 </FrameLayout>
 
             </FrameLayout>
         </LinearLayout>
 
-
-        <!-- Mode Toggle -->
         <LinearLayout
             android:id="@+id/switch_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/avatar_layout"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="10dp"
             android:orientation="vertical">
             <!--            <LinearLayout-->
@@ -296,7 +299,7 @@
 
                             <TextView
                                 android:id="@+id/user_name"
-                                android:layout_width="wrap_content"
+                                android:layout_width="240dp"
                                 android:layout_height="wrap_content"
                                 android:text="Tài Nguyễn"
                                 android:textColor="#FFFFFF"
@@ -342,7 +345,11 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.4">
 
-
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="23dp"
+                        android:src="@drawable/ic_birthday" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -438,7 +445,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/info_layout"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:background="@drawable/logout_button"
             android:drawableLeft="@drawable/ic_logout"
             android:text="Logout"

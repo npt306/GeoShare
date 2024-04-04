@@ -1,4 +1,4 @@
-package com.example.geoshare;
+package com.example.geoshare.Fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.example.geoshare.CaptureAct;
+import com.example.geoshare.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
