@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     FirebaseAuth mAuth;
     FirebaseUser firebaseUser;
-    ImageButton imageButtonProfile, imageButtonInvite, buttonLocation, buttonChat;
+    ImageButton imageButtonProfile, imageButtonInvite, buttonLocation, buttonChat, buttonSearch;
     private GoogleMap maps;
     private final int FINE_PERMISSION_CODE = 1;
     Location currentLocation;
@@ -99,6 +99,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         imageButtonProfile =findViewById(R.id.btnProfile);
         buttonLocation = findViewById(R.id.btnCurrentLocation);
         buttonChat = findViewById(R.id.btnChat);
+        buttonSearch = findViewById(R.id.btnSearch);
+        buttonSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), Search.class);
+                startActivity(intent);
+                finish();
+            }
+        });
         imageButtonInvite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
