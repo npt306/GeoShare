@@ -161,18 +161,21 @@
                             android:layout_width="150dp"
                             android:layout_height="150dp"
                             android:layout_marginRight="10dp"
+                            android:layout_marginTop="10dp"
                             android:src="@drawable/report_proof" />
 
                         <ImageView
                             android:layout_width="150dp"
                             android:layout_height="150dp"
                             android:layout_marginRight="10dp"
+                            android:layout_marginTop="10dp"
                             android:src="@drawable/report_proof" />
 
                         <ImageView
                             android:layout_width="150dp"
                             android:layout_height="150dp"
                             android:layout_marginRight="10dp"
+                            android:layout_marginTop="10dp"
                             android:src="@drawable/report_proof" />
 
                     </com.google.android.flexbox.FlexboxLayout>
