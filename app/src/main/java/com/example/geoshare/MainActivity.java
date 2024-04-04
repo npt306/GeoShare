@@ -218,7 +218,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 maps.clear();
                 maps.addMarker(markerOptions);
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Xử lý lỗi nếu có

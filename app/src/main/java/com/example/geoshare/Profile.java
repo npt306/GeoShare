@@ -1,19 +1,16 @@
 package com.example.geoshare;
 
 import android.app.DatePickerDialog;
-import android.app.Instrumentation;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -137,6 +134,7 @@ public class Profile extends AppCompatActivity {
                             public void onDateSet(android.widget.DatePicker view, int year, int month, int dayOfMonth) {
 //                                editTextUser_dob.setText(dayOfMonth + "-" + (month + 1) + "-" + year);
                                 newDob = dayOfMonth + "-" + (month + 1) + "-" + year;
+                                txtDob.setText(newDob);
                             }
                         },
                         year, month, day);
@@ -163,6 +161,8 @@ public class Profile extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), Profile.class);
                 startActivity(intent);
                 finish();
+
+                Toast.makeText(Profile.this, "Update profile completed", Toast.LENGTH_SHORT).show();
             }
         });
         buttonCancelUpdate.setOnClickListener(new View.OnClickListener() {
@@ -264,7 +264,7 @@ public class Profile extends AppCompatActivity {
 //                        txtUsername.setText(newUsername);
 //                        DataOutput.updateNewUsername(newUsername);
 //                    }
-                    txtUsername.setText(newUsername);
+                    txtUsername.setText(enterUsername);
                     newUsername = enterUsername;
                     dialog.dismiss();
                 } else {
