@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.geoshare.Adapter.InviteAdapter;
@@ -84,7 +86,9 @@ public class InviteFragment extends Fragment {
     private InviteAdapter inviteAdapter;
     private List<User> mUsers;
     private EditText editTextAddFriendUserId;
-    private Button buttonAddFriend, buttonDeleteFriend;
+    private TextView textViewInviteUserFriend;
+    private LinearLayout linearLayoutUserFound;
+    private Button buttonFindFriend, buttonAddFriend, buttonDeleteFriend;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -95,11 +99,55 @@ public class InviteFragment extends Fragment {
 //        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         editTextAddFriendUserId = view.findViewById(R.id.editTextAddFriendID);
+        textViewInviteUserFriend = view.findViewById(R.id.invite_friend_username);
+        linearLayoutUserFound = view.findViewById(R.id.layoutUserFound);
+        buttonFindFriend = view.findViewById(R.id.btnFindFriend);
         buttonAddFriend = view.findViewById(R.id.btnAddFriend);
         buttonDeleteFriend = view.findViewById(R.id.btnDeleteFriend);
 
         DatabaseReference friendRef = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("friends");
 
+        buttonFindFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String id = String.valueOf(editTextAddFriendUserId.getText());
+                if(id.length() < 28) {
+                    show_dialog("Invalid UID","Please check again friend's UID.",InviteFragment.this.getContext() );
+                }
+                else {
+                    checkUserIdExistence(id, new UserIdCheckListener() {
+                        @Override
+                        public void onUserIdChecked(boolean result) {
+                            if(result) {
+                                DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("Users");
+                                String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                                if(currentUserId.equals(id)){
+                                    show_dialog("User Not Valid","Do not enter your own id.",InviteFragment.this.getContext() );
+                                    return;
+                                }
+                                usersRef.child(id).child("username").addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        String usernameFound = dataSnapshot.getValue(String.class);
+                                        textViewInviteUserFriend.setText(usernameFound);
+                                        linearLayoutUserFound.setVisibility(View.VISIBLE);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        // Xử lý lỗi nếu có
+                                        Log.d("Kiem tra ban", "Da xay ra loi: " + databaseError.getMessage());
+                                    }
+                                });
+
+                            }
+                        }
+                    });
+                }
+
+            }
+        });
         buttonAddFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

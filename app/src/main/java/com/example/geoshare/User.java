@@ -10,6 +10,8 @@ public class User {
     private String imageURL;
     private String dob;
     private ArrayList<String> friendList;
+    private ArrayList<String> pendingList;
+    private ArrayList<String> inviteList;
     private String locLat;
     private String locLong;
 
