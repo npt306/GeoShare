@@ -6,17 +6,29 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.example.geoshare.Adapter.FriendListAdapter;
 import com.example.geoshare.CaptureAct;
+import com.example.geoshare.Model.User;
 import com.example.geoshare.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -24,6 +36,9 @@ import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -71,9 +86,11 @@ public class QRFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
     ImageView imageQrCode;
     Button buttonScanQR;
+    private RecyclerView recyclerView;
+    private FriendListAdapter pendingListAdapter;
+    private List<User> pendingFriends;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -81,6 +98,12 @@ public class QRFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_qr, container, false);
         imageQrCode = view.findViewById(R.id.qr_code);
         buttonScanQR = view.findViewById(R.id.button_scan_qr);
+        recyclerView = view.findViewById(R.id.recycles_view_pending_list);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        pendingFriends = new ArrayList<>();
+        getPendingList();
         buttonScanQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -125,4 +148,41 @@ public class QRFragment extends Fragment {
             }).show();
         }
     });
+
+    private void getPendingList(){
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference friendsRef = FirebaseDatabase.getInstance().getReference("Friends").child(currentUser.getUid());
+        friendsRef.child("pendingList").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                pendingFriends.clear();
+                for (DataSnapshot friendSnapshot : dataSnapshot.getChildren()) {
+                    String friendId = friendSnapshot.getValue(String.class);
+                    Log.d("friend key: ", friendId);
+                    if(friendId.equals("empty")) {
+                       return;
+                    }
+                    DatabaseReference pendingUserRef = FirebaseDatabase.getInstance().getReference("Users").child(friendId);
+                    Log.d("findFriend", friendId);
+                    pendingUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            User pendingUserFound = snapshot.getValue(User.class);
+                            pendingFriends.add(pendingUserFound);
+                            pendingListAdapter = new FriendListAdapter(getContext(), pendingFriends);
+                            recyclerView.setAdapter(pendingListAdapter);
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý lỗi nếu có
+            }
+        });
+    }
 }

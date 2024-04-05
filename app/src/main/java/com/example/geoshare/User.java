@@ -15,15 +15,12 @@ public class User {
     private String locLat;
     private String locLong;
 
-    public User(String id, String username, String status, String imageURL, String dob, ArrayList<String> friendList, String locLat, String locLong) {
+    public User(String id, String username, String status, String imageURL, String dob) {
         this.id = id;
         this.username = username;
         this.status = status;
         this.imageURL = imageURL;
         this.dob = dob;
-        this.friendList = friendList;
-        this.locLat = locLat;
-        this.locLong = locLong;
     }
     public User() {
 
