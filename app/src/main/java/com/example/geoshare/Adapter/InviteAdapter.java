@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.geoshare.DataOutput;
 import com.example.geoshare.Model.User;
 import com.example.geoshare.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,6 +43,7 @@ public class InviteAdapter extends RecyclerView.Adapter<InviteAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         User user = mUsers.get(position);
         holder.username.setText(user.getUsername());
+        holder.pendingFriendID.setText(user.getId());
         if(user.getImageURL().equals("default")){
             holder.profile_image.setImageResource(R.mipmap.ic_launcher);
         }
@@ -55,12 +57,14 @@ public class InviteAdapter extends RecyclerView.Adapter<InviteAdapter.ViewHolder
                 // Xử lý sự kiện khi button được nhấn
 //                Toast.makeText(mContext, "Invite button clicked for user: " + user.getUsername(), Toast.LENGTH_SHORT).show();
                 // Gửi yêu cầu kết bạn đến ID tương ứng
-                sendFriendRequest(user.getId());
+//                acceptFriendRequest(user.getId());
+                DataOutput.acceptNewFriend(String.valueOf(holder.pendingFriendID.getText()));
+
             }
         });
     }
     // Phương thức để gửi yêu cầu kết bạn
-    private void sendFriendRequest(String invitedId) {
+    private void acceptFriendRequest(String invitedId) {
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         // Đường dẫn tới node "invites" trong Firebase Realtime Database
         DatabaseReference invitedRef = FirebaseDatabase.getInstance().getReference().child("Users").child(invitedId).child("requests");
@@ -119,13 +123,14 @@ public class InviteAdapter extends RecyclerView.Adapter<InviteAdapter.ViewHolder
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        public TextView username;
+        public TextView username, pendingFriendID;
         public ImageView profile_image;
         public Button inviteButton;
         public ViewHolder(View itemView){
             super(itemView);
 
-            username = itemView.findViewById(R.id.invite_username);
+            username = itemView.findViewById(R.id.invite_friend_username);
+            pendingFriendID = itemView.findViewById(R.id.invite_friend_ID);
             profile_image = itemView.findViewById(R.id.invite_profile_image);
             inviteButton = itemView.findViewById(R.id.invite_button);
         }
