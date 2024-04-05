@@ -38,30 +38,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignUp">
-
-        </activity>
-        <activity android:name=".SignIn">
-
-        </activity>
-        <activity android:name=".ForgotPassword">
-
-        </activity>
-        <activity android:name=".Profile">
-
-        </activity>
-        <activity android:name=".Invite">
-
-        </activity>
-        <activity android:name=".Chat">
-
-        </activity>
-
+        <activity android:name=".SignUp"/>
+        <activity android:name=".SignIn"/>
+        <activity android:name=".ForgotPassword"/>
+        <activity android:name=".Profile"/>
+        <activity android:name=".Invite"/>
+        <activity android:name=".Chat"/>
         <activity android:name=".CaptureAct"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:theme="@style/zxing_CaptureTheme"/>
         <activity android:name=".Search"/>
+        <activity android:name=".QR"/>
     </application>
 
 </manifest>
