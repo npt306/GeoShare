@@ -70,8 +70,8 @@ public class MarkerManager {
         // Tạo một marker mới với thông tin từ Firebase và sử dụng Custom Marker Adapter
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(location)
-//                .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.mipmap.ic_launcher, "Battery: 100%")));
-                .icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromImage(R.drawable.avatar)));
+                .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.mipmap.ic_launcher, "Battery: 100%")));
+//                .icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromImage(R.drawable.avatar)));
 
         // Thêm marker vào bản đồ
         callerContext.getMaps().addMarker(markerOptions);
@@ -84,8 +84,8 @@ public class MarkerManager {
                 // Lấy dữ liệu từ dataSnapshot và cập nhật giá trị pin
                 String batteryInfo = dataSnapshot.child("currentBattery").getValue(String.class);
                 // Cập nhật thông tin pin của marker
-//                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.mipmap.ic_launcher, "Battery: " + batteryInfo)));
-                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromImage(R.drawable.avatar)));
+                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.mipmap.ic_launcher, "Battery: " + batteryInfo)));
+//                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromImage(R.drawable.avatar)));
 
                 // Xóa marker cũ và thêm marker mới với thông tin đã cập nhật
                 callerContext.getMaps().clear();
