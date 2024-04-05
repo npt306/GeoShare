@@ -8,17 +8,40 @@
     android:layout_height="50dp"
     android:id="@+id/invite_profile_image"
     android:src="@mipmap/ic_launcher"/>
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="220dp"
         android:layout_height="wrap_content"
-        android:id="@+id/invite_username"
-        android:text="Username"
-        android:layout_marginLeft="20dp"
-        android:layout_toRightOf="@id/invite_profile_image"
-        android:layout_toEndOf="@id/invite_profile_image"
-        android:layout_centerVertical="true"
-        android:textColor="#FFFFFF"
-        android:textSize="18dp"/>
+        android:layout_marginLeft="65dp"
+        android:orientation="vertical"
+        android:gravity="start">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/invite_friend_username"
+            android:text="Username"
+            android:textColor="#FFFFFF"
+            android:textSize="18dp"/>
+
+        <TextView
+            android:id="@+id/invite_friend_ID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="ID"
+            android:textColor="#FFFFFF"
+            android:textSize="14dp" />
+    </LinearLayout>
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:id="@+id/invite_username"-->
+<!--        android:text="Username"-->
+<!--        android:layout_marginLeft="20dp"-->
+<!--        android:layout_toRightOf="@id/invite_profile_image"-->
+<!--        android:layout_toEndOf="@id/invite_profile_image"-->
+<!--        android:layout_centerVertical="true"-->
+<!--        android:textColor="#FFFFFF"-->
+<!--        android:textSize="18dp"/>-->
 
     <Button
         android:id="@+id/invite_button"
@@ -28,6 +51,6 @@
         android:layout_centerVertical="true"
         android:textColor="#FFFFFF"
         android:background="@drawable/invite_button"
-        android:text="Invite" />
+        android:text="Accept" />
 
 </RelativeLayout>

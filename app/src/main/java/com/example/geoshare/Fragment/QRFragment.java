@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.example.geoshare.Adapter.FriendListAdapter;
+import com.example.geoshare.Adapter.InviteAdapter;
 import com.example.geoshare.CaptureAct;
 import com.example.geoshare.Model.User;
 import com.example.geoshare.R;
@@ -89,7 +90,7 @@ public class QRFragment extends Fragment {
     ImageView imageQrCode;
     Button buttonScanQR;
     private RecyclerView recyclerView;
-    private FriendListAdapter pendingListAdapter;
+    private InviteAdapter pendingListAdapter;
     private List<User> pendingFriends;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -169,7 +170,7 @@ public class QRFragment extends Fragment {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             User pendingUserFound = snapshot.getValue(User.class);
                             pendingFriends.add(pendingUserFound);
-                            pendingListAdapter = new FriendListAdapter(getContext(), pendingFriends);
+                            pendingListAdapter = new InviteAdapter(getContext(), pendingFriends);
                             recyclerView.setAdapter(pendingListAdapter);
                         }
                         @Override

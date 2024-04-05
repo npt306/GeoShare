@@ -129,13 +129,88 @@ public class DataOutput {
                     ArrayList<String> pendingArray = new ArrayList<>();
 
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                        if(Objects.equals(snapshot.getValue(String.class), id))
+//                            return;
+                        if(!Objects.equals(snapshot.getValue(String.class), "empty"))
+                            pendingArray.add(snapshot.getValue(String.class));
+                    }
+                    pendingArray.add(id);
+                    friendIDRef.child("pendingList").setValue(pendingArray);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    public static void acceptNewFriend(String friendId) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String id = user.getUid();
+
+        DatabaseReference friendsRef = database.getReference("Friends").child(id);
+        friendsRef.child("friendList").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    ArrayList<String> listFriendArray = new ArrayList<>();
+
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        if(Objects.equals(snapshot.getValue(String.class), friendId))
+                            return;
+                        if(!Objects.equals(snapshot.getValue(String.class), "empty"))
+                            listFriendArray.add(snapshot.getValue(String.class));
+                    }
+                    listFriendArray.add(friendId);
+                    friendsRef.child("friendList").setValue(listFriendArray);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        DatabaseReference friendIDRef = database.getReference("Friends").child(friendId);
+        friendIDRef.child("friendList").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    ArrayList<String> pendingArray = new ArrayList<>();
+
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         if(Objects.equals(snapshot.getValue(String.class), id))
                             return;
                         if(!Objects.equals(snapshot.getValue(String.class), "empty"))
                             pendingArray.add(snapshot.getValue(String.class));
                     }
                     pendingArray.add(id);
-                    friendIDRef.child("pendingList").setValue(pendingArray);
+                    friendIDRef.child("friendList").setValue(pendingArray);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        friendsRef.child("pendingList").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    ArrayList<String> pendingArray = new ArrayList<>();
+
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        if(!Objects.equals(snapshot.getValue(String.class), "empty") &&
+                                !Objects.equals(snapshot.getValue(String.class), friendId))
+                            pendingArray.add(snapshot.getValue(String.class));
+                    }
+                    if(pendingArray.isEmpty())
+                        pendingArray.add("empty");
+                    friendsRef.child("pendingList").setValue(pendingArray);
                 }
             }
 
