@@ -47,18 +47,21 @@ import com.google.firebase.database.ValueEventListener;
 
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
-
     FirebaseAuth mAuth;
     FirebaseUser firebaseUser;
     ImageButton buttonProfile, buttonInvite, buttonLocation, buttonChat, buttonSearch;
     private GoogleMap maps;
     private final int FINE_PERMISSION_CODE = 1;
+    private UrlDownloader urlDownloader;
+    private MarkerManager markerManager;
     Location currentLocation;
     FusedLocationProviderClient fusedLocationProviderClient;
+
 
     public GoogleMap getMaps(){
         return maps;
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 finish();
             }
         });
-
         buttonProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -103,14 +105,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 finish();
             }
         });
-
         buttonLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 focusToMyLocation();
             }
         });
-
         buttonChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,10 +119,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 finish();
             }
         });
+
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
-    }
 
+        urlDownloader = new UrlDownloader(MainActivity.this);
+        markerManager = new MarkerManager(MainActivity.this);
+    }
 
 
     private int getCurrentBatteryLevel() {
@@ -136,6 +139,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         return (int)(batteryPct*100);
     }
+
+
     private void getLastLocation() {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[] {android.Manifest.permission.ACCESS_FINE_LOCATION}, FINE_PERMISSION_CODE);
@@ -153,9 +158,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         });
-
-
     }
+
+
     public void focusToMyLocation() {
         getLastLocation();
         CameraPosition camPos = new CameraPosition.Builder()
@@ -169,6 +174,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         maps.animateCamera(camUpd3);
     }
 
+
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         maps = googleMap;
@@ -177,56 +183,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         batteryChangeListener.startBatteryChangeListener();
 
         LatLng myLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-
-        // Tạo một marker mới với thông tin từ Firebase và sử dụng Custom Marker Adapter
-        MarkerOptions markerOptions = new MarkerOptions()
-                .position(myLocation)
-                .title("My location")
-                .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.mipmap.ic_launcher, "Battery: 100%")));
-//                .icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromImage(R.drawable.avatar)));
-
-        // Thêm marker vào bản đồ
-        maps.addMarker(markerOptions);
+        markerManager.createMarker(myLocation);
         maps.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
-
-        // Đặt listener để lắng nghe sự thay đổi trên Firebase và cập nhật marker
-
-        DatabaseReference firebaseRef = FirebaseDatabase.getInstance().getReference().child("batteryLevel").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        firebaseRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Lấy dữ liệu từ dataSnapshot và cập nhật giá trị pin
-                String batteryInfo = dataSnapshot.child("currentBattery").getValue(String.class);
-                // Cập nhật thông tin pin của marker
-                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.mipmap.ic_launcher, "Battery: " + batteryInfo)));
-                // Xóa marker cũ và thêm marker mới với thông tin đã cập nhật
-                maps.clear();
-                maps.addMarker(markerOptions);
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Xử lý lỗi nếu có
-            }
-        });
     }
 
-
-
-
-    private Bitmap getMarkerBitmapFromView(@DrawableRes int resId, String batteryInfo) {
-        View customMarkerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.market_custom, null);
-        ImageView markerImageView = customMarkerView.findViewById(R.id.avatarImageView);
-        TextView markerBatteryTextView = customMarkerView.findViewById(R.id.batteryTextView);
-        markerImageView.setImageResource(resId);
-        markerBatteryTextView.setText(batteryInfo);
-        customMarkerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        customMarkerView.layout(0, 0, customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight());
-        customMarkerView.buildDrawingCache();
-        Bitmap returnedBitmap = Bitmap.createBitmap(customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(returnedBitmap);
-        customMarkerView.draw(canvas);
-        return returnedBitmap;
-    }
 
     private class YourBatteryChangeListener {
         private BroadcastReceiver batteryReceiver;
@@ -257,6 +217,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+
     // Cập nhật dữ liệu pin lên Firebase
     private void updateBatteryInfo(String batteryInfo) {
         DatabaseReference firebaseRef = FirebaseDatabase.getInstance().getReference().child("batteryLevel").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -276,6 +237,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 });
     }
 
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -287,9 +249,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
     }
+
+
     private void transfer(String sou, String des){
         des = sou;
     }
+
+
     // Hàm để tạo Bitmap từ layout XML
     private Bitmap createMarkerBitmap() {
         View customMarkerView = getLayoutInflater().inflate(R.layout.market_custom, null);
@@ -328,11 +294,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return bitmap;
     }
 
+
     private void getDirection(LatLng origin, LatLng dest){
         // Getting URL to the Google Directions API
         String url = UrlGenerator.getDirectionsUrl(origin, dest);
 
-        UrlDownloader urlDownloader = new UrlDownloader(MainActivity.this);
 
         // Start downloading json data from Google Directions API
         // and draw routes
