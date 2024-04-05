@@ -7,14 +7,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,7 +34,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -53,17 +45,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -74,6 +55,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private final int FINE_PERMISSION_CODE = 1;
     Location currentLocation;
     FusedLocationProviderClient fusedLocationProviderClient;
+
+    public GoogleMap getMaps(){
+        return maps;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -226,40 +211,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    // crop middle circle from a bitmap
-    private Bitmap cropCircleFromBitmap(Bitmap bitmap){
 
-        final int r = bitmap.getHeight();
-        final Bitmap outputBitmap = Bitmap.createBitmap(r, r, Bitmap.Config.ARGB_8888);
-
-        Canvas canvas = new Canvas(outputBitmap);
-
-        final int color = 0xff424242;
-        final Paint paint = new Paint();
-        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-
-        paint.setAntiAlias(true);
-        canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(color);
-        // canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
-        canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2,
-                bitmap.getWidth() / 2, paint);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(bitmap, rect, rect, paint);
-
-        return outputBitmap;
-    }
-
-
-    // support converting image to bitmap, which will be used as marker icon
-    private Bitmap getBitmapFromImage(@DrawableRes int resId){
-
-        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(resId);
-        Bitmap bitmap = bitmapdraw.getBitmap();
-        bitmap = Bitmap.createScaledBitmap(bitmap, 128, 128, false);
-
-        return cropCircleFromBitmap(bitmap);
-    }
 
     private Bitmap getMarkerBitmapFromView(@DrawableRes int resId, String batteryInfo) {
         View customMarkerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.market_custom, null);
@@ -376,170 +328,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return bitmap;
     }
 
-
-
-    /**
-     * A method to prepare a query to Direction API
-     * @param origin a starting location
-     * @param dest a finish location
-     * @return query url for api
-     */
-    private String getDirectionsUrl(LatLng origin, LatLng dest) {
-
-        // Origin of route
-        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
-
-        // Destination of route
-        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-
-        // Sensor enabled
-        String sensor = "sensor=false";
-        String mode = "mode=driving";
-        // Building the parameters to the web service
-        String parameters = str_origin + "&" + str_dest + "&" + sensor + "&" + mode;
-
-        // Output format
-        String output = "json";
-
-        // Building the url to the web service
-        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters
-                + "&key=AIzaSyCGc2dm5WJgaBbVaAYeqStrIqnV6oVEHzg";
-
-        return url;
-    }
-
-
     private void getDirection(LatLng origin, LatLng dest){
         // Getting URL to the Google Directions API
-        String url = getDirectionsUrl(origin, dest);
+        String url = UrlGenerator.getDirectionsUrl(origin, dest);
 
-        DownloadTask downloadTask = new DownloadTask();
+        UrlDownloader urlDownloader = new UrlDownloader(MainActivity.this);
 
         // Start downloading json data from Google Directions API
         // and draw routes
-        downloadTask.execute(url);
+        urlDownloader.execute(url);
     }
 
-    private class DownloadTask extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... url) {
-
-            String data = "";
-
-            try {
-                data = downloadUrl(url[0]);
-            } catch (Exception e) {
-                Log.d("Background Task", e.toString());
-            }
-            return data;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            ParserTask parserTask = new ParserTask();
-
-
-            parserTask.execute(result);
-        }
-
-        /**
-         * A method to download json data from url
-         */
-        private String downloadUrl(String strUrl) throws Exception {
-            String data = "";
-            InputStream iStream = null;
-            HttpURLConnection urlConnection = null;
-            try {
-                URL url = new URL(strUrl);
-
-                urlConnection = (HttpURLConnection) url.openConnection();
-
-                urlConnection.connect();
-
-                iStream = urlConnection.getInputStream();
-
-                BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
-
-                StringBuffer sb = new StringBuffer();
-
-                String line = "";
-                while ((line = br.readLine()) != null) {
-                    sb.append(line);
-                }
-
-                data = sb.toString();
-
-                br.close();
-
-            } catch (Exception e) {
-                Log.d("Exception", e.toString());
-            } finally {
-                iStream.close();
-                urlConnection.disconnect();
-            }
-            return data;
-        }
-    }
-
-
-    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
-
-        /**
-         * A class to parse the Google Places in JSON format
-         */
-
-        // Parsing the data in non-ui thread
-        @Override
-        protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
-
-            JSONObject jObject;
-            List<List<HashMap<String, String>>> routes = null;
-
-            try {
-                jObject = new JSONObject(jsonData[0]);
-                DirectionsJSONParser parser = new DirectionsJSONParser();
-
-                routes = parser.parse(jObject);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return routes;
-        }
-
-        @Override
-        protected void onPostExecute(List<List<HashMap<String, String>>> result) {
-            ArrayList points = null;
-            PolylineOptions lineOptions = null;
-            MarkerOptions markerOptions = new MarkerOptions();
-
-            for (int i = 0; i < result.size(); i++) {
-                points = new ArrayList();
-                lineOptions = new PolylineOptions();
-
-                List<HashMap<String, String>> path = result.get(i);
-
-                for (int j = 0; j < path.size(); j++) {
-                    HashMap<String, String> point = path.get(j);
-
-                    double lat = Double.parseDouble(point.get("lat"));
-                    double lng = Double.parseDouble(point.get("lng"));
-                    LatLng position = new LatLng(lat, lng);
-
-                    points.add(position);
-                }
-
-                // setting for routes
-                lineOptions.addAll(points);
-                lineOptions.width(12);
-                lineOptions.color(Color.RED);
-                lineOptions.geodesic(true);
-
-            }
-            // Drawing polyline in the Google Map for the i-th route
-            maps.addPolyline(lineOptions);
-        }
-    }
 }
