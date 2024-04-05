@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.geoshare.Adapter.InviteAdapter;
+import com.example.geoshare.DataOutput;
 import com.example.geoshare.Invite;
 import com.example.geoshare.Model.User;
 import com.example.geoshare.R;
@@ -88,7 +89,7 @@ public class InviteFragment extends Fragment {
     private EditText editTextAddFriendUserId;
     private TextView textViewInviteUserFriend;
     private LinearLayout linearLayoutUserFound;
-    private Button buttonFindFriend, buttonAddFriend, buttonDeleteFriend;
+    private Button buttonFindFriend, buttonAddFriend, buttonDeleteFriend, buttonInviteFoundFriend;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -104,6 +105,7 @@ public class InviteFragment extends Fragment {
         buttonFindFriend = view.findViewById(R.id.btnFindFriend);
         buttonAddFriend = view.findViewById(R.id.btnAddFriend);
         buttonDeleteFriend = view.findViewById(R.id.btnDeleteFriend);
+        buttonInviteFoundFriend = view.findViewById(R.id.btnInviteFoundFriend);
 
         DatabaseReference friendRef = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("friends");
 
@@ -197,6 +199,17 @@ public class InviteFragment extends Fragment {
                         }
                     }
                 });
+            }
+        });
+
+        buttonInviteFoundFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String inviteFriendID = String.valueOf(editTextAddFriendUserId.getText());
+                DataOutput.inviteNewFriend(inviteFriendID);
+
+                editTextAddFriendUserId.setText("");
+                linearLayoutUserFound.setVisibility(View.GONE);
             }
         });
 

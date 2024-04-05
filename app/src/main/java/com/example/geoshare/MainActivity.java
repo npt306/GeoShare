@@ -206,12 +206,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Đặt listener để lắng nghe sự thay đổi trên Firebase và cập nhật marker
 
-        DatabaseReference firebaseRef = FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        DatabaseReference firebaseRef = FirebaseDatabase.getInstance().getReference().child("batteryLevel").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         firebaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Lấy dữ liệu từ dataSnapshot và cập nhật giá trị pin
-                String batteryInfo = dataSnapshot.child("battery").getValue(String.class);
+                String batteryInfo = dataSnapshot.child("currentBattery").getValue(String.class);
                 // Cập nhật thông tin pin của marker
                 markerOptions.icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.mipmap.ic_launcher, "Battery: " + batteryInfo)));
                 // Xóa marker cũ và thêm marker mới với thông tin đã cập nhật
@@ -307,9 +307,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // Cập nhật dữ liệu pin lên Firebase
     private void updateBatteryInfo(String batteryInfo) {
-        DatabaseReference firebaseRef = FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        DatabaseReference firebaseRef = FirebaseDatabase.getInstance().getReference().child("batteryLevel").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        firebaseRef.child("battery").setValue(batteryInfo)
+        firebaseRef.child("currentBattery").setValue(batteryInfo)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -347,13 +347,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         String batteryPercentage = "";
         Integer batteryInteger;
 
-        DatabaseReference batteryRef = FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        DatabaseReference batteryRef = FirebaseDatabase.getInstance().getReference().child("batteryLevel").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         batteryRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    Integer battery = dataSnapshot.child("battery").getValue(Integer.class);
-//                    Toast.makeText(MainActivity.this, String.valueOf(battery),Toast.LENGTH_SHORT).show();
+                    Integer battery = dataSnapshot.child("currentBattery").getValue(Integer.class);
+                    Toast.makeText(MainActivity.this, String.valueOf(battery),Toast.LENGTH_SHORT).show();
                     batteryTextView.setText(battery + "%");
 //                    transfer(battery, batteryPercentage);
                 } else {

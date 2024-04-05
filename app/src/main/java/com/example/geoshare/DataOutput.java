@@ -2,30 +2,24 @@ package com.example.geoshare;
 
 import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -98,21 +92,50 @@ public class DataOutput {
         myRef.child("dob").setValue(DOB);
     }
 
-    public static void addNewFriend(String friendId) {
+    public static void inviteNewFriend(String friendId) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String id = user.getUid();
-        DatabaseReference myRef = database.getReference("Users").child(id);
+        DatabaseReference friendsRef = database.getReference("Friends").child(id);
 
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        friendsRef.child("inviteSentList").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                 if(dataSnapshot.exists()){
-                    User user = dataSnapshot.getValue(User.class);
-                    user.addingFriendToList(friendId);
+                    ArrayList<String> inviteSentArray = new ArrayList<>();
 
-                    myRef.setValue(user);
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        if(Objects.equals(snapshot.getValue(String.class), friendId))
+                            return;
+                        if(!Objects.equals(snapshot.getValue(String.class), "empty"))
+                            inviteSentArray.add(snapshot.getValue(String.class));
+                    }
+                    inviteSentArray.add(friendId);
+                    friendsRef.child("inviteSentList").setValue(inviteSentArray);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        DatabaseReference friendIDRef = database.getReference("Friends").child(friendId);
+
+        friendIDRef.child("pendingList").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    ArrayList<String> pendingArray = new ArrayList<>();
+
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        if(Objects.equals(snapshot.getValue(String.class), id))
+                            return;
+                        if(!Objects.equals(snapshot.getValue(String.class), "empty"))
+                            pendingArray.add(snapshot.getValue(String.class));
+                    }
+                    pendingArray.add(id);
+                    friendIDRef.child("pendingList").setValue(pendingArray);
                 }
             }
 

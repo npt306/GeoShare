@@ -28,7 +28,7 @@ public class Invite extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
     ImageButton buttonBack;
-    Button btnFindID;
+    Button btnFindID, btnInviteFriend;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

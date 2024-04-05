@@ -137,21 +137,27 @@ public class SignUp extends AppCompatActivity {
                                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     String id = user.getUid();
-                                    DatabaseReference myRef = database.getReference("Users").child(id);
 
-//                                    Map<String,String> userData = new HashMap<>();
-//                                    userData.put("id", id);
-//                                    userData.put("username", username);
-//                                    userData.put("imageURL", "default");
-//                                    userData.put("status","");
-//                                    userData.put("locLat", "100.123");
-//                                    userData.put("locLong", "100.123");
-//                                    myRef.setValue(userData);
+                                    DatabaseReference usersRef = database.getReference("Users").child(id);
+                                    Map<String,String> userData = new HashMap<>();
+                                    userData.put("id", id);
+                                    userData.put("username", username);
+                                    userData.put("imageURL", "default");
+                                    userData.put("status","");
+                                    userData.put("dob", dob);
+                                    usersRef.setValue(userData);
+
+                                    DatabaseReference friendsRef = database.getReference("Friends").child(id);
+                                    Map<String,Object> userFriends = new HashMap<>();
+                                    userFriends.put("friendList", Arrays.asList(new String[]{"empty"}));
+                                    userFriends.put("pendingList", Arrays.asList(new String[]{"empty"}));
+                                    userFriends.put("inviteSentList", Arrays.asList(new String[]{"empty"}));
+                                    friendsRef.setValue(userFriends);
 
 //                                    ArrayList<String> defaultFriendList = new ArrayList<>(Arrays.asList(new String[]{"i0dlD9bphthZkMWOuz6z5yQ28oq1"}));
-                                    ArrayList<String> defaultFriendList = new ArrayList<>(Arrays.asList(new String[]{"empty"}));
-                                    User newUser = new User(id,username,"","default", dob, defaultFriendList,"100.123","100.123");
-                                    myRef.setValue(newUser);
+//                                    ArrayList<String> defaultFriendList = new ArrayList<>(Arrays.asList(new String[]{"empty"}));
+//                                    User newUser = new User(id,username,"","default", dob, defaultFriendList,"100.123","100.123");
+//                                    myRef.setValue(newUser);
 
 
                                     Intent intent = new Intent(getApplicationContext(), SignIn.class);
@@ -161,7 +167,7 @@ public class SignUp extends AppCompatActivity {
                                     show_notification("Account created");
                                 } else {
                                     // If sign in fails, display a message to the user.
-                                    show_notification("Authentication failed");
+                                    show_notification("Authentication failed. Password was too short.");
                                 }
                             }
                         });
