@@ -256,45 +256,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    // Hàm để tạo Bitmap từ layout XML
-    private Bitmap createMarkerBitmap() {
-        View customMarkerView = getLayoutInflater().inflate(R.layout.market_custom, null);
-        ImageView avatarImageView = customMarkerView.findViewById(R.id.avatarImageView);
-        TextView batteryTextView = customMarkerView.findViewById(R.id.batteryTextView);
-//        String batteryPercentage = String.valueOf(getCurrentBatteryLevel());
-        String batteryPercentage = "";
-        Integer batteryInteger;
-
-        DatabaseReference batteryRef = FirebaseDatabase.getInstance().getReference().child("batteryLevel").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        batteryRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    Integer battery = dataSnapshot.child("currentBattery").getValue(Integer.class);
-                    Toast.makeText(MainActivity.this, String.valueOf(battery),Toast.LENGTH_SHORT).show();
-                    batteryTextView.setText(battery + "%");
-//                    transfer(battery, batteryPercentage);
-                } else {
-                    // Không tìm thấy thông tin người dùng, xử lý tương ứng
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Xử lý lỗi nếu cần
-            }
-        });
-
-        batteryTextView.setText(batteryPercentage + "%");
-        customMarkerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        customMarkerView.layout(0, 0, customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight());
-        customMarkerView.buildDrawingCache();
-        Bitmap bitmap = Bitmap.createBitmap(customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        customMarkerView.draw(canvas);
-        return bitmap;
-    }
-
-
     private void getDirection(LatLng origin, LatLng dest){
         // Getting URL to the Google Directions API
         String url = UrlGenerator.getDirectionsUrl(origin, dest);
