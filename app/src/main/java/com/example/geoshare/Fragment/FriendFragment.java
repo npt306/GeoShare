@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.example.geoshare.Adapter.FriendListAdapter;
 import com.example.geoshare.Adapter.InviteAdapter;
+import com.example.geoshare.Adapter.RequestAdapter;
 import com.example.geoshare.Model.User;
 import com.example.geoshare.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -93,33 +94,30 @@ public class FriendFragment extends Fragment {
 
     private void getFriendList(){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(currentUser.getUid()).child("friends");
-        reference.addValueEventListener(new ValueEventListener() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Friends").child(currentUser.getUid());
+        reference.child("friendList").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mFriends.clear();
                 for (DataSnapshot friendSnapshot : dataSnapshot.getChildren()) {
-                    String friendId = friendSnapshot.getKey();
-                    Log.d("friend key: ", friendId);
-                    DatabaseReference friendRef = FirebaseDatabase.getInstance().getReference("Users").child(friendId);
-                    friendRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            User friend = snapshot.getValue(User.class);
-                            if(!friend.getId().equals((currentUser.getUid()))){
+                    String friendId = friendSnapshot.getValue(String.class);
+                    Log.d("friendID", friendId);
+                    if(!friendId.equals("empty")) {
+                        DatabaseReference friendRef = FirebaseDatabase.getInstance().getReference("Users").child(friendId);
+                        friendRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                User friend = snapshot.getValue(User.class);
                                 mFriends.add(friend);
-                            }
-                            if (mFriends.size() == dataSnapshot.getChildrenCount()) {
-                                // Nếu đã thêm tất cả, hiển thị danh sách bạn bè
                                 friendListAdapter = new FriendListAdapter(getContext(), mFriends);
                                 recyclerView.setAdapter(friendListAdapter);
                             }
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
 
-                        }
-                    });
+                            }
+                        });
+                    }
                 }
             }
             @Override

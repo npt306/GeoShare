@@ -38,10 +38,10 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
         User friend = mFriends.get(position);
         holder.username.setText(friend.getUsername());
         if(friend.getImageURL().equals("default")){
-            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
+//            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
         }
         else {
-            Glide.with(mContext).load(friend.getImageURL()).into(holder.profile_image);
+//            Glide.with(mContext).load(friend.getImageURL()).into(holder.profile_image);
         }
         // Xác định sự kiện click cho button
 //        holder.inviteButton.setOnClickListener(new View.OnClickListener() {
