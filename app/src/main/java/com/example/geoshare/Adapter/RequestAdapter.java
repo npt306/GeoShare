@@ -4,8 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -115,9 +113,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
                 // Xử lý lỗi nếu có
             }
         });
-
     }
-
     @Override
     public int getItemCount() {
         return mRequest.size();
@@ -129,7 +125,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
         public ImageView buttonAccept, buttonReject;
         public ViewHolder(View itemView){
             super(itemView);
-
             username = itemView.findViewById(R.id.request_friend_username);
             pendingFriendID = itemView.findViewById(R.id.request_friend_ID);
             profile_image = itemView.findViewById(R.id.request_profile_image);

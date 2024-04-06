@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/dialog_profile_background"
-        android:layout_margin="10dp"
         android:padding="20dp">
 
     <LinearLayout
