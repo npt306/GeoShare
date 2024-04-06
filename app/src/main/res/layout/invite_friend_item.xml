@@ -6,7 +6,7 @@
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:id="@+id/invite_friend_profile_image"
+        android:id="@+id/friend_profile_image"
         android:src="@mipmap/ic_launcher"/>
     <TextView
         android:layout_width="wrap_content"
@@ -14,20 +14,20 @@
         android:id="@+id/invite_friend_username"
         android:text="Username"
         android:layout_marginLeft="20dp"
-        android:layout_toRightOf="@id/invite_friend_profile_image"
-        android:layout_toEndOf="@id/invite_friend_profile_image"
+        android:layout_toRightOf="@id/friend_profile_image"
+        android:layout_toEndOf="@id/friend_profile_image"
         android:layout_centerVertical="true"
         android:textColor="#FFFFFF"
         android:textSize="18dp"/>
 
-<!--    <Button-->
-<!--        android:id="@+id/invite_unfriend_button"-->
-<!--        android:layout_width="100dp"-->
-<!--        android:layout_height="40dp"-->
-<!--        android:layout_alignParentEnd="true"-->
-<!--        android:layout_centerVertical="true"-->
-<!--        android:textColor="#FFFFFF"-->
-<!--        android:background="@drawable/invite_unfriend_button"-->
-<!--        android:text="Unfriend" />-->
+    <Button
+        android:id="@+id/friend_unfriend_button"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/invite_unfriend_button"
+        android:text="Unfriend" />
 
 </RelativeLayout>

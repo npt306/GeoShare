@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.geoshare.Adapter.InviteAdapter;
+import com.example.geoshare.Adapter.RequestAdapter;
 import com.example.geoshare.Model.User;
 import com.example.geoshare.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -74,13 +75,13 @@ public class RequestFragment extends Fragment {
     }
 
     private RecyclerView recyclerView;
-    private InviteAdapter pendingListAdapter;
+    private RequestAdapter pendingListAdapter;
     private List<User> pendingFriends;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_qr, container, false);
+        View view = inflater.inflate(R.layout.fragment_request, container, false);
         recyclerView = view.findViewById(R.id.recycles_view_pending_list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -90,7 +91,6 @@ public class RequestFragment extends Fragment {
 
         return view;
     }
-
     private void getPendingList(){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference friendsRef = FirebaseDatabase.getInstance().getReference("Friends").child(currentUser.getUid());
@@ -111,7 +111,7 @@ public class RequestFragment extends Fragment {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             User pendingUserFound = snapshot.getValue(User.class);
                             pendingFriends.add(pendingUserFound);
-                            pendingListAdapter = new InviteAdapter(getContext(), pendingFriends);
+                            pendingListAdapter = new RequestAdapter(getContext(), pendingFriends);
                             recyclerView.setAdapter(pendingListAdapter);
                         }
                         @Override
