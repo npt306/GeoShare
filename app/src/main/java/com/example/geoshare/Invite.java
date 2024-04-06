@@ -15,7 +15,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.geoshare.Fragment.FriendFragment;
 import com.example.geoshare.Fragment.InviteFragment;
-import com.example.geoshare.Fragment.QRFragment;
+import com.example.geoshare.Fragment.RequestFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -93,9 +93,9 @@ public class Invite extends AppCompatActivity {
                 fragmentTransaction1.replace(R.id.content, fragment1);
                 fragmentTransaction1.commit();
                 return true;
-            } else if (itemId == R.id.nav_qr) {
+            } else if (itemId == R.id.nav_request) {
                 textViewSelect.setText("Request");
-                QRFragment fragment2 = new QRFragment();
+                RequestFragment fragment2 = new RequestFragment();
                 FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction2.replace(R.id.content, fragment2, "");
                 fragmentTransaction2.commit();

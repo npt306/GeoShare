@@ -2,6 +2,7 @@ package com.example.geoshare.Fragment;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,7 +25,9 @@ import com.example.geoshare.Adapter.InviteAdapter;
 import com.example.geoshare.DataOutput;
 import com.example.geoshare.Invite;
 import com.example.geoshare.Model.User;
+import com.example.geoshare.QR;
 import com.example.geoshare.R;
+import com.example.geoshare.Search;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -89,7 +93,8 @@ public class InviteFragment extends Fragment {
     private EditText editTextAddFriendUserId;
     private TextView textViewInviteUserFriend;
     private LinearLayout linearLayoutUserFound;
-    private Button buttonFindFriend, buttonAddFriend, buttonDeleteFriend, buttonInviteFoundFriend;
+    private Button buttonInviteFoundFriend;
+    private ImageButton buttonFindFriend, buttonQrCode;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -103,11 +108,8 @@ public class InviteFragment extends Fragment {
         textViewInviteUserFriend = view.findViewById(R.id.invite_friend_username);
         linearLayoutUserFound = view.findViewById(R.id.layoutUserFound);
         buttonFindFriend = view.findViewById(R.id.btnFindFriend);
-        buttonAddFriend = view.findViewById(R.id.btnAddFriend);
-        buttonDeleteFriend = view.findViewById(R.id.btnDeleteFriend);
         buttonInviteFoundFriend = view.findViewById(R.id.btnInviteFoundFriend);
-
-        DatabaseReference friendRef = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("friends");
+        buttonQrCode = view.findViewById(R.id.btnQrCode);
 
         buttonFindFriend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,57 +152,6 @@ public class InviteFragment extends Fragment {
 
             }
         });
-        buttonAddFriend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String id = String.valueOf(editTextAddFriendUserId.getText());
-                checkUserIdExistence(id, new UserIdCheckListener() {
-                    @Override
-                    public void onUserIdChecked(boolean result) {
-                        if (result) {
-                            // UID tồn tại trong thư mục "Users"
-                            Log.d("TAG", "UID tồn tại trong thư mục Users");
-                            DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("Users");
-                            String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-                            if(currentUserId.equals(id)){
-                                show_dialog("User Not Valid","Do not enter your own id.",InviteFragment.this.getContext() );
-                                return;
-                            }
-                            usersRef.child(currentUserId).child("friends").addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    if (dataSnapshot.hasChild(id)) {
-                                        // Người này đã là bạn của bạn, không thêm lại vào danh sách bạn bè
-                                        Log.d("Kiem tra ban", "Da la ban be");
-                                        show_dialog("Add friend","Users are already friends.",InviteFragment.this.getContext() );
-                                    } else {
-                                        // Người này chưa là bạn của bạn, thêm vào danh sách bạn bè
-                                        usersRef.child(currentUserId).child("friends").child(id).setValue(true);
-                                        usersRef.child(id).child("friends").child(currentUserId).setValue(true);
-                                        show_dialog("Add friend","Added friends successfully.",InviteFragment.this.getContext() );
-                                        Log.d("Kiem tra ban", "Chua la ban be them ban be");
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-                                    // Xử lý lỗi nếu có
-                                    Log.d("Kiem tra ban", "Da xay ra loi: " + databaseError.getMessage());
-                                }
-                            });
-
-                        } else {
-                            // UID không tồn tại trong thư mục "Users"
-                            Log.d("TAG", "UID không tồn tại trong thư mục Users");
-//                            Toast.makeText(mContext, "User not found", Toast.LENGTH_SHORT).show();
-                            show_dialog("User Not Found","The user you are looking for was not found.",InviteFragment.this.getContext() );
-
-                        }
-                    }
-                });
-            }
-        });
 
         buttonInviteFoundFriend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -213,12 +164,16 @@ public class InviteFragment extends Fragment {
             }
         });
 
+        buttonQrCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), QR.class);
+                startActivity(intent);
+            }
+        });
 
 
         mUsers = new ArrayList<>();
-
-        readUser();
-
         return view;
     }
     void show_dialog(String title, String msg, Context context){
@@ -255,31 +210,6 @@ public class InviteFragment extends Fragment {
             public void onCancelled(DatabaseError databaseError) {
                 // Xử lý khi có lỗi xảy ra
                 Log.e("TAG", "Lỗi: " + databaseError.getMessage());
-            }
-        });
-    }
-    private void readUser(){
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot datasnapshot) {
-                mUsers.clear();
-                for (DataSnapshot snapshot: datasnapshot.getChildren()){
-                    User user = snapshot.getValue(User.class);
-
-                    if(!user.getId().equals((firebaseUser.getUid()))){
-                        mUsers.add(user);
-                    }
-                }
-                inviteAdapter = new InviteAdapter(getContext(), mUsers);
-//                recyclerView.setAdapter(inviteAdapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }

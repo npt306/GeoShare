@@ -9,8 +9,7 @@
         android:icon="@drawable/ic_friend_list"
         android:title="Friend list" />
     <item
-        android:id="@+id/nav_qr"
-        android:icon="@drawable/qr_code_scan_icon"
-        android:title="QR" />
-
+        android:id="@+id/nav_request"
+        android:icon="@drawable/ic_request"
+        android:title="Request" />
 </menu>
