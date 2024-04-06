@@ -172,6 +172,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         maps.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())));
         CameraUpdate camUpd3 = CameraUpdateFactory.newCameraPosition(camPos);
         maps.animateCamera(camUpd3);
+
+        Log.d("DEBUG TAG", "Focusing on current location");
     }
 
 
@@ -183,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         batteryChangeListener.startBatteryChangeListener();
 
         LatLng myLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        markerManager.createMarker(myLocation);
+        markerManager.createMarker(myLocation, "My location");
         maps.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
     }
 

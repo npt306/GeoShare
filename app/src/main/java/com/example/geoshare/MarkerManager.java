@@ -8,6 +8,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,6 +20,7 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -26,6 +28,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Objects;
 
 public class MarkerManager {
     MainActivity callerContext;
@@ -68,36 +72,53 @@ public class MarkerManager {
         return cropCircleFromBitmap(bitmap);
     }
 
-    public void createMarker(LatLng location){
+
+    public void createMarker(LatLng location, String title){
         // Tạo một marker mới với thông tin từ Firebase và sử dụng Custom Marker Adapter
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(location)
-                .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.mipmap.ic_launcher, "Battery: 100%")));
+                .title(title)
+                .icon(BitmapDescriptorFactory
+                .fromBitmap(getMarkerBitmapFromView(R.mipmap.ic_launcher, "Battery: 100%")));
 //                .icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromImage(R.drawable.avatar)));
 
         // Thêm marker vào bản đồ
-        callerContext.getMaps().addMarker(markerOptions);
+        Marker newMarker = callerContext.getMaps().addMarker(markerOptions);
 
+        if (Objects.requireNonNull(newMarker).getTitle().equals("My location")){
+            addListener(newMarker);
+        }
+    }
+
+
+    private void addListener(Marker marker){
         // Đặt listener để lắng nghe sự thay đổi trên Firebase và cập nhật marker
-        DatabaseReference firebaseRef = FirebaseDatabase.getInstance().getReference().child("batteryLevel").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        DatabaseReference firebaseRef = FirebaseDatabase.getInstance().getReference()
+                .child("batteryLevel")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         firebaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Lấy dữ liệu từ dataSnapshot và cập nhật giá trị pin
                 String batteryInfo = dataSnapshot.child("currentBattery").getValue(String.class);
+
+
                 // Cập nhật thông tin pin của marker
-                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.mipmap.ic_launcher, "Battery: " + batteryInfo)));
+                marker.setIcon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.mipmap.ic_launcher, "Battery: " + batteryInfo)));
+
 //                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromImage(R.drawable.avatar)));
 
+                Log.d("DEBUG TAG", "Updating " + marker.getTitle());
                 // Xóa marker cũ và thêm marker mới với thông tin đã cập nhật
-                callerContext.getMaps().clear();
-                callerContext.getMaps().addMarker(markerOptions);
+//                callerContext.getMaps().clear();
+//                callerContext.getMaps().addMarker(marker.getMarkerOptions());
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Xử lý lỗi nếu có
             }
         });
+
     }
 
 
