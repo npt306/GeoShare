@@ -7,12 +7,18 @@
     <com.google.android.material.bottomsheet.BottomSheetDragHandleView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+    <View
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:layout_width="50dp"
+        android:layout_height="3dp"
+        android:background="@drawable/divider_gradient" />
     <TextView
         android:id="@+id/mark_location_address_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Address"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:textColor="#FFFFFF"
@@ -20,7 +26,7 @@
         android:textSize="20sp"
         />
     <View
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@drawable/divider_gradient" />
@@ -32,6 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <RadioGroup
+                android:id="@+id/mark_location_radio_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -44,7 +51,7 @@
                     android:button="@android:color/transparent"
                     android:textAlignment="center"
                     android:textSize="10sp"
-                    android:text="Home"
+                    android:text="@string/home"
                     android:layout_width="100dp"
                     android:layout_height="100dp"/>
                 <RadioButton
@@ -54,7 +61,7 @@
                     android:button="@android:color/transparent"
                     android:textAlignment="center"
                     android:textSize="10sp"
-                    android:text="School"
+                    android:text="@string/school"
                     android:layout_width="100dp"
                     android:layout_height="100dp"/>
                 <RadioButton
@@ -64,7 +71,7 @@
                     android:button="@android:color/transparent"
                     android:textAlignment="center"
                     android:textSize="10sp"
-                    android:text="Workplace"
+                    android:text="@string/workplace"
                     android:layout_width="100dp"
                     android:layout_height="100dp"/>
                 <RadioButton
@@ -74,18 +81,35 @@
                     android:button="@android:color/transparent"
                     android:textAlignment="center"
                     android:textSize="10sp"
-                    android:text="Restaurant"
+                    android:text="@string/restaurant"
                     android:layout_width="100dp"
                     android:layout_height="100dp"/>
             </RadioGroup>
         </HorizontalScrollView>
     </LinearLayout>
-    <Button
-        android:layout_margin="10dp"
-        android:id="@+id/button_set_mark_location"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
-        android:background="@drawable/divider_gradient"
-        android:text="Set location"/>
+        android:gravity="center"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/button_marker_list"
+            android:layout_margin="10dp"
+            android:layout_width="150dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:background="@drawable/button_bottom_sheet_dialog_background"
+            android:text="Marker List"/>
+        <Button
+            android:layout_margin="10dp"
+            android:id="@+id/button_mark_location"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#000000"
+            android:background="@drawable/button_bottom_sheet_dialog_background"
+            android:text="Mark location"/>
+    </LinearLayout>
+
 </LinearLayout>

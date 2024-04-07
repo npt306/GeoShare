@@ -216,7 +216,6 @@ public class DataOutput {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }

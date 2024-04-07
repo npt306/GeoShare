@@ -8,6 +8,7 @@
     <color name="primary_background">#FF000000</color>
     <color name="secondary_background">#101D25</color>
     <color name="third_background">#2D383E</color>
+    <color name="fourth_background">#FFFFFF</color>
 
     <color name="primary_text">#FFFFFFFF</color>
     <color name="secondary_text">#535353</color>
@@ -15,5 +16,6 @@
 
     <color name="primary_radio">#00FFE7</color>
     <color name="secondary_radio">#D500FA</color>
+    
 
 </resources>

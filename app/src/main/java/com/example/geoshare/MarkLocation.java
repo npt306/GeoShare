@@ -5,11 +5,14 @@ import android.location.Geocoder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.geoshare.Database.RealtimeDatabase.MarkLocationDatabase;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -26,8 +29,10 @@ public class MarkLocation implements GoogleMap.OnMapLongClickListener {
     private MainActivity activity;
     private GoogleMap maps;
     TextView txtAddress;
+    RadioGroup radioGroupMarkLocation;
     private Marker marker;
-    Button buttonSetMarkLocation;
+    Button buttonMarkLocation, buttonMarkerList;
+    String selected;
 
     public MarkLocation(MainActivity activity, GoogleMap maps) {
         this.activity = activity;
@@ -43,7 +48,6 @@ public class MarkLocation implements GoogleMap.OnMapLongClickListener {
 
         // Hiển thị BottomSheetDialog
         showBottomSheet(point);
-
         // Lấy địa chỉ từ LatLng
         getAddressFromLatLng(point);
     }
@@ -55,9 +59,37 @@ public class MarkLocation implements GoogleMap.OnMapLongClickListener {
         bottomSheetDialog.show();
 
         txtAddress = view.findViewById(R.id.mark_location_address_textview);
-        buttonSetMarkLocation = view.findViewById(R.id.button_set_mark_location);
-        buttonSetMarkLocation.setOnClickListener(v -> {
-            Toast.makeText(activity, "Set location", Toast.LENGTH_SHORT).show();
+        buttonMarkLocation = view.findViewById(R.id.button_mark_location);
+        buttonMarkerList = view.findViewById(R.id.button_marker_list);
+        radioGroupMarkLocation = view.findViewById(R.id.mark_location_radio_group);
+
+        buttonMarkLocation.setOnClickListener(v -> {
+
+            if(!selected.isEmpty()){
+                MarkLocationDatabase.getInstance().addNewMarkerLocation(point, selected);
+                Toast.makeText(activity, "Mark location as "+selected, Toast.LENGTH_SHORT).show();
+                bottomSheetDialog.dismiss();
+            }
+            else {
+                Toast.makeText(activity, "Please choose type location", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        buttonMarkerList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(activity, "Marker list", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        radioGroupMarkLocation.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                if(i != -1){
+                    RadioButton radioButton = view.findViewById(i);
+                    selected = radioButton.getText().toString();
+                }
+            }
         });
 
         bottomSheetDialog.setOnDismissListener(dialog -> {
@@ -65,6 +97,7 @@ public class MarkLocation implements GoogleMap.OnMapLongClickListener {
                 marker.remove();
             }
             Toast.makeText(activity, "Bottom sheet dismiss", Toast.LENGTH_SHORT).show();
+            selected = "";
         });
     }
 
