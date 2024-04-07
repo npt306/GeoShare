@@ -30,5 +30,4 @@ public class MarkLocationDatabase {
     public void addNewMarkerLocation(LatLng latLng, String typeMarker){
         referenceToCurrentUser.child(typeMarker).push().setValue(latLng);
     }
-
 }

@@ -1,6 +1,7 @@
 package com.example.geoshare.Database.Authentication;
 
 import com.example.geoshare.Database.FirebaseSingleton;
+import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 

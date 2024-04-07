@@ -1,5 +1,6 @@
 package com.example.geoshare;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -190,6 +191,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(@NonNull GoogleMap googleMap) {
         maps = googleMap;
         MarkLocation markLocation = new MarkLocation(MainActivity.this, maps);
+        markLocation.readMarkersFromDatabase();
         maps.setOnMapLongClickListener(markLocation);
 
         YourBatteryChangeListener batteryChangeListener = new YourBatteryChangeListener();
@@ -250,7 +252,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 });
     }
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -261,11 +262,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Toast.makeText(this,"Location permission is denied, please allow permission", Toast.LENGTH_SHORT).show();
             }
         }
-    }
-
-
-    private void transfer(String sou, String des){
-        des = sou;
     }
 
 
