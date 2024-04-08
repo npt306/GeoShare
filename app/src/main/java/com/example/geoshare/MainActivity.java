@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private final int FINE_PERMISSION_CODE = 1;
     private UrlDownloader urlDownloader;
     private MarkerManager markerManager;
+    private long pressedTime;
     Location currentLocation;
     FusedLocationProviderClient fusedLocationProviderClient;
 
@@ -96,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), Search.class);
                 startActivity(intent);
-                finish();
+//                finish();
             }
         });
         buttonInvite.setOnClickListener(new View.OnClickListener() {
@@ -104,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), Invite.class);
                 startActivity(intent);
-                finish();
+//                finish();
             }
         });
         buttonProfile.setOnClickListener(new View.OnClickListener() {
@@ -112,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), Profile.class);
                 startActivity(intent);
-                finish();
+//                finish();
             }
         });
         buttonLocation.setOnClickListener(new View.OnClickListener() {
@@ -126,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), Chat.class);
                 startActivity(intent);
-                finish();
+//                finish();
             }
         });
 
@@ -137,6 +138,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         markerManager = new MarkerManager(MainActivity.this);
     }
 
+    public void onBackPressed() {
+        if (pressedTime + 2000 > System.currentTimeMillis()) {
+            super.onBackPressed();
+            finish();
+        } else {
+            Toast.makeText(getBaseContext(), "Press back again to exit", Toast.LENGTH_SHORT).show();
+        }
+        pressedTime = System.currentTimeMillis();
+    }
 
     private int getCurrentBatteryLevel() {
         IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);

@@ -131,15 +131,13 @@ public class MarkLocation implements GoogleMap.OnMapLongClickListener {
                 // Cập nhật TextView trong BottomSheetDialog với địa chỉ
                 txtAddress.setText(addressLine.toString());
             } else {
-                TextView txtAddress = activity.findViewById(R.id.mark_location_address_textview);
-                txtAddress.setText(point.toString());
+                txtAddress.setText(point.latitude + ", " +point.longitude);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
     public void readMarkersFromDatabase() {
-        DatabaseReference markLocationReference1 = MarkLocationDatabase.getInstance().getReference();
         DatabaseReference markLocationReference = MarkLocationDatabase.getInstance().getReferenceToCurrentUser();
         markLocationReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

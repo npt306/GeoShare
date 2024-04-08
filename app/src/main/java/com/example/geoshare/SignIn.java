@@ -113,7 +113,7 @@ public class SignIn extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), SignUp.class);
                 startActivity(intent);
-                finish();
+//                finish();
             }
         });
 
@@ -126,7 +126,7 @@ public class SignIn extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), ForgotPassword.class);
                 startActivity(intent);
-                finish();
+//                finish();
             }
         });
     }
