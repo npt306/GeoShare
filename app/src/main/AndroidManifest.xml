@@ -42,6 +42,7 @@
         <activity android:name=".SignIn"/>
         <activity android:name=".ForgotPassword"/>
         <activity android:name=".Profile"/>
+        <activity android:name=".FriendProfile"/>
         <activity android:name=".Invite"/>
         <activity android:name=".Chat"/>
         <activity android:name=".CaptureAct"

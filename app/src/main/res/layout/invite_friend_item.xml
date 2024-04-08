@@ -20,14 +20,27 @@
         android:textColor="#FFFFFF"
         android:textSize="18dp"/>
 
-    <Button
-        android:id="@+id/friend_unfriend_button"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:textColor="#FFFFFF"
-        android:background="@drawable/invite_unfriend_button"
-        android:text="Unfriend" />
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/friend_viewProfile_button"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="20dp"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/invite_viewprofile_button"
+            android:text="Profile" />
+
+        <Button
+            android:id="@+id/friend_unfriend_button"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/invite_unfriend_button"
+            android:text="Unfriend" />
+    </LinearLayout>
 
 </RelativeLayout>
