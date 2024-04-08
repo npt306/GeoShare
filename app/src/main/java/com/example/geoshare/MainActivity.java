@@ -67,8 +67,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private long pressedTime;
     Location currentLocation;
     FusedLocationProviderClient fusedLocationProviderClient;
-
-
     public GoogleMap getMaps(){
         return maps;
     }

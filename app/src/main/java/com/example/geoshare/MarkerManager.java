@@ -79,7 +79,7 @@ public class MarkerManager {
                 .position(location)
                 .title(title)
                 .icon(BitmapDescriptorFactory
-                .fromBitmap(getMarkerBitmapFromView(R.mipmap.ic_launcher, "Battery: 100%")));
+                .fromBitmap(getMarkerBitmapFromView(R.drawable.avatar, "100%")));
 //                .icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromImage(R.drawable.avatar)));
 
         // Thêm marker vào bản đồ
@@ -104,7 +104,7 @@ public class MarkerManager {
 
 
                 // Cập nhật thông tin pin của marker
-                marker.setIcon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.mipmap.ic_launcher, "Battery: " + batteryInfo)));
+                marker.setIcon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.drawable.avatar, batteryInfo)));
 
 //                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromImage(R.drawable.avatar)));
 

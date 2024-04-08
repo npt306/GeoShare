@@ -10,8 +10,7 @@ public class MarkerLocationModel {
         this.latLng = latLng;
         this.typeMarker = typeMarker;
     }
-
-
+    
     public String getTypeMarker() {
         return typeMarker;
     }

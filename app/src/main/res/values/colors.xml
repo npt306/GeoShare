@@ -16,6 +16,10 @@
 
     <color name="primary_radio">#00FFE7</color>
     <color name="secondary_radio">#D500FA</color>
+
+    <color name="primary_icon_background">#FF000000</color>
+
+    <color name="primary_home_button_background">#F8F7E0</color>
     
 
 </resources>

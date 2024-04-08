@@ -3,10 +3,11 @@
     <item android:state_pressed="false">
         <shape android:shape="oval">
             <corners android:radius="10dp"/>
-            <solid android:color="@color/transparent"/>
             <padding android:left="10dp" android:top="10dp" android:right="10dp" android:bottom="10dp"/>
-
-
+            <gradient
+                android:startColor="@color/primary_radio"
+                android:endColor="@color/secondary_radio"
+                android:angle="-90" />
         </shape>
     </item>
     <item android:state_pressed="true" >
