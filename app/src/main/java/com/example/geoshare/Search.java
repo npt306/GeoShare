@@ -1,7 +1,5 @@
 package com.example.geoshare;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -88,8 +85,11 @@ public class Search extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-//                searchInput.setText(query);
                 addSearchToHistory(query);
+//                searchInput.setText(query);
+                String url = UrlGenerator.getPlaceQueryUrl(query);
+                Log.d("DEBUG TAG", "Handling place query");
+                UrlDownloader.getInstance().execute(url);
                 return false;
             }
 
