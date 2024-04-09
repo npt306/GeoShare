@@ -117,6 +117,10 @@ public class LocationManager {
         }
     }
 
+    public Location getCurrentLocation(){
+        return currentLocation;
+    }
+
     public void updateFriendLocation(String friendId, Location location) {
         friendLocations.put(friendId, location);
     }
