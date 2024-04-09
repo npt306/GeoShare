@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     ImageButton buttonProfile, buttonInvite, buttonLocation, buttonChat, buttonSearch;
     private GoogleMap maps;
     private final int FINE_PERMISSION_CODE = 1;
-    private UrlDownloader urlDownloader;
     private MarkerManager markerManager;
     private long pressedTime;
     Location currentLocation;
@@ -132,7 +131,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
 
-        urlDownloader = new UrlDownloader(MainActivity.this);
         markerManager = new MarkerManager(MainActivity.this);
     }
 
@@ -273,12 +271,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    private void getDirection(LatLng origin, LatLng dest){
+    public static void getDirection(LatLng origin, LatLng dest){
         // Getting URL to the Google Directions API
         String url = UrlGenerator.getDirectionsUrl(origin, dest);
         // Start downloading json data from Google Directions API
         // and draw routes
-        urlDownloader.execute(url);
+        UrlDownloader.getInstance().execute(url);
     }
 
 }
