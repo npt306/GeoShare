@@ -17,11 +17,11 @@ import java.util.List;
 /**
  * A class to parse the Google Places in JSON format
  */
-public class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
+public class DirectionsResultParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
 
     MainActivity mapContext;
 
-    public ParserTask(Context callerContext){
+    public DirectionsResultParserTask(Context callerContext){
         this.mapContext = (MainActivity) callerContext;
     }
 
