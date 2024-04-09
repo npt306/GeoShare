@@ -32,4 +32,18 @@ public class UrlGenerator {
 
         return url;
     }
+
+    /**
+     * A method to prepare a query to Direction API
+     * @param keyword a text search key
+     * @return query url for api
+     */
+    public static String getPlaceQueryUrl(String keyword) {
+        // Building the url to the web service
+        keyword = keyword.replace(" ", "%20");
+        String url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + keyword
+                + "&key=AIzaSyCGc2dm5WJgaBbVaAYeqStrIqnV6oVEHzg";
+
+        return url;
+    }
 }
