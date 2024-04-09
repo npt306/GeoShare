@@ -2,16 +2,41 @@ package com.example.geoshare;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+
+import com.google.android.gms.location.LocationServices;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class UrlDownloader extends AsyncTask<String, Void, String>{
     MainActivity callerContext;
+
+    private static UrlDownloader instance;
+
+    private UrlDownloader() {
+
+    }
+
+    public static UrlDownloader getInstance(){
+        if (instance == null) {
+            synchronized (LocationManager.class) {
+                if (instance == null) {
+                    instance = new UrlDownloader();
+                }
+            }
+        }
+        return instance;
+    }
+
+    String api = "";
 
     public UrlDownloader(Context callerContext){
         this.callerContext= (MainActivity) callerContext;
@@ -27,6 +52,9 @@ public class UrlDownloader extends AsyncTask<String, Void, String>{
         } catch (Exception e) {
             Log.d("Background Task", e.toString());
         }
+
+        //TODO: handle error message
+
         return data;
     }
 
@@ -34,10 +62,18 @@ public class UrlDownloader extends AsyncTask<String, Void, String>{
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
 
-        ParserTask parserTask = new ParserTask(callerContext);
+        if (api.equals("directions")){
+            Log.d("DEBUG TAG", "API Directions");
+            DirectionsResultParserTask parserTask = new DirectionsResultParserTask(callerContext);
+            parserTask.execute(result);
+        }
 
+        if (api.equals("place")){
+            Log.d("DEBUG TAG", "API Place");
 
-        parserTask.execute(result);
+            PlacesResultParserTask parserTask = new PlacesResultParserTask(callerContext);
+            parserTask.execute(result);
+        }
     }
 
     /**
@@ -47,6 +83,15 @@ public class UrlDownloader extends AsyncTask<String, Void, String>{
         String data = "";
         InputStream iStream = null;
         HttpURLConnection urlConnection = null;
+
+        // define api
+        if (strUrl.contains("api/place/")){
+            api = "places";
+        }
+        if (strUrl.contains("api/directions/")){
+            api = "directions";
+        }
+
         try {
             URL url = new URL(strUrl);
 
