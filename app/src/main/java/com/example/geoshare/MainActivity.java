@@ -77,9 +77,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
+//        if (mAuth == null){
+//            mAuth.signOut();
+//        }
         firebaseUser = mAuth.getCurrentUser();
         if(firebaseUser == null){
             Intent intent = new Intent(getApplicationContext(), SignIn.class);
+            startActivity(intent);
+            finish();
+        }
+
+
+        // check if user is an admin
+        // not complete!
+//        DatabaseReference firebaseRef = FirebaseDatabase.getInstance().getReference()
+//                .child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+//                .child("isAdmin");
+
+        boolean isAdmin = false;
+//        isAdmin = true;
+
+        if (isAdmin){
+            Intent intent = new Intent(getApplicationContext(), AdminActivity.class);
             startActivity(intent);
             finish();
         }
