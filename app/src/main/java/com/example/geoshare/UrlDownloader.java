@@ -17,7 +17,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class UrlDownloader extends AsyncTask<String, Void, String>{
-    MainActivity callerContext;
+    Context callerContext;
 
     private static UrlDownloader instance;
 
@@ -25,7 +25,7 @@ public class UrlDownloader extends AsyncTask<String, Void, String>{
 
     }
 
-    public static UrlDownloader getInstance(){
+    public static UrlDownloader getInstance(Context context){
         if (instance == null) {
             synchronized (LocationManager.class) {
                 if (instance == null) {
@@ -33,14 +33,12 @@ public class UrlDownloader extends AsyncTask<String, Void, String>{
                 }
             }
         }
+        instance.callerContext = context;
         return instance;
     }
 
     String api = "";
 
-    public UrlDownloader(Context callerContext){
-        this.callerContext= (MainActivity) callerContext;
-    }
 
     @Override
     protected String doInBackground(String... url) {
