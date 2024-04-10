@@ -270,13 +270,4 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-
-    public static void getDirection(LatLng origin, LatLng dest){
-        // Getting URL to the Google Directions API
-        String url = UrlGenerator.getDirectionsUrl(origin, dest);
-        // Start downloading json data from Google Directions API
-        // and draw routes
-        UrlDownloader.getInstance().execute(url);
-    }
-
 }
