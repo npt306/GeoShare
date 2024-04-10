@@ -3,6 +3,8 @@ package com.example.geoshare.Adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,9 @@ import com.example.geoshare.Invite;
 import com.example.geoshare.MainActivity;
 import com.example.geoshare.Model.User;
 import com.example.geoshare.R;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
@@ -47,7 +52,14 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
 //            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
         }
         else {
-//            Glide.with(mContext).load(friend.getImageURL()).into(holder.profile_image);
+            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+            storageRef.child("usersAvatar/" + friend.getImageURL()).getDownloadUrl()
+                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Glide.with(mContext.getApplicationContext()).load(uri).into(holder.profile_image);
+                        }
+                    });
         }
         holder.friend_viewProfile_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,7 +67,6 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
                 Intent intent = new Intent(mContext.getApplicationContext(), FriendProfile.class);
                 intent.putExtra("friendID", friend.getId());
                 mContext.startActivity(intent);
-                ((FriendProfile)mContext).finish();
             }
         });
         holder.delete_friend_btn.setOnClickListener(new View.OnClickListener() {
@@ -89,7 +100,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
             super(itemView);
 
             username = itemView.findViewById(R.id.invite_friend_username);
-            profile_image = itemView.findViewById(R.id.invite_friend_profile_image);
+            profile_image = itemView.findViewById(R.id.friend_profile_image);
             friend_viewProfile_btn = itemView.findViewById(R.id.friend_viewProfile_button);
             delete_friend_btn = itemView.findViewById(R.id.friend_unfriend_button);
         }
