@@ -89,7 +89,7 @@ public class Search extends AppCompatActivity {
 //                searchInput.setText(query);
                 String url = UrlGenerator.getPlaceQueryUrl(query);
                 Log.d("DEBUG TAG", "Handling place query");
-                UrlDownloader.getInstance().execute(url);
+//                UrlDownloader.getInstance().execute(url);
                 return false;
             }
 
