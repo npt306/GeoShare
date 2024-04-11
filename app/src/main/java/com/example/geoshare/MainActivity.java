@@ -28,6 +28,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.example.geoshare.Battery.BatteryService;
+import com.example.geoshare.Database.Authentication.Authentication;
+import com.example.geoshare.Database.FirebaseSingleton;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
@@ -70,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return maps;
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //        if (mAuth == null){
 //            mAuth.signOut();
 //        }
-        firebaseUser = mAuth.getCurrentUser();
+        firebaseUser = FirebaseSingleton.getInstance().getFirebaseAuth().getCurrentUser();
         if(firebaseUser == null){
             Intent intent = new Intent(getApplicationContext(), SignIn.class);
             startActivity(intent);
@@ -147,6 +149,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+        // Bắt đầu battery service
+        Intent batteryService = new Intent(this, BatteryService.class);
+        startService(batteryService);
+        // chưa kết thúc battery service
+
+        // Bắt đầu my location service
+//        Intent myLocationService = new Intent(this, MyLocationService.class);
+//        startService(myLocationService);
+        // chưa kết thúc my location service
+
+
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
 
@@ -163,17 +176,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         pressedTime = System.currentTimeMillis();
     }
 
-    private int getCurrentBatteryLevel() {
-        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        Intent batteryStatus = registerReceiver(null, ifilter);
-
-        int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-        int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-
-        float batteryPct = level / (float)scale;
-
-        return (int)(batteryPct*100);
-    }
 
 
     private void getLastLocation() {
@@ -219,62 +221,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         markLocation.readMarkersFromDatabase();
         maps.setOnMapLongClickListener(markLocation);
 
-        YourBatteryChangeListener batteryChangeListener = new YourBatteryChangeListener();
-        batteryChangeListener.startBatteryChangeListener();
-
         LatLng myLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
         markerManager.createMarker(myLocation, "My location");
         maps.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
-    }
-
-
-    private class YourBatteryChangeListener {
-        private BroadcastReceiver batteryReceiver;
-
-        public void startBatteryChangeListener() {
-            batteryReceiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-                    int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-                    float batteryPct = level / (float) scale;
-                    String batteryInfo = String.valueOf((int) (batteryPct * 100)) + "%";
-
-                    // Cập nhật dữ liệu pin lên Firebase
-                    updateBatteryInfo(batteryInfo);
-                }
-            };
-
-            // Đăng ký BroadcastReceiver để lắng nghe sự thay đổi pin
-            registerReceiver(batteryReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        }
-
-        public void stopBatteryChangeListener() {
-            // Ngừng lắng nghe sự thay đổi pin
-            if (batteryReceiver != null) {
-                unregisterReceiver(batteryReceiver);
-            }
-        }
-    }
-
-
-    // Cập nhật dữ liệu pin lên Firebase
-    private void updateBatteryInfo(String batteryInfo) {
-        DatabaseReference firebaseRef = FirebaseDatabase.getInstance().getReference().child("batteryLevel").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-
-        firebaseRef.child("currentBattery").setValue(batteryInfo)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("Firebase", "Dữ liệu pin đã được cập nhật thành công.");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e("Firebase", "Lỗi khi cập nhật dữ liệu pin: " + e.getMessage());
-                    }
-                });
     }
 
     @Override
@@ -288,5 +237,4 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
     }
-
 }
