@@ -49,7 +49,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 //                intent.putExtra("chatFriendID", user.getId());
 //                mContext.startActivity(intent);
                 holder.itemView.setBackgroundColor(0xFF00FF00);
-                Toast.makeText(mContext, "hahahihi", Toast.LENGTH_SHORT).show();
             }
         });
 //        if(user.getImageURL().equals("default")){
