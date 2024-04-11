@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -82,6 +83,7 @@ public class PlacesResultParserTask extends AsyncTask<String, Integer, List<Stri
         // build dialog
         AlertDialog dialog = builder.create();
         dialog.show();
+        Log.d("DEBUG TAG", "Showed dialog");
 
         // configure dialog
         dialog.getListView().setItemsCanFocus(false);
@@ -101,12 +103,20 @@ public class PlacesResultParserTask extends AsyncTask<String, Integer, List<Stri
                 // call direction api
                 Location location = LocationManager.getInstance(callerContext).getCurrentLocation();
                 LatLng curLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                MainActivity.getDirection(curLocation,
+                getDirection(curLocation,
                         new LatLng(Double.parseDouble(result.get(position)[2]),
                                 Double.parseDouble(result.get(position)[3])));
             }
         });
 
+    }
+
+    private void getDirection(LatLng origin, LatLng dest){
+        // Getting URL to the Google Directions API
+        String url = UrlGenerator.getDirectionsUrl(origin, dest);
+        // Start downloading json data from Google Directions API
+        // and draw routes
+        UrlDownloader.getInstance(callerContext).execute(url);
     }
 }
 

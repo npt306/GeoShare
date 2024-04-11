@@ -95,6 +95,7 @@
                         android:layout_gravity="center_vertical"
                         android:text="5h"/>
                     <Button
+                        android:id="@+id/showButton"
                         android:layout_width="80dp"
                         android:layout_height="30dp"
                         android:text="Show"
