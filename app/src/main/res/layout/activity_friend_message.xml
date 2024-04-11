@@ -64,7 +64,7 @@
         android:padding="10dp">
 
         <ImageButton
-            android:id="@+id/send_message_button"
+            android:id="@+id/send_image_button"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/ic_image"
@@ -83,7 +83,7 @@
             android:maxLines="4" />
 
         <ImageButton
-            android:id="@+id/send_image_button"
+            android:id="@+id/send_message_button"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/ic_send"

@@ -1,6 +1,7 @@
 package com.example.geoshare.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.geoshare.ChatBox;
 import com.example.geoshare.Model.User;
 import com.example.geoshare.R;
 
@@ -45,7 +47,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(mContext.getApplicationContext(), Chatbox.class);
+//                Intent intent = new Intent(mContext.getApplicationContext(), ChatBox.class);
+//                intent.putExtra("chatFriendUsername", user.getUsername());
 //                intent.putExtra("chatFriendID", user.getId());
 //                mContext.startActivity(intent);
                 holder.itemView.setBackgroundColor(0xFF00FF00);
