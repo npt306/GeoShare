@@ -1,9 +1,15 @@
 package com.example.geoshare;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,11 +27,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ChatBox extends AppCompatActivity {
-    String chatFriendID, chatFriendUsername, senderRoom, reveiverRoom;
+    String chatFriendID, chatFriendUsername, senderRoom, receiverRoom;
     TextView textViewChatFriendUsername;
-    ImageButton buttonSendMessage;
+    ImageButton btnMessageBack, buttonSendMessage;
     EditText editTextMessage;
     ChatboxAdapter chatboxAdapter;
     RecyclerView recyclerView;
@@ -36,22 +43,34 @@ public class ChatBox extends AppCompatActivity {
 
         chatFriendID = getIntent().getStringExtra("chatFriendID");
         chatFriendUsername = getIntent().getStringExtra("chatFriendUsername");
+        if(chatFriendID != null) {
+            senderRoom = FirebaseAuth.getInstance().getCurrentUser().getUid() + "-" + chatFriendID;
+            receiverRoom = chatFriendID + "-" + FirebaseAuth.getInstance().getCurrentUser().getUid();
+        }
 
+        btnMessageBack = findViewById(R.id.btnMessageBack);
         textViewChatFriendUsername = findViewById(R.id.message_friend_username);
         buttonSendMessage = findViewById(R.id.send_message_button);
         recyclerView = findViewById(R.id.recycles_view_chat_box);
         editTextMessage = findViewById(R.id.message_input_text);
 
-        textViewChatFriendUsername.setText(chatFriendUsername);
-        if(chatFriendID != null) {
-            senderRoom = FirebaseAuth.getInstance().getCurrentUser().getUid() + "-" + chatFriendID;
-            reveiverRoom = chatFriendID + "-" + FirebaseAuth.getInstance().getCurrentUser().getUid();
-        }
+        btnMessageBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), Chat.class);
+                startActivity(intent);
+            }
+        });
 
+        textViewChatFriendUsername.setText(chatFriendUsername);
+
+        chatboxAdapter = new ChatboxAdapter(getApplicationContext());
+        recyclerView.setAdapter(chatboxAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference senderRoomRef = FirebaseDatabase.getInstance().getReference("Chats").child(senderRoom);
-        DatabaseReference receriverRoomRef = FirebaseDatabase.getInstance().getReference("Chats").child(reveiverRoom);
+        DatabaseReference receiverRoomRef = FirebaseDatabase.getInstance().getReference("Chats").child(receiverRoom);
 
         senderRoomRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -61,8 +80,10 @@ public class ChatBox extends AppCompatActivity {
                     ChatMessage message = dataSnapshot.getValue(ChatMessage.class);
                     chatMessageList.add(message);
                 }
-                chatboxAdapter = new ChatboxAdapter(getApplicationContext(),chatMessageList);
-                recyclerView.setAdapter(chatboxAdapter);
+                chatboxAdapter.clearMessageList();
+                for(ChatMessage chatMessage : chatMessageList) {
+                    chatboxAdapter.addNewMessage(chatMessage);
+                }
             }
 
             @Override
@@ -71,6 +92,30 @@ public class ChatBox extends AppCompatActivity {
             }
         });
 
+        buttonSendMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = String.valueOf(editTextMessage.getText());
+                if(message.trim().length() > 0) {
+                    String messageID = UUID.randomUUID().toString();
+                    ChatMessage sendMessage = new ChatMessage(messageID,message,
+                            FirebaseAuth.getInstance().getCurrentUser().getUid(), chatFriendID);
+                    chatboxAdapter.addNewMessage(sendMessage);
+                    DataOutput.sendNewMessage(sendMessage, senderRoom, receiverRoom);
+                }else {
+                    Toast.makeText(ChatBox.this, "Message empty", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
+        recyclerView.scrollToPosition(chatboxAdapter.getItemCount() - 1);
+        editTextMessage.setText("");
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+//        MenuInflater menuInflater = getMenuInflater();
+//        menuInflater.inflate(R.menu.menu_invite_nav, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 }

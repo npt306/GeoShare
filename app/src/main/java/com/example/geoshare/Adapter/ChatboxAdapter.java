@@ -30,20 +30,20 @@ public class ChatboxAdapter extends RecyclerView.Adapter<ChatboxAdapter.ViewHold
     private static final int VIEW_TYPE_RECEIVE = 2;
     private Context mContext;
     private List<ChatMessage> messageList;
-    public ChatboxAdapter(Context mContext, List<ChatMessage> messageList){
+    public ChatboxAdapter(Context mContext){
         this.mContext = mContext;
-        this.messageList = messageList;
+        this.messageList = new ArrayList<>();
     }
     @NonNull
     @Override
     public ChatboxAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
         if(viewType == VIEW_TYPE_SEND) {
-            View view = LayoutInflater.from(mContext).inflate(R.layout.chat_item, parent, false);
+            View view = LayoutInflater.from(mContext).inflate(R.layout.message_row_send, parent, false);
             return new ChatboxAdapter.ViewHolder(view);
         }
         else {
-            View view = LayoutInflater.from(mContext).inflate(R.layout.chat_item, parent, false);
+            View view = LayoutInflater.from(mContext).inflate(R.layout.message_row_receive, parent, false);
             return new ChatboxAdapter.ViewHolder(view);
         }
     }
@@ -57,6 +57,7 @@ public class ChatboxAdapter extends RecyclerView.Adapter<ChatboxAdapter.ViewHold
             holder.textViewReceiveMessage.setText(message.getMessage());
         }
     }
+
     @Override
     public int getItemViewType(int position) {
         if(messageList.get(position).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
@@ -65,10 +66,24 @@ public class ChatboxAdapter extends RecyclerView.Adapter<ChatboxAdapter.ViewHold
             return VIEW_TYPE_RECEIVE;
         }
     }
+    public void addNewMessage(ChatMessage message) {
+        messageList = new ArrayList<>(messageList);
+        messageList.add(message);
+        this.notifyDataSetChanged();
+    }
+    public void clearMessageList() {
+        this.messageList.clear();;
+        this.messageList = new ArrayList<>();
+        this.notifyDataSetChanged();
+    }
+
+    public List<ChatMessage> getMessageList() {
+        return messageList;
+    }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return this.messageList.size();
     }
 
 

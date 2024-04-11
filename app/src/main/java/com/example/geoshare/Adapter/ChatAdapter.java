@@ -24,9 +24,9 @@ import java.util.List;
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     private Context mContext;
     private List<User> friendList;
-    public ChatAdapter(Context mContext, List<User> friendList){
+    public ChatAdapter(Context mContext){
         this.mContext = mContext;
-        this.friendList = friendList;
+        this.friendList = new ArrayList<>();
     }
     @NonNull
     @Override
@@ -47,10 +47,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(mContext.getApplicationContext(), ChatBox.class);
-//                intent.putExtra("chatFriendUsername", user.getUsername());
-//                intent.putExtra("chatFriendID", user.getId());
-//                mContext.startActivity(intent);
+                Intent intent = new Intent(mContext.getApplicationContext(), ChatBox.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("chatFriendUsername", user.getUsername());
+                intent.putExtra("chatFriendID", user.getId());
+                mContext.getApplicationContext().startActivity(intent);
                 holder.itemView.setBackgroundColor(0xFF00FF00);
             }
         });
@@ -61,9 +62,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 //            Glide.with(mContext).load(user.getImageURL()).into(holder.profile_image);
 //        }
     }
-    public void add(User friend) {
-        Log.d("friendList", friend.getUsername());
+    public void addFriendToList(User friend) {
+        this.friendList = new ArrayList<>(this.friendList);
         this.friendList.add(friend);
+        this.notifyDataSetChanged();
+    }
+    public void clearFriendList() {
+        this.friendList.clear();;
+        this.friendList = new ArrayList<>();
+        this.notifyDataSetChanged();
     }
     public void clear() {
         if(!this.friendList.isEmpty() && this.friendList != null)

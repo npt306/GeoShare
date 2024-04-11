@@ -32,7 +32,6 @@ public class Chat extends AppCompatActivity {
     ImageButton buttonBack;
     RecyclerView recyclerViewChatList;
     ChatAdapter chatAdapter;
-    List<User> friendList;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +39,7 @@ public class Chat extends AppCompatActivity {
         recyclerViewChatList = findViewById(R.id.recycles_view_chat_list);
         buttonBack = findViewById(R.id.btnChatBack);
 
+        chatAdapter = new ChatAdapter(getApplicationContext());
         recyclerViewChatList.setLayoutManager(new LinearLayoutManager(this));
 
         buttonBack.setOnClickListener(new View.OnClickListener() {
@@ -47,17 +47,15 @@ public class Chat extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
 
-        friendList = new ArrayList<>();
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference friendsRef = FirebaseDatabase.getInstance().getReference("Friends").child(currentUser.getUid());
         friendsRef.child("friendList").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                friendList.clear();
+                chatAdapter.clearFriendList();
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     String friendId = dataSnapshot.getValue(String.class);
                     if(friendId == "empty")
@@ -69,9 +67,8 @@ public class Chat extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             User friend = snapshot.getValue(User.class);
-                            friendList.add(friend);
-                            chatAdapter = new ChatAdapter(getApplicationContext(), friendList);
-                            recyclerViewChatList.setAdapter(chatAdapter);
+                            chatAdapter.addFriendToList(friend);
+                            chatAdapter.notifyDataSetChanged();
                         }
 
                         @Override
@@ -80,7 +77,7 @@ public class Chat extends AppCompatActivity {
                         }
                     });
                 }
-//                List<User> friendList = chatAdapter.getFriendList();
+                recyclerViewChatList.setAdapter(chatAdapter);
             }
 
             @Override

@@ -2,6 +2,7 @@ package com.example.geoshare;
 
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -218,5 +219,30 @@ public class DataOutput {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+    }
+    public static void sendNewMessage(ChatMessage newMessage, String senderRoom, String receiverRoom) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String id = user.getUid();
+
+        DatabaseReference senderRoomRef = FirebaseDatabase.getInstance().getReference("Chats").child(senderRoom);
+        senderRoomRef.child(newMessage.getMessageID()).setValue(newMessage)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+
+                    }
+
+                });
+
+        DatabaseReference receiverRoomRef = FirebaseDatabase.getInstance().getReference("Chats").child(receiverRoom);
+        receiverRoomRef.child(newMessage.getMessageID()).setValue(newMessage)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+
+                    }
+                });
+
     }
 }
