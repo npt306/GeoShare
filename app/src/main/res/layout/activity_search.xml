@@ -13,10 +13,10 @@
         android:orientation="horizontal"
         android:gravity="center"
         android:layout_gravity="left"
-        android:layout_marginLeft="16dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="26dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
         tools:ignore="RtlHardcoded">
+
         <ImageButton
             android:id="@+id/btnSearchBack"
             android:layout_width="30dp"
@@ -32,6 +32,13 @@
             android:textStyle="bold"
             android:textColor="#C28C3A"/>
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/primary_back_arrow_background"
+        />
 <!--    <androidx.cardview.widget.CardView-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="wrap_content"-->

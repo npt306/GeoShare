@@ -20,6 +20,10 @@
     <color name="primary_icon_background">#FF000000</color>
 
     <color name="primary_home_button_background">#F8F7E0</color>
+
+    <color name="primary_back_arrow_background">#C28C3A</color>
+
+    <color name="primary_dialog_background">#2D383E</color>
     
 
 </resources>
