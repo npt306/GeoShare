@@ -101,13 +101,9 @@ public class MarkerManager {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Lấy dữ liệu từ dataSnapshot và cập nhật giá trị pin
                 String batteryInfo = dataSnapshot.child("currentBattery").getValue(String.class);
-
-
                 // Cập nhật thông tin pin của marker
                 marker.setIcon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.drawable.avatar, batteryInfo)));
-
 //                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromImage(R.drawable.avatar)));
-
                 Log.d("DEBUG TAG", "Updating " + marker.getTitle());
                 // Xóa marker cũ và thêm marker mới với thông tin đã cập nhật
 //                callerContext.getMaps().clear();

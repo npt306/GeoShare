@@ -31,6 +31,7 @@
             android:value="ca-app-pub-3940256099942544~3347511713"/>
 
         <service android:name=".Battery.BatteryService" />
+        <service android:name=".MyLocationService" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

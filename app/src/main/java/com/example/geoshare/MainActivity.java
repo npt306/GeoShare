@@ -29,6 +29,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.example.geoshare.Battery.BatteryService;
+import com.example.geoshare.Database.Authentication.Authentication;
 import com.example.geoshare.Database.FirebaseSingleton;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -71,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public GoogleMap getMaps(){
         return maps;
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,9 +149,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+        // Bắt đầu battery service
         Intent batteryService = new Intent(this, BatteryService.class);
         startService(batteryService);
         // chưa kết thúc battery service
+
+        // Bắt đầu my location service
+//        Intent myLocationService = new Intent(this, MyLocationService.class);
+//        startService(myLocationService);
+        // chưa kết thúc my location service
+
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
@@ -169,17 +176,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         pressedTime = System.currentTimeMillis();
     }
 
-    private int getCurrentBatteryLevel() {
-        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        Intent batteryStatus = registerReceiver(null, ifilter);
-
-        int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-        int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-
-        float batteryPct = level / (float)scale;
-
-        return (int)(batteryPct*100);
-    }
 
 
     private void getLastLocation() {

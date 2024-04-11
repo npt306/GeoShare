@@ -38,6 +38,10 @@ public class RealtimeDatabase {
                 .child(Authentication.getInstance().getCurrentUserId())
                 .child("currentBattery");
     }
+    public DatabaseReference getCurrentUserLocationReference(){
+        return mDatabase.getReference("Locations")
+                .child(Authentication.getInstance().getCurrentUserId());
+    }
     public void updateBatteryLevel(String battery){
         RealtimeDatabase.getInstance()
                 .getCurrentBatteryLevelReference()
