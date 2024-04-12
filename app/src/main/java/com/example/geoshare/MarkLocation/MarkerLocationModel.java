@@ -1,14 +1,27 @@
-package com.example.geoshare.Model;
+package com.example.geoshare.MarkLocation;
 
 import com.google.android.gms.maps.model.LatLng;
 
 public class MarkerLocationModel {
+    public MarkerLocationModel() {
+    }
     private String typeMarker;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    private String address;
     private LatLng latLng;
     private String key;
-    public MarkerLocationModel(LatLng latLng, String typeMarker){
+    public MarkerLocationModel(LatLng latLng, String typeMarker, String address){
         this.latLng = latLng;
         this.typeMarker = typeMarker;
+        this.address = address;
     }
     
     public String getTypeMarker() {

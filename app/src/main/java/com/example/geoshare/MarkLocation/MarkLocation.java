@@ -1,7 +1,9 @@
-package com.example.geoshare;
+package com.example.geoshare.MarkLocation;
 
-import android.app.Activity;
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -20,8 +22,8 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.example.geoshare.Database.RealtimeDatabase.MarkLocationDatabase;
-import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
-import com.example.geoshare.Model.MarkerLocationModel;
+import com.example.geoshare.MainActivity;
+import com.example.geoshare.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -64,7 +66,7 @@ public class MarkLocation implements GoogleMap.OnMapLongClickListener {
         // Hiển thị BottomSheetDialog
         showBottomSheet(point);
         // Lấy địa chỉ từ LatLng
-        getAddressFromLatLng(point);
+        updateAddress(point);
     }
 
     private void showBottomSheet(LatLng point) {
@@ -81,11 +83,14 @@ public class MarkLocation implements GoogleMap.OnMapLongClickListener {
         buttonMarkLocation.setOnClickListener(v -> {
 
             if(!selected.isEmpty()){
-                MarkLocationDatabase.getInstance().addNewMarkerLocation(point, selected);
+
                 Toast.makeText(activity, "Mark location as "+selected, Toast.LENGTH_SHORT).show();
 //                activity.recreate();
 //                maps.addMarker(new MarkerOptions().position(point).title(selected));
-                maps.addMarker((typeIconMarker(new MarkerLocationModel(point, selected))));
+                String address = getAddressFromLatLng(point);
+                MarkerLocationModel marker = new MarkerLocationModel(point, selected, address);
+                maps.addMarker((typeIconMarker(marker)));
+                MarkLocationDatabase.getInstance().addNewMarkerLocation(marker);
                 bottomSheetDialog.dismiss();
             }
             else {
@@ -98,7 +103,8 @@ public class MarkLocation implements GoogleMap.OnMapLongClickListener {
             @Override
             public void onClick(View view) {
                 Toast.makeText(activity, "Marker list", Toast.LENGTH_SHORT).show();
-
+                Intent intent = new Intent(activity, MarkLocationList.class);
+                activity.startActivity(intent);
             }
         });
 
@@ -121,7 +127,9 @@ public class MarkLocation implements GoogleMap.OnMapLongClickListener {
         });
     }
 
-    private void getAddressFromLatLng(LatLng point) {
+
+
+    private String getAddressFromLatLng(LatLng point){
         Geocoder geocoder = new Geocoder(activity, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(point.latitude, point.longitude, 1);
@@ -129,34 +137,42 @@ public class MarkLocation implements GoogleMap.OnMapLongClickListener {
                 Address address = addresses.get(0);
                 String addressLine = address.getAddressLine(0);
                 // Cập nhật TextView trong BottomSheetDialog với địa chỉ
-                txtAddress.setText(addressLine.toString());
+                return addressLine.toString();
             } else {
-                txtAddress.setText(point.latitude + ", " +point.longitude);
+                return point.latitude + ", " +point.longitude;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return null;
+    }
+    private void updateAddress(LatLng point) {
+        String address = getAddressFromLatLng(point);
+        if(address != null){
+            txtAddress.setText(address);
+        }
+        else {
+            txtAddress.setText("");
+        }
     }
     public void readMarkersFromDatabase() {
         DatabaseReference markLocationReference = MarkLocationDatabase.getInstance().getReferenceToCurrentUser();
-        markLocationReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        markLocationReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<MarkerLocationModel> markerList = new ArrayList<>();
-                    for (DataSnapshot typeSnapshot : dataSnapshot.getChildren()) {
-                        String typeMarker = typeSnapshot.getKey();
-                        for (DataSnapshot markerSnapshot : typeSnapshot.getChildren()) {
-                            double latitude = markerSnapshot.child("latitude").getValue(Double.class);
-                            double longitude = markerSnapshot.child("longitude").getValue(Double.class);
-                            LatLng latLng = new LatLng(latitude, longitude);
-                            String key = markerSnapshot.getKey();
-                            MarkerLocationModel marker = new MarkerLocationModel(latLng, typeMarker);
-                            marker.setKey(key);
-                            markerList.add(marker);
-                        }
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        String key = snapshot.getKey();
+                        String address = snapshot.child("address").getValue(String.class);
+                        double latitude = snapshot.child("latLng").child("latitude").getValue(Double.class);
+                        double longitude = snapshot.child("latLng").child("longitude").getValue(Double.class);
+                        String typeMarker = snapshot.child("typeMarker").getValue(String.class);
+                        LatLng latLng = new LatLng(latitude,longitude);
+                        MarkerLocationModel marker = new MarkerLocationModel(latLng, typeMarker, address);
+                        marker.setKey(key);
+                        markerList.add(marker);
                     }
-                // Sau khi đọc xong, bạn có thể sử dụng danh sách markerList để làm gì đó
-                // Ví dụ: hiển thị các marker lên bản đồ
+                // Sau khi đọc xong, sử dụng danh sách markerList để hiển thị lên bản đồ
                 displayMarkers(markerList);
             }
 

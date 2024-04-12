@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
+    android:padding="10dp">
+    <ImageView
+        android:id="@+id/mark_location_list_type_icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerVertical="true"
+        android:background="@color/transparent"
+        android:src="@mipmap/ic_launcher"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/mark_location_list_type_icon"
+        android:layout_toEndOf="@id/mark_location_list_type_icon"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/mark_location_list_type_textview"
+            android:text="Home"
+            android:layout_marginStart="15dp"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/mark_location_list_address_textview"
+            android:text="135B Tran Hung Dao, phuong Cau Ong Lanh, quan 1, thanh pho Ho Chi Minh Viet Nam"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="30dp"
+            android:textColor="@color/fourth_text"
+            android:textSize="18sp"/>
+
+    </LinearLayout>
+    <ImageButton
+        android:id="@+id/button_delete_mark_location_list"
+        android:layout_width="wrap_content"
+        android:background="@color/transparent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_delete"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"/>
+
+</RelativeLayout>
