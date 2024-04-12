@@ -17,12 +17,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.geoshare.Adapter.ChatboxAdapter;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -68,19 +70,58 @@ public class ChatBox extends AppCompatActivity {
         recyclerView.setAdapter(chatboxAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        DatabaseReference senderRoomRef = FirebaseDatabase.getInstance().getReference("Chats").child(senderRoom);
-
-        senderRoomRef.addValueEventListener(new ValueEventListener() {
+        DatabaseReference chatsRef = FirebaseDatabase.getInstance().getReference("Chats");
+        chatsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<ChatMessage> chatMessageList = new ArrayList<>();
-                for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    ChatMessage message = dataSnapshot.getValue(ChatMessage.class);
-                    chatMessageList.add(message);
-                }
-                chatboxAdapter.clearMessageList();
-                for(ChatMessage chatMessage : chatMessageList) {
-                    chatboxAdapter.addNewMessage(chatMessage);
+                if(snapshot.hasChild(senderRoom)) {
+                    DatabaseReference senderRoomRef = chatsRef.child(senderRoom);
+                    Query chatQuery = senderRoomRef.orderByChild("timeStamp");
+                    chatQuery.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if(snapshot.exists()) {
+                                List<ChatMessage> chatMessageList = new ArrayList<>();
+                                for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                    ChatMessage message = dataSnapshot.getValue(ChatMessage.class);
+                                    chatMessageList.add(message);
+                                }
+                                chatboxAdapter.clearMessageList();
+                                for(ChatMessage chatMessage : chatMessageList) {
+                                    chatboxAdapter.addNewMessage(chatMessage);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }else if(snapshot.hasChild(receiverRoom)) {
+                    DatabaseReference receiverRoomRef = chatsRef.child(receiverRoom);
+                    Query chatQuery = receiverRoomRef.orderByChild("timeStamp");
+                    chatQuery.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if(snapshot.exists()) {
+                                List<ChatMessage> chatMessageList = new ArrayList<>();
+                                for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                    ChatMessage message = dataSnapshot.getValue(ChatMessage.class);
+                                    chatMessageList.add(message);
+                                }
+                                chatboxAdapter.clearMessageList();
+                                for(ChatMessage chatMessage : chatMessageList) {
+                                    chatboxAdapter.addNewMessage(chatMessage);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
             }
 
@@ -89,7 +130,6 @@ public class ChatBox extends AppCompatActivity {
 
             }
         });
-
         buttonSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,9 +141,11 @@ public class ChatBox extends AppCompatActivity {
                     chatboxAdapter.addNewMessage(sendMessage);
                     DataOutput.sendNewMessage(sendMessage, senderRoom, receiverRoom);
                     editTextMessage.setText("");
+                    recyclerView.smoothScrollToPosition(chatboxAdapter.getItemCount() - 1);
                 }else {
                     Toast.makeText(ChatBox.this, "Message empty", Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
 

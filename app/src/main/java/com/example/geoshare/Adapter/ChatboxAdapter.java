@@ -59,7 +59,7 @@ public class ChatboxAdapter extends RecyclerView.Adapter<ChatboxAdapter.ViewHold
     }
     @Override
     public int getItemViewType(int position) {
-        if(messageList.get(position).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+        if( messageList.get(position).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
             return VIEW_TYPE_SEND;
         }else {
             return VIEW_TYPE_RECEIVE;
