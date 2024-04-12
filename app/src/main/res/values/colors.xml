@@ -13,17 +13,24 @@
     <color name="primary_text">#FFFFFFFF</color>
     <color name="secondary_text">#535353</color>
     <color name="third_text">#C28C3A</color>
+    <color name="fourth_text">#9E9E9E</color>
+
+
 
     <color name="primary_radio">#00FFE7</color>
     <color name="secondary_radio">#D500FA</color>
 
     <color name="primary_icon_background">#FF000000</color>
+    <color name="secondary_icon_background">#535353</color>
+    <color name="third_icon_background">#9E9E9E</color>
+
 
     <color name="primary_home_button_background">#F8F7E0</color>
 
     <color name="primary_back_arrow_background">#C28C3A</color>
 
     <color name="primary_dialog_background">#2D383E</color>
-    
+
+
 
 </resources>

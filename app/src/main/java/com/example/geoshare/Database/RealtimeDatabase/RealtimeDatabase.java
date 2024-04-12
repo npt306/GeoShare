@@ -29,6 +29,7 @@ public class RealtimeDatabase {
     public DatabaseReference getMarkLocationReference(){
         return mDatabase.getReference("markLocation");
     }
+
     public DatabaseReference getBatteryLevelReference(){
         return mDatabase.getReference("batteryLevel");
     }
