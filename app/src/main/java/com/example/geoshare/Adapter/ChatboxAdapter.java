@@ -57,7 +57,6 @@ public class ChatboxAdapter extends RecyclerView.Adapter<ChatboxAdapter.ViewHold
             holder.textViewReceiveMessage.setText(message.getMessage());
         }
     }
-
     @Override
     public int getItemViewType(int position) {
         if(messageList.get(position).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
@@ -76,16 +75,13 @@ public class ChatboxAdapter extends RecyclerView.Adapter<ChatboxAdapter.ViewHold
         this.messageList = new ArrayList<>();
         this.notifyDataSetChanged();
     }
-
     public List<ChatMessage> getMessageList() {
         return messageList;
     }
-
     @Override
     public int getItemCount() {
         return this.messageList.size();
     }
-
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView textViewSendMessage, textViewReceiveMessage;

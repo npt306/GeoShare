@@ -68,9 +68,7 @@ public class ChatBox extends AppCompatActivity {
         recyclerView.setAdapter(chatboxAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference senderRoomRef = FirebaseDatabase.getInstance().getReference("Chats").child(senderRoom);
-        DatabaseReference receiverRoomRef = FirebaseDatabase.getInstance().getReference("Chats").child(receiverRoom);
 
         senderRoomRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -102,6 +100,7 @@ public class ChatBox extends AppCompatActivity {
                             FirebaseAuth.getInstance().getCurrentUser().getUid(), chatFriendID);
                     chatboxAdapter.addNewMessage(sendMessage);
                     DataOutput.sendNewMessage(sendMessage, senderRoom, receiverRoom);
+                    editTextMessage.setText("");
                 }else {
                     Toast.makeText(ChatBox.this, "Message empty", Toast.LENGTH_SHORT).show();
                 }

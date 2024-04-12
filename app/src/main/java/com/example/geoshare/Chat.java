@@ -27,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Chat extends AppCompatActivity {
     ImageButton buttonBack;
@@ -58,24 +59,26 @@ public class Chat extends AppCompatActivity {
                 chatAdapter.clearFriendList();
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     String friendId = dataSnapshot.getValue(String.class);
-                    if(friendId == "empty")
+                    if(Objects.equals(friendId, "empty"))
                     {
                         return;
                     }
-                    DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("Users").child(friendId);
-                    usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            User friend = snapshot.getValue(User.class);
-                            chatAdapter.addFriendToList(friend);
-                            chatAdapter.notifyDataSetChanged();
-                        }
+                    else {
+                        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("Users").child(friendId);
+                        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                User friend = snapshot.getValue(User.class);
+                                chatAdapter.addFriendToList(friend);
+                                chatAdapter.notifyDataSetChanged();
+                            }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
 
-                        }
-                    });
+                            }
+                        });
+                    }
                 }
                 recyclerViewChatList.setAdapter(chatAdapter);
             }
