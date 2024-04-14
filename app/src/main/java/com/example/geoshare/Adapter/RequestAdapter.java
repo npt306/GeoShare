@@ -1,6 +1,7 @@
 package com.example.geoshare.Adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +15,15 @@ import com.bumptech.glide.Glide;
 import com.example.geoshare.DataOutput;
 import com.example.geoshare.Model.User;
 import com.example.geoshare.R;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
@@ -40,14 +44,21 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull RequestAdapter.ViewHolder holder, int position) {
-        User user = mRequest.get(position);
-        holder.username.setText(user.getUsername());
-        holder.pendingFriendID.setText(user.getId());
-        if(user.getImageURL().equals("default")){
-            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
+        User friend = mRequest.get(position);
+        holder.username.setText(friend.getUsername());
+        holder.pendingFriendID.setText(friend.getId());
+        if(friend.getImageURL().equals("default")){
+//            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
         }
         else {
-            Glide.with(mContext).load(user.getImageURL()).into(holder.profile_image);
+            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+            storageRef.child("usersAvatar/" + friend.getImageURL()).getDownloadUrl()
+                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Glide.with(mContext.getApplicationContext()).load(uri).into(holder.profile_image);
+                        }
+                    });
         }
         // Xác định sự kiện click cho button
 //        holder.inviteButton.setOnClickListener(new View.OnClickListener() {

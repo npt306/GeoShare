@@ -127,8 +127,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // chưa kết thúc battery service
 
         // Bắt đầu my location service
-//        Intent myLocationService = new Intent(this, MyLocationService.class);
-//        startService(myLocationService);
+        Intent myLocationService = new Intent(this, MyLocationService.class);
+        startService(myLocationService);
         // chưa kết thúc my location service
 
 

@@ -25,7 +25,7 @@ public class AdminReportActivity extends AppCompatActivity {
             }
         });
 
-        Button showButton = (Button) findViewById(R.id.showButton);
+        Button showButton = (Button) findViewById(R.id.show_button);
         showButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

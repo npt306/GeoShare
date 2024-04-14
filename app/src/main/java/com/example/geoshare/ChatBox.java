@@ -1,6 +1,7 @@
 package com.example.geoshare;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -8,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.geoshare.Adapter.ChatboxAdapter;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,13 +29,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class ChatBox extends AppCompatActivity {
-    String chatFriendID, chatFriendUsername, senderRoom, receiverRoom;
+    String chatFriendID, chatFriendUsername, chatFriendImageURL, senderRoom, receiverRoom;
+    ImageView imageViewMessageFriendProfile;
     TextView textViewChatFriendUsername;
     ImageButton btnMessageBack, buttonSendMessage;
     EditText editTextMessage;
@@ -45,12 +51,14 @@ public class ChatBox extends AppCompatActivity {
 
         chatFriendID = getIntent().getStringExtra("chatFriendID");
         chatFriendUsername = getIntent().getStringExtra("chatFriendUsername");
+        chatFriendImageURL = getIntent().getStringExtra("chatFriendImageURL");
         if(chatFriendID != null) {
             senderRoom = FirebaseAuth.getInstance().getCurrentUser().getUid() + "-" + chatFriendID;
             receiverRoom = chatFriendID + "-" + FirebaseAuth.getInstance().getCurrentUser().getUid();
         }
 
         btnMessageBack = findViewById(R.id.btnMessageBack);
+        imageViewMessageFriendProfile = findViewById(R.id.message_friend_profile_image);
         textViewChatFriendUsername = findViewById(R.id.message_friend_username);
         buttonSendMessage = findViewById(R.id.send_message_button);
         recyclerView = findViewById(R.id.recycles_view_chat_box);
@@ -65,6 +73,20 @@ public class ChatBox extends AppCompatActivity {
         });
 
         textViewChatFriendUsername.setText(chatFriendUsername);
+
+        if(chatFriendImageURL.equals("default")){
+//            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
+        }
+        else {
+            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+            storageRef.child("usersAvatar/" + chatFriendImageURL).getDownloadUrl()
+                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Glide.with(getApplicationContext()).load(uri).into(imageViewMessageFriendProfile);
+                        }
+                    });
+        }
 
         chatboxAdapter = new ChatboxAdapter(getApplicationContext());
         recyclerView.setAdapter(chatboxAdapter);
