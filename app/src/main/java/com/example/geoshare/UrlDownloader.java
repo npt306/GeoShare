@@ -51,8 +51,6 @@ public class UrlDownloader extends AsyncTask<String, Void, String>{
             Log.d("Background Task", e.toString());
         }
 
-        //TODO: handle error message
-
         return data;
     }
 
@@ -69,7 +67,7 @@ public class UrlDownloader extends AsyncTask<String, Void, String>{
         if (api.equals("place")){
             Log.d("DEBUG TAG", "API Place");
 
-            PlacesResultParserTask parserTask = new PlacesResultParserTask(callerContext);
+            PlacesResultParserTask parserTask = new PlacesResultParserTask();
             parserTask.execute(result);
         }
     }
