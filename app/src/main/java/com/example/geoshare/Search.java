@@ -26,6 +26,18 @@ public class Search extends AppCompatActivity {
 
     private List<String> searchHistoryList;
     private ArrayAdapter<String> searchHistoryAdapter;
+
+    // Implement to get context from other intent
+    private static Search instance;
+
+    public Search() {
+        instance = this;
+    }
+
+    public static Search getInstance() {
+        return instance;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -85,11 +97,14 @@ public class Search extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                // prevent this event from triggering twice when pressed the enter key
+                searchView.clearFocus();
+
                 addSearchToHistory(query);
 //                searchInput.setText(query);
                 String url = UrlGenerator.getPlaceQueryUrl(query);
                 Log.d("DEBUG TAG", "Handling place query");
-//                UrlDownloader.getInstance().execute(url);
+                UrlDownloader.getInstance(Search.this).execute(url);
                 return false;
             }
 
