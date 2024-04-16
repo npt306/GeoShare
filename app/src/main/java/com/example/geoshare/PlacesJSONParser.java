@@ -16,6 +16,8 @@ public class PlacesJSONParser {
         List<String[]> results = new ArrayList<String[]>();
 
         try {
+            Log.d("DEBUG TAG", "Parsing JSON Object");
+
             JSONArray resultsArray = jsonObject.getJSONArray("results");
 
             for (int i = 0; i < resultsArray.length(); i++) {

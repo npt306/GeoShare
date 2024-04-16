@@ -41,25 +41,13 @@ public class PlacesResultParserTask extends AsyncTask<String, Integer, List<Stri
             e.printStackTrace();
         }
 
-        if (places != null && places.isEmpty()) {
-            try {
-                String status = jObject.getString("status");
-
-                // request is denied
-                if (!status.equals("OK") && !status.isEmpty()){
-                    return null;
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
         return places;
     }
 
     @Override
     protected void onPostExecute(List<String[]> result) {
+        Log.d("DEBUG TAG", "Getting alert dialog");
+
         // prepare list
         List<String> nameList = new ArrayList<String>();
         List<String> addressList = new ArrayList<String>();
@@ -89,16 +77,6 @@ public class PlacesResultParserTask extends AsyncTask<String, Integer, List<Stri
         builder.setTitle("Search results")
                 .setNegativeButton("Cancel", null)
                 .setAdapter(adapter, null);
-
-        if (result.isEmpty()){
-            builder.setMessage("Over query limit");
-
-            // build dialog
-            AlertDialog dialog = builder.create();
-            dialog.show();
-
-            return;
-        }
 
         // build dialog
         AlertDialog dialog = builder.create();
@@ -130,6 +108,7 @@ public class PlacesResultParserTask extends AsyncTask<String, Integer, List<Stri
             }
         });
 
+        Log.d("DEBUG TAG", "Showed alert dialog");
     }
 
     private void getDirection(LatLng origin, LatLng dest){

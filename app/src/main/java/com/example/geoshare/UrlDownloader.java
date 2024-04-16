@@ -2,17 +2,11 @@ package com.example.geoshare;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
-
-import com.google.android.gms.location.LocationServices;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -89,6 +83,7 @@ public class UrlDownloader extends AsyncTask<String, Void, String>{
         }
 
         try {
+            Log.d("DEBUG TAG", "Start Downloading");
             URL url = new URL(strUrl);
 
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -116,6 +111,9 @@ public class UrlDownloader extends AsyncTask<String, Void, String>{
             iStream.close();
             urlConnection.disconnect();
         }
+
+        Log.d("DEBUG TAG", "Finish Downloading");
+
         return data; // to be used by onPostExecute()
     }
 }
