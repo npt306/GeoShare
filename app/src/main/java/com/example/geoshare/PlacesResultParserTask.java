@@ -47,6 +47,7 @@ public class PlacesResultParserTask extends AsyncTask<String, Integer, List<Stri
 
                 // request is denied
                 if (!status.equals("OK") && !status.isEmpty()){
+                    Log.d("DEBUG TAG", "Request is denied");
                     return null;
                 }
 
@@ -60,6 +61,8 @@ public class PlacesResultParserTask extends AsyncTask<String, Integer, List<Stri
 
     @Override
     protected void onPostExecute(List<String[]> result) {
+        Log.d("DEBUG TAG", "Getting alert dialog");
+
         // prepare list
         List<String> nameList = new ArrayList<String>();
         List<String> addressList = new ArrayList<String>();
@@ -122,14 +125,15 @@ public class PlacesResultParserTask extends AsyncTask<String, Integer, List<Stri
                 SystemClock.sleep(2000);
 
                 // Draw path
-                Location location = LocationManager.getInstance(MainActivity.getInstance()).getCurrentLocation();
-                LatLng curLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                getDirection(curLocation,
-                        new LatLng(Double.parseDouble(result.get(position)[2]),
-                                Double.parseDouble(result.get(position)[3])));
+//                Location location = LocationManager.getInstance(MainActivity.getInstance()).getCurrentLocation();
+//                LatLng curLocation = new LatLng(location.getLatitude(), location.getLongitude());
+//                getDirection(curLocation,
+//                        new LatLng(Double.parseDouble(result.get(position)[2]),
+//                                Double.parseDouble(result.get(position)[3])));
             }
         });
 
+        Log.d("DEBUG TAG", "Showed alert dialog");
     }
 
     private void getDirection(LatLng origin, LatLng dest){
