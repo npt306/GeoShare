@@ -41,21 +41,6 @@ public class PlacesResultParserTask extends AsyncTask<String, Integer, List<Stri
             e.printStackTrace();
         }
 
-        if (places != null && places.isEmpty()) {
-            try {
-                String status = jObject.getString("status");
-
-                // request is denied
-                if (!status.equals("OK") && !status.isEmpty()){
-                    Log.d("DEBUG TAG", "Request is denied");
-                    return null;
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
         return places;
     }
 
@@ -93,16 +78,6 @@ public class PlacesResultParserTask extends AsyncTask<String, Integer, List<Stri
                 .setNegativeButton("Cancel", null)
                 .setAdapter(adapter, null);
 
-        if (result.isEmpty()){
-            builder.setMessage("Over query limit");
-
-            // build dialog
-            AlertDialog dialog = builder.create();
-            dialog.show();
-
-            return;
-        }
-
         // build dialog
         AlertDialog dialog = builder.create();
         dialog.show();
@@ -125,11 +100,11 @@ public class PlacesResultParserTask extends AsyncTask<String, Integer, List<Stri
                 SystemClock.sleep(2000);
 
                 // Draw path
-//                Location location = LocationManager.getInstance(MainActivity.getInstance()).getCurrentLocation();
-//                LatLng curLocation = new LatLng(location.getLatitude(), location.getLongitude());
-//                getDirection(curLocation,
-//                        new LatLng(Double.parseDouble(result.get(position)[2]),
-//                                Double.parseDouble(result.get(position)[3])));
+                Location location = LocationManager.getInstance(MainActivity.getInstance()).getCurrentLocation();
+                LatLng curLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                getDirection(curLocation,
+                        new LatLng(Double.parseDouble(result.get(position)[2]),
+                                Double.parseDouble(result.get(position)[3])));
             }
         });
 
