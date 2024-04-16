@@ -3,6 +3,7 @@ package com.example.geoshare.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,10 +18,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.geoshare.Adapter.InviteAdapter;
 import com.example.geoshare.DataOutput;
 import com.example.geoshare.Invite;
@@ -28,6 +31,7 @@ import com.example.geoshare.Model.User;
 import com.example.geoshare.QR;
 import com.example.geoshare.R;
 import com.example.geoshare.Search;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -35,6 +39,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,6 +100,7 @@ public class InviteFragment extends Fragment {
     private TextView textViewInviteUserFriend;
     private LinearLayout linearLayoutUserFound;
     private Button buttonInviteFoundFriend;
+    private ImageView imageViewInviteFriendProfile;
     private ImageButton buttonFindFriend, buttonQrCode;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -107,6 +114,7 @@ public class InviteFragment extends Fragment {
         editTextAddFriendUserId = view.findViewById(R.id.editTextAddFriendID);
         textViewInviteUserFriend = view.findViewById(R.id.invite_friend_username);
         linearLayoutUserFound = view.findViewById(R.id.layoutUserFound);
+        imageViewInviteFriendProfile = view.findViewById(R.id.invite_friend_profile_image);
         buttonFindFriend = view.findViewById(R.id.btnFindFriend);
         buttonInviteFoundFriend = view.findViewById(R.id.btnInviteFoundFriend);
         buttonQrCode = view.findViewById(R.id.btnQrCode);
@@ -130,12 +138,24 @@ public class InviteFragment extends Fragment {
                                     show_dialog("User Not Valid","Do not enter your own id.",InviteFragment.this.getContext() );
                                     return;
                                 }
-                                usersRef.child(id).child("username").addListenerForSingleValueEvent(new ValueEventListener() {
+                                usersRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        String usernameFound = dataSnapshot.getValue(String.class);
-                                        textViewInviteUserFriend.setText(usernameFound);
+                                        User userFound = dataSnapshot.getValue(User.class);
+                                        textViewInviteUserFriend.setText(userFound.getUsername());
                                         linearLayoutUserFound.setVisibility(View.VISIBLE);
+
+                                        if(!userFound.getImageURL().equals("default")){
+                                            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                                            storageRef.child("usersAvatar/" + userFound.getImageURL()).getDownloadUrl()
+                                                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                        @Override
+                                                        public void onSuccess(Uri uri) {
+                                                            Glide.with(InviteFragment.this.getContext()).load(uri).into(imageViewInviteFriendProfile);
+                                                        }
+                                                    });
+                                        }
+
                                     }
 
                                     @Override

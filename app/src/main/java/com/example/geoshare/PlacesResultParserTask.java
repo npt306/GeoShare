@@ -1,10 +1,9 @@
 package com.example.geoshare;
 
 import android.app.AlertDialog;
-import android.content.Context;
-import android.content.Intent;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -24,17 +25,11 @@ import java.util.List;
  */
 public class PlacesResultParserTask extends AsyncTask<String, Integer, List<String[]>> {
 
-    Search callerContext;
-
-    public PlacesResultParserTask(Context callerContext){
-        this.callerContext = (Search) callerContext;
-    }
-
     // Parsing the data in non-ui thread
     @Override
     protected List<String[]> doInBackground(String... jsonData) {
 
-        JSONObject jObject;
+        JSONObject jObject = null;
         List<String[]> places = null;
 
         try {
@@ -45,11 +40,14 @@ public class PlacesResultParserTask extends AsyncTask<String, Integer, List<Stri
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return places;
     }
 
     @Override
     protected void onPostExecute(List<String[]> result) {
+        Log.d("DEBUG TAG", "Getting alert dialog");
+
         // prepare list
         List<String> nameList = new ArrayList<String>();
         List<String> addressList = new ArrayList<String>();
@@ -60,7 +58,7 @@ public class PlacesResultParserTask extends AsyncTask<String, Integer, List<Stri
         }
 
         // configure adapter
-        ArrayAdapter adapter = new ArrayAdapter(callerContext,
+        ArrayAdapter adapter = new ArrayAdapter(Search.getInstance(),
                 android.R.layout.simple_list_item_2, android.R.id.text1, nameList) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
@@ -75,7 +73,7 @@ public class PlacesResultParserTask extends AsyncTask<String, Integer, List<Stri
         };
 
         // configure builder
-        AlertDialog.Builder builder = new AlertDialog.Builder(callerContext);
+        AlertDialog.Builder builder = new AlertDialog.Builder(Search.getInstance());
         builder.setTitle("Search results")
                 .setNegativeButton("Cancel", null)
                 .setAdapter(adapter, null);
@@ -83,6 +81,7 @@ public class PlacesResultParserTask extends AsyncTask<String, Integer, List<Stri
         // build dialog
         AlertDialog dialog = builder.create();
         dialog.show();
+
         Log.d("DEBUG TAG", "Showed dialog");
 
         // configure dialog
@@ -95,13 +94,13 @@ public class PlacesResultParserTask extends AsyncTask<String, Integer, List<Stri
                 // Manage selected item here
                 System.out.println("clicked" + position);
 
-                // click -> back to main -> draw
-                Intent intent = new Intent(callerContext, MainActivity.class);
-                callerContext.startActivity(intent);
-                callerContext.finish();
+                Search.getInstance().finish();
 
-                // call direction api
-                Location location = LocationManager.getInstance(callerContext).getCurrentLocation();
+                // wait for screen to change to MainActivity
+                SystemClock.sleep(2000);
+
+                // Draw path
+                Location location = LocationManager.getInstance(MainActivity.getInstance()).getCurrentLocation();
                 LatLng curLocation = new LatLng(location.getLatitude(), location.getLongitude());
                 getDirection(curLocation,
                         new LatLng(Double.parseDouble(result.get(position)[2]),
@@ -109,6 +108,7 @@ public class PlacesResultParserTask extends AsyncTask<String, Integer, List<Stri
             }
         });
 
+        Log.d("DEBUG TAG", "Showed alert dialog");
     }
 
     private void getDirection(LatLng origin, LatLng dest){
@@ -116,7 +116,7 @@ public class PlacesResultParserTask extends AsyncTask<String, Integer, List<Stri
         String url = UrlGenerator.getDirectionsUrl(origin, dest);
         // Start downloading json data from Google Directions API
         // and draw routes
-        UrlDownloader.getInstance(callerContext).execute(url);
+        UrlDownloader.getInstance(MainActivity.getInstance()).execute(url);
     }
 }
 

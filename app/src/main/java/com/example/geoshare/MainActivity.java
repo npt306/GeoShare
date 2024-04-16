@@ -56,6 +56,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return maps;
     }
 
+
+    // Implement to get context from other Intent
+    private static MainActivity instance;
+
+    public MainActivity() {
+        instance = this;
+    }
+
+    public static MainActivity getInstance() {
+        return instance;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mAuth.signOut();
         }
         firebaseUser = FirebaseSingleton.getInstance().getFirebaseAuth().getCurrentUser();
+
         if(firebaseUser == null){
             Intent intent = new Intent(getApplicationContext(), SignIn.class);
             startActivity(intent);
@@ -150,8 +163,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         // Bắt đầu my location service
-//        Intent myLocationService = new Intent(this, MyLocationService.class);
-//        startService(myLocationService);
+        Intent myLocationService = new Intent(this, MyLocationService.class);
+        startService(myLocationService);
         // chưa kết thúc my location service
 
 

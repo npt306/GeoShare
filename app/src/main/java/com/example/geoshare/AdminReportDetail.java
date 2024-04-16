@@ -1,38 +1,43 @@
 package com.example.geoshare;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class AdminReportActivity extends AppCompatActivity {
+public class AdminReportDetail extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin_report);
+        setContentView(R.layout.admin_report_detail);
 
         LinearLayout backButton = (LinearLayout) findViewById(R.id.back_layout);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), AdminActivity.class);
-                startActivity(intent);
                 finish();
             }
         });
 
-        Button showButton = (Button) findViewById(R.id.show_button);
-        showButton.setOnClickListener(new View.OnClickListener() {
+        Button skipBtn = (Button) findViewById(R.id.skip_Btn);
+        skipBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //do sth
-                Toast.makeText(getBaseContext(), "Show Button has been pressed", Toast.LENGTH_SHORT).show();
-
+                finish();
             }
         });
+
+        Button banBtn = (Button) findViewById(R.id.ban_Btn);
+        skipBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+
     }
 }
+

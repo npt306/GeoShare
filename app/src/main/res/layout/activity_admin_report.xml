@@ -18,7 +18,8 @@
             android:gravity="center"
             android:layout_marginBottom="35dp"
             android:layout_marginTop="35dp"
-            android:layout_marginLeft="10dp">
+            android:layout_marginLeft="10dp"
+            android:clickable="true">
             <ImageButton
                 android:id="@+id/back_button"
                 android:layout_width="wrap_content"
@@ -36,6 +37,7 @@
                 android:textColor="#C28C3A"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/report_history"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -95,7 +97,7 @@
                         android:layout_gravity="center_vertical"
                         android:text="5h"/>
                     <Button
-                        android:id="@+id/showButton"
+                        android:id="@+id/show_button"
                         android:layout_width="80dp"
                         android:layout_height="30dp"
                         android:text="Show"
