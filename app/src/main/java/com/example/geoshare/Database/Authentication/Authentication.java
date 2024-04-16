@@ -13,7 +13,9 @@ public class Authentication {
     private Authentication(){
         firebaseAuth = FirebaseSingleton.getInstance().getFirebaseAuth();
         currentUser = firebaseAuth.getCurrentUser();
-        currentUserId = currentUser.getUid();
+        if(currentUser != null){
+            currentUserId = currentUser.getUid();
+        }
     }
     public static synchronized  Authentication getInstance(){
         if(instance == null){
@@ -29,6 +31,9 @@ public class Authentication {
     }
     public String getCurrentUserId(){
         return currentUserId;
+    }
+    public void signOut(){
+        firebaseAuth.signOut();
     }
 
 }

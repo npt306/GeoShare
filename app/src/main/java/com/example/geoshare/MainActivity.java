@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -15,6 +16,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.example.geoshare.Battery.BatteryService;
 import com.example.geoshare.Database.FirebaseSingleton;
+import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
 import com.example.geoshare.MarkLocation.MarkLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -29,12 +31,21 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     FirebaseAuth mAuth;
     FirebaseUser firebaseUser;
-    ImageButton buttonProfile, buttonInvite, buttonLocation, buttonChat, buttonSearch;
+    ImageButton buttonProfile, buttonInvite, buttonLocation, buttonChat, buttonSearch, buttonSetting;
     private GoogleMap maps;
     private final int FINE_PERMISSION_CODE = 1;
     private MarkerManager markerManager;
@@ -51,9 +62,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
-//        if (mAuth == null){
-//            mAuth.signOut();
-//        }
+        if (mAuth == null){
+            mAuth.signOut();
+        }
         firebaseUser = FirebaseSingleton.getInstance().getFirebaseAuth().getCurrentUser();
         if(firebaseUser == null){
             Intent intent = new Intent(getApplicationContext(), SignIn.class);
@@ -82,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         buttonLocation = findViewById(R.id.btnCurrentLocation);
         buttonChat = findViewById(R.id.btnChat);
         buttonSearch = findViewById(R.id.btnSearch);
+        buttonSetting = findViewById(R.id.btnSetting);
         buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,11 +132,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                finish();
             }
         });
+        buttonSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                StatusManager status = new StatusManager();
+//                status.updateUserStatus("hello");
 
-        // Bắt đầu battery service
-        Intent batteryService = new Intent(this, BatteryService.class);
-        startService(batteryService);
-        // chưa kết thúc battery service
+
+            }
+        });
+
+        if(firebaseUser != null) {
+            // Bắt đầu battery service
+            Intent batteryService = new Intent(this, BatteryService.class);
+            startService(batteryService);
+            // chưa kết thúc battery service
+        }
 
         // Bắt đầu my location service
 //        Intent myLocationService = new Intent(this, MyLocationService.class);
