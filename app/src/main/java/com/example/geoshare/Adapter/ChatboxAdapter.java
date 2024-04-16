@@ -20,7 +20,9 @@ import com.example.geoshare.R;
 import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.type.Date;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -53,8 +55,10 @@ public class ChatboxAdapter extends RecyclerView.Adapter<ChatboxAdapter.ViewHold
         if(Objects.equals(message.getSender(), FirebaseAuth.getInstance().getCurrentUser().getUid()))
         {
             holder.textViewSendMessage.setText(message.getMessage());
+            holder.textViewSendMessageTime.setText(message.getDateFromTimeStamp());
         }else {
             holder.textViewReceiveMessage.setText(message.getMessage());
+            holder.textViewReceiveMessageTime.setText(message.getDateFromTimeStamp());
         }
     }
     @Override
@@ -85,12 +89,14 @@ public class ChatboxAdapter extends RecyclerView.Adapter<ChatboxAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView textViewSendMessage, textViewReceiveMessage;
-        public ImageView profile_image;
+        public TextView textViewSendMessageTime, textViewReceiveMessageTime;
         public ViewHolder(View itemView){
             super(itemView);
 
             textViewSendMessage = itemView.findViewById(R.id.textViewSendMessage);
             textViewReceiveMessage = itemView.findViewById(R.id.textViewReceiveMessage);
+            textViewSendMessageTime = itemView.findViewById(R.id.textViewSendMessageTime);
+            textViewReceiveMessageTime = itemView.findViewById(R.id.textViewReceiveMessageTime);
         }
     }
 }

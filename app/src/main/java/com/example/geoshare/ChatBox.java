@@ -3,6 +3,7 @@ package com.example.geoshare;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,6 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -106,12 +108,14 @@ public class ChatBox extends AppCompatActivity {
                                 List<ChatMessage> chatMessageList = new ArrayList<>();
                                 for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                     ChatMessage message = dataSnapshot.getValue(ChatMessage.class);
+                                    message.setTimeStamp(dataSnapshot.child("timeStamp").getValue(Long.class));
                                     chatMessageList.add(message);
                                 }
                                 chatboxAdapter.clearMessageList();
                                 for(ChatMessage chatMessage : chatMessageList) {
                                     chatboxAdapter.addNewMessage(chatMessage);
                                 }
+                                recyclerView.scrollToPosition(chatboxAdapter.getItemCount() - 1);
                             }
                         }
 
@@ -136,6 +140,7 @@ public class ChatBox extends AppCompatActivity {
                                 for(ChatMessage chatMessage : chatMessageList) {
                                     chatboxAdapter.addNewMessage(chatMessage);
                                 }
+                                recyclerView.scrollToPosition(chatboxAdapter.getItemCount() - 1);
                             }
                         }
 
@@ -155,7 +160,8 @@ public class ChatBox extends AppCompatActivity {
         buttonSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String message = String.valueOf(editTextMessage.getText());
+                String message = Normalizer.normalize(editTextMessage.getText().toString(), Normalizer.Form.NFC);
+//                String message = String.valueOf(editTextMessage.getText());
                 if(message.trim().length() > 0) {
                     String messageID = UUID.randomUUID().toString();
                     ChatMessage sendMessage = new ChatMessage(messageID,message,
@@ -170,8 +176,6 @@ public class ChatBox extends AppCompatActivity {
 
             }
         });
-
-        recyclerView.scrollToPosition(chatboxAdapter.getItemCount() - 1);
         editTextMessage.setText("");
     }
 
