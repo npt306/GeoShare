@@ -229,6 +229,7 @@ public class FriendProfile extends AppCompatActivity {
                     report.setReportDescription(problemDescription);
                     DataOutput.reportUSer(report);
                     dialog.dismiss();
+                    Toast.makeText(FriendProfile.this, "Your report will be consider, sorry for your inconvenience.", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(FriendProfile.this, "Problem description cannot be emty.", Toast.LENGTH_SHORT).show();
                 }
