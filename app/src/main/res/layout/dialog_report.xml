@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/avatarlayout_border_radius"
+    android:padding="20dp">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:textColor="@color/white"
+        android:text="Please describe your problem"
+        android:layout_marginBottom="5dp"/>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="20dp">
+        <CheckBox android:id="@+id/checkbox_harassment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:buttonTint="@color/white"
+            android:layout_marginBottom="10dp"
+            android:text="Harrassment" />
+        <CheckBox android:id="@+id/checkbox_pretend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:buttonTint="@color/white"
+            android:layout_marginBottom="10dp"
+            android:text="Pretending to be something"/>
+        <CheckBox android:id="@+id/checkbox_hate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:buttonTint="@color/white"
+            android:layout_marginBottom="10dp"
+            android:text="Hate speech"/>
+        <CheckBox android:id="@+id/checkbox_nudity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:buttonTint="@color/white"
+            android:layout_marginBottom="10dp"
+            android:text="Nudity or sexual content"/>
+        <CheckBox android:id="@+id/checkbox_violence"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:buttonTint="@color/white"
+            android:layout_marginBottom="10dp"
+            android:text="Violence"/>
+        <CheckBox android:id="@+id/checkbox_scam"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:buttonTint="@color/white"
+            android:layout_marginBottom="10dp"
+            android:text="Fraud or scam"/>
+        <CheckBox android:id="@+id/checkbox_other"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:buttonTint="@color/white"
+            android:text="Other"/>
+    </LinearLayout>
+    <EditText
+        android:paddingLeft="10dp"
+        android:paddingVertical="12dp"
+        android:id="@+id/editTextProblemDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lines="5"
+        android:minLines="1"
+        android:maxLines="10"
+        android:background="@drawable/custom_signin_editext"
+        android:textColorHint="#C6C6C6"
+        android:layout_marginBottom="20dp"
+        android:hint="Describe your problems" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnCancelReport"
+            android:layout_width="150dp"
+            android:background="@drawable/custom_signin_button"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="Cancel" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/btnReport"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background="@drawable/report_button"
+            android:text="Report" />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

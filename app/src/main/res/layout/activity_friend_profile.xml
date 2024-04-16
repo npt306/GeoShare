@@ -408,15 +408,14 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/btnUpdate"
+            android:id="@+id/btnReport"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/info_layout"
             android:layout_marginTop="10dp"
-            android:background="@drawable/logout_button"
+            android:background="@drawable/report_button"
             android:textColor="#FFFFFF"
-            android:text="Update"
-            android:visibility="gone"/>
+            android:text="Report"/>
         <!--        <com.google.android.material.appbar.MaterialToolbar-->
         <!--            android:layout_width="match_parent"-->
         <!--            android:layout_height="wrap_content"-->

@@ -55,25 +55,9 @@ public class ChatMessage {
     public String getReceiver() {
         return receiver;
     }
-    public String getDateFromTimeStamp(){
+    public String getDateFromTimeStamp() {
         SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm dd/MM"); //this format changeable
         dateFormatter.setTimeZone(TimeZone.getDefault());
         return dateFormatter.format(this.timeStamp);
-
-//        Instant instant = Instant.ofEpochMilli ( now );
-//        ZonedDateTime zdt = ZonedDateTime.ofInstant ( instant , ZoneOffset.UTC );
-//
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern ( "HH:mm dd/MM" );
-//        String output = formatter.format ( zdt );
-//        return output;
     }
-//    public String getDateTimeStamp() {
-//        String date = longToDateString(timeStamp, "dd.MM.yyyyy");
-//        String time = longToDateString(timeStamp, "HH:mm");
-//        return date;
-//    }
-//    public String getTimeTimeStamp() {
-//        String time = longToDateString(timeStamp, "HH:mm");
-//        return time;
-//    }
 }

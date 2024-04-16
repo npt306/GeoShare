@@ -283,4 +283,13 @@ public class DataOutput {
 //                });
 
     }
+    public static void reportUSer(Report report) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String id = user.getUid();
+
+        DatabaseReference reportsRef = FirebaseDatabase.getInstance().getReference("Reports");
+
+        reportsRef.child(report.getReceiver()).child(report.getSender()).setValue(report);
+    }
 }

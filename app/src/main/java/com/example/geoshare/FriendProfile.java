@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -31,6 +33,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.core.Repo;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -44,6 +47,7 @@ public class FriendProfile extends AppCompatActivity {
     ImageButton buttonProfileBack;
     CircleImageView imageViewUser;
     TextView txtId, txtUsername, txtDob;
+    Button btnReport;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -54,6 +58,7 @@ public class FriendProfile extends AppCompatActivity {
         txtId = findViewById(R.id.user_id);
         txtUsername = findViewById(R.id.user_name);
         txtDob = findViewById(R.id.user_dob);
+        btnReport = findViewById(R.id.btnReport);
         buttonProfileBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,5 +109,139 @@ public class FriendProfile extends AppCompatActivity {
         else {
             // Người dùng chưa đăng nhập, xử lý tương ứng
         }
+        btnReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showReportDialog();
+            }
+        });
+    }
+    private void showReportDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_report, null);
+        builder.setView(dialogView);
+        Report report = new Report(FirebaseAuth.getInstance().getCurrentUser().getUid(), String.valueOf(txtId.getText()));
+
+        final EditText editTextProblemDescription = dialogView.findViewById(R.id.editTextProblemDescription);
+
+        CheckBox checkBoxHarassment = dialogView.findViewById(R.id.checkbox_harassment);
+        checkBoxHarassment.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    report.addProblems("Harrassment");
+                }else {
+                    report.removeProblem("Harrassment");
+                }
+            }
+
+        });
+        CheckBox checkBoxPretend = dialogView.findViewById(R.id.checkbox_pretend);
+        checkBoxPretend.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    report.addProblems("Pretending to be something");
+                }else {
+                    report.removeProblem("Pretending to be something");
+                }
+            }
+
+        });
+        CheckBox checkBoxHate = dialogView.findViewById(R.id.checkbox_hate);
+        checkBoxHate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    report.addProblems("Hate speech");
+                }else {
+                    report.removeProblem("Hate speech");
+                }
+            }
+
+        });
+        CheckBox checkBoxNudity = dialogView.findViewById(R.id.checkbox_nudity);
+        checkBoxNudity.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    report.addProblems("Nudity or sexual content");
+                }else {
+                    report.removeProblem("Nudity or sexual content");
+                }
+            }
+
+        });
+        CheckBox checkBoxViolence = dialogView.findViewById(R.id.checkbox_violence);
+        checkBoxViolence.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    report.addProblems("Violence");
+                }else {
+                    report.removeProblem("Violence");
+                }
+            }
+
+        });
+        CheckBox checkBoxScam = dialogView.findViewById(R.id.checkbox_scam);
+        checkBoxScam.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    report.addProblems("Fraud or scam");
+                }else {
+                    report.removeProblem("Fraud or scam");
+                }
+            }
+
+        });
+        CheckBox checkBoxOther = dialogView.findViewById(R.id.checkbox_other);
+        checkBoxOther.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    report.addProblems("Other");
+                }else {
+                    report.removeProblem("Other");
+                }
+            }
+
+        });
+
+        Button btnReport = dialogView.findViewById(R.id.btnReport);
+        Button btnCancelReport = dialogView.findViewById(R.id.btnCancelReport);
+
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        btnReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String problemDescription = editTextProblemDescription.getText().toString().trim();
+                if (!problemDescription.isEmpty()) {
+                    // Cập nhật username ở đây
+//                    updateUsername(newUsername);
+//                    if(!newUsername.isEmpty()) {
+//                        txtUsername.setText(newUsername);
+//                        DataOutput.updateNewUsername(newUsername);
+//                    }
+                    report.setReportDescription(problemDescription);
+                    DataOutput.reportUSer(report);
+                    dialog.dismiss();
+                } else {
+                    Toast.makeText(FriendProfile.this, "Problem description cannot be emty.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        btnCancelReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Đóng dialog mà không cập nhật username
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 }
