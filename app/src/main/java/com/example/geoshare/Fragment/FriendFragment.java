@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.geoshare.Adapter.ChatAdapter;
 import com.example.geoshare.Adapter.FriendListAdapter;
 import com.example.geoshare.Adapter.InviteAdapter;
 import com.example.geoshare.Adapter.RequestAdapter;
@@ -77,17 +78,17 @@ public class FriendFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private FriendListAdapter friendListAdapter;
-    private List<User> mFriends;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_friend, container, false);
         recyclerView = view.findViewById(R.id.recycles_view_friend_list);
+
+        friendListAdapter = new FriendListAdapter(getContext());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        mFriends = new ArrayList<>();
         getFriendList();
         return view;
     }
@@ -98,19 +99,19 @@ public class FriendFragment extends Fragment {
         reference.child("friendList").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mFriends.clear();
+                friendListAdapter.clearFriendList();
                 for (DataSnapshot friendSnapshot : dataSnapshot.getChildren()) {
                     String friendId = friendSnapshot.getValue(String.class);
-                    Log.d("friendID", friendId);
                     if(!friendId.equals("empty")) {
                         DatabaseReference friendRef = FirebaseDatabase.getInstance().getReference("Users").child(friendId);
                         friendRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 User friend = snapshot.getValue(User.class);
-                                mFriends.add(friend);
-                                friendListAdapter = new FriendListAdapter(getContext(), mFriends);
-                                recyclerView.setAdapter(friendListAdapter);
+                                if(friend != null) {
+                                    friendListAdapter.addFriendToList(friend);
+                                    friendListAdapter.notifyDataSetChanged();
+                                }
                             }
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
@@ -119,6 +120,7 @@ public class FriendFragment extends Fragment {
                         });
                     }
                 }
+                recyclerView.setAdapter(friendListAdapter);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

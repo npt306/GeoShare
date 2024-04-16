@@ -82,10 +82,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         this.friendList = new ArrayList<>();
         this.notifyDataSetChanged();
     }
-    public void clear() {
-        if(!this.friendList.isEmpty() && this.friendList != null)
-            this.friendList.clear();
-    }
     public List<User> getFriendList() {
         return this.friendList;
     }

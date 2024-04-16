@@ -26,15 +26,16 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.ViewHolder> {
     private Context mContext;
     private List<User> mFriends;
-    public FriendListAdapter(Context mContext, List<User> mFriends){
+    public FriendListAdapter(Context mContext){
         this.mContext = mContext;
-        this.mFriends = mFriends;
+        this.mFriends = new ArrayList<>();
     }
 
     @NonNull
@@ -86,7 +87,16 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
 //            }
 //        });
     }
-
+    public void addFriendToList(User friend) {
+        this.mFriends = new ArrayList<>(this.mFriends);
+        this.mFriends.add(friend);
+        this.notifyDataSetChanged();
+    }
+    public void clearFriendList() {
+        this.mFriends.clear();;
+        this.mFriends = new ArrayList<>();
+        this.notifyDataSetChanged();
+    }
     @Override
     public int getItemCount() {
         return mFriends.size();
