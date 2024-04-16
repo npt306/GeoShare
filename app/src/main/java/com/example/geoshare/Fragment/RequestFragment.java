@@ -76,17 +76,16 @@ public class RequestFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private RequestAdapter pendingListAdapter;
-    private List<User> pendingFriends;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_request, container, false);
         recyclerView = view.findViewById(R.id.recycles_view_pending_list);
+
+        pendingListAdapter = new RequestAdapter(getContext());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        pendingFriends = new ArrayList<>();
         getPendingList();
 
         return view;
@@ -97,7 +96,7 @@ public class RequestFragment extends Fragment {
         friendsRef.child("pendingList").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                pendingFriends.clear();
+                pendingListAdapter.clearRequestList();
                 for (DataSnapshot friendSnapshot : dataSnapshot.getChildren()) {
                     String friendId = friendSnapshot.getValue(String.class);
                     Log.d("friend key: ", friendId);
@@ -110,9 +109,9 @@ public class RequestFragment extends Fragment {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             User pendingUserFound = snapshot.getValue(User.class);
-                            pendingFriends.add(pendingUserFound);
-                            pendingListAdapter = new RequestAdapter(getContext(), pendingFriends);
-                            recyclerView.setAdapter(pendingListAdapter);
+                            if(pendingUserFound != null) {
+                                pendingListAdapter.addFriendToList(pendingUserFound);
+                            }
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
@@ -120,6 +119,7 @@ public class RequestFragment extends Fragment {
                         }
                     });
                 }
+                recyclerView.setAdapter(pendingListAdapter);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

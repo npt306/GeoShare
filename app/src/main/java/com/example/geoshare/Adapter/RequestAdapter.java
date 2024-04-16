@@ -25,14 +25,15 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHolder> {
     private Context mContext;
     private List<User> mRequest;
-    public RequestAdapter(Context mContext, List<User> mRequest){
+    public RequestAdapter(Context mContext){
         this.mContext = mContext;
-        this.mRequest = mRequest;
+        this.mRequest = new ArrayList<>();
     }
 
     @NonNull
@@ -124,6 +125,16 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
                 // Xử lý lỗi nếu có
             }
         });
+    }
+    public void addFriendToList(User friend) {
+        this.mRequest = new ArrayList<>(this.mRequest);
+        this.mRequest.add(friend);
+        this.notifyDataSetChanged();
+    }
+    public void clearRequestList() {
+        this.mRequest.clear();;
+        this.mRequest = new ArrayList<>();
+        this.notifyDataSetChanged();
     }
     @Override
     public int getItemCount() {
