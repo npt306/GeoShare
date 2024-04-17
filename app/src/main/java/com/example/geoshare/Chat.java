@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.geoshare.Adapter.ChatAdapter;
 import com.example.geoshare.Adapter.FriendListAdapter;
+import com.example.geoshare.Database.Authentication.Authentication;
+import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
 import com.example.geoshare.Model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -51,8 +53,8 @@ public class Chat extends AppCompatActivity {
             }
         });
 
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference friendsRef = FirebaseDatabase.getInstance().getReference("Friends").child(currentUser.getUid());
+        FirebaseUser currentUser = Authentication.getInstance().getCurrentUser();
+        DatabaseReference friendsRef = RealtimeDatabase.getInstance().getFriendsReference().child(currentUser.getUid());
         friendsRef.child("friendList").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -64,7 +66,7 @@ public class Chat extends AppCompatActivity {
                         return;
                     }
                     else {
-                        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("Users").child(friendId);
+                        DatabaseReference usersRef = RealtimeDatabase.getInstance().getUsersReference().child(friendId);
                         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {

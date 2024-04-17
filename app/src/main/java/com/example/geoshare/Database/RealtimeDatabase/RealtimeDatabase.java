@@ -33,6 +33,21 @@ public class RealtimeDatabase {
     public DatabaseReference getBatteryLevelReference(){
         return mDatabase.getReference("batteryLevel");
     }
+    public DatabaseReference getReportsReference(){
+        return mDatabase.getReference("Reports");
+    }
+    public DatabaseReference getChatsReference(){
+        return mDatabase.getReference("Chats");
+    }
+    public DatabaseReference getFriendsReference(){
+        return mDatabase.getReference("Friends");
+    }
+    public DatabaseReference getUsersReference(){
+        return mDatabase.getReference("Users");
+    }
+    public DatabaseReference getStatusReference(){
+        return mDatabase.getReference("status");
+    }
     public DatabaseReference getCurrentBatteryLevelReference(){
         return RealtimeDatabase.getInstance()
                 .getBatteryLevelReference()

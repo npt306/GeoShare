@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.geoshare.Database.Storage.Storage;
 import com.example.geoshare.FriendProfile;
 import com.example.geoshare.Invite;
 import com.example.geoshare.MainActivity;
@@ -53,8 +54,8 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
 //            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
         }
         else {
-            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-            storageRef.child("usersAvatar/" + friend.getImageURL()).getDownloadUrl()
+            StorageReference storageRef = Storage.getInstance().getUsersAvatarReference();
+            storageRef.child(friend.getImageURL()).getDownloadUrl()
                     .addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {

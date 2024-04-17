@@ -36,8 +36,6 @@ public class ChatMessage {
     }
 
     public void setTimeStamp(Long timeStamp) {
-        Log.d("timeStamp", String.valueOf(timeStamp));
-
         this.timeStamp = timeStamp;
     }
 
@@ -55,9 +53,15 @@ public class ChatMessage {
     public String getReceiver() {
         return receiver;
     }
+
+    public Long getTimeStamp() {
+        return timeStamp;
+    }
+
     public String getDateFromTimeStamp() {
         SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm dd/MM"); //this format changeable
         dateFormatter.setTimeZone(TimeZone.getDefault());
+        Log.d("timeStamp", String.valueOf(this.timeStamp));
         return dateFormatter.format(this.timeStamp);
     }
 }

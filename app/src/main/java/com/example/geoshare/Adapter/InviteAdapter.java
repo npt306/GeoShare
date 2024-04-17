@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.geoshare.DataOutput;
+import com.example.geoshare.Database.Authentication.Authentication;
+import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
 import com.example.geoshare.Model.User;
 import com.example.geoshare.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -65,10 +67,10 @@ public class InviteAdapter extends RecyclerView.Adapter<InviteAdapter.ViewHolder
     }
     // Phương thức để gửi yêu cầu kết bạn
     private void acceptFriendRequest(String invitedId) {
-        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String currentUserId = Authentication.getInstance().getCurrentUserId();
         // Đường dẫn tới node "invites" trong Firebase Realtime Database
-        DatabaseReference invitedRef = FirebaseDatabase.getInstance().getReference().child("Users").child(invitedId).child("requests");
-        DatabaseReference currentUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId).child("invites");
+        DatabaseReference invitedRef = RealtimeDatabase.getInstance().getUsersReference().child(invitedId).child("requests");
+        DatabaseReference currentUserRef = RealtimeDatabase.getInstance().getUsersReference().child(currentUserId).child("invites");
 
         invitedRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

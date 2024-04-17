@@ -21,6 +21,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.geoshare.Adapter.ChatboxAdapter;
+import com.example.geoshare.Database.Authentication.Authentication;
+import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
+import com.example.geoshare.Database.Storage.Storage;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -55,8 +58,8 @@ public class ChatBox extends AppCompatActivity {
         chatFriendUsername = getIntent().getStringExtra("chatFriendUsername");
         chatFriendImageURL = getIntent().getStringExtra("chatFriendImageURL");
         if(chatFriendID != null) {
-            senderRoom = FirebaseAuth.getInstance().getCurrentUser().getUid() + "-" + chatFriendID;
-            receiverRoom = chatFriendID + "-" + FirebaseAuth.getInstance().getCurrentUser().getUid();
+            senderRoom = Authentication.getInstance().getCurrentUserId() + "-" + chatFriendID;
+            receiverRoom = chatFriendID + "-" + Authentication.getInstance().getCurrentUserId();
         }
 
         btnMessageBack = findViewById(R.id.btnMessageBack);
@@ -80,8 +83,8 @@ public class ChatBox extends AppCompatActivity {
 //            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
         }
         else {
-            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-            storageRef.child("usersAvatar/" + chatFriendImageURL).getDownloadUrl()
+            StorageReference storageRef = Storage.getInstance().getUsersAvatarReference();
+            storageRef.child(chatFriendImageURL).getDownloadUrl()
                     .addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
@@ -94,7 +97,7 @@ public class ChatBox extends AppCompatActivity {
         recyclerView.setAdapter(chatboxAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        DatabaseReference chatsRef = FirebaseDatabase.getInstance().getReference("Chats");
+        DatabaseReference chatsRef = RealtimeDatabase.getInstance().getChatsReference();
         chatsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -108,7 +111,9 @@ public class ChatBox extends AppCompatActivity {
                                 List<ChatMessage> chatMessageList = new ArrayList<>();
                                 for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                     ChatMessage message = dataSnapshot.getValue(ChatMessage.class);
-                                    message.setTimeStamp(dataSnapshot.child("timeStamp").getValue(Long.class));
+                                    if(dataSnapshot.child("timeStamp").getValue(Long.class) != null) {
+                                        message.setTimeStamp(dataSnapshot.child("timeStamp").getValue(Long.class));
+                                    }
                                     chatMessageList.add(message);
                                 }
                                 chatboxAdapter.clearMessageList();
@@ -165,7 +170,7 @@ public class ChatBox extends AppCompatActivity {
                 if(message.trim().length() > 0) {
                     String messageID = UUID.randomUUID().toString();
                     ChatMessage sendMessage = new ChatMessage(messageID,message,
-                            FirebaseAuth.getInstance().getCurrentUser().getUid(), chatFriendID);
+                            Authentication.getInstance().getCurrentUserId(), chatFriendID);
                     chatboxAdapter.addNewMessage(sendMessage);
                     DataOutput.sendNewMessage(sendMessage, senderRoom, receiverRoom);
                     editTextMessage.setText("");

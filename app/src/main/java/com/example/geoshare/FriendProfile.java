@@ -25,6 +25,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.example.geoshare.Database.Authentication.Authentication;
+import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -75,7 +77,7 @@ public class FriendProfile extends AppCompatActivity {
             String friendID = intent.getExtras().getString("friendID");
             txtId.setText(friendID);
 
-            DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("Users").child(friendID);
+            DatabaseReference usersRef = RealtimeDatabase.getInstance().getUsersReference().child(friendID);
             usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -120,7 +122,7 @@ public class FriendProfile extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_report, null);
         builder.setView(dialogView);
-        Report report = new Report(FirebaseAuth.getInstance().getCurrentUser().getUid(), String.valueOf(txtId.getText()));
+        Report report = new Report(Authentication.getInstance().getCurrentUserId(), String.valueOf(txtId.getText()));
 
         final EditText editTextProblemDescription = dialogView.findViewById(R.id.editTextProblemDescription);
 

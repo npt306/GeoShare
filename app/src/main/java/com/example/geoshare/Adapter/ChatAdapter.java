@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.geoshare.ChatBox;
+import com.example.geoshare.Database.Storage.Storage;
 import com.example.geoshare.Model.User;
 import com.example.geoshare.R;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -62,8 +63,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 //            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
         }
         else {
-            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-            storageRef.child("usersAvatar/" + friend.getImageURL()).getDownloadUrl()
+            StorageReference storageRef = Storage.getInstance().getUsersAvatarReference();
+            storageRef.child(friend.getImageURL()).getDownloadUrl()
                     .addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {

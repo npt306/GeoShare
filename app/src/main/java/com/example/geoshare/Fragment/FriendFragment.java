@@ -16,6 +16,8 @@ import com.example.geoshare.Adapter.ChatAdapter;
 import com.example.geoshare.Adapter.FriendListAdapter;
 import com.example.geoshare.Adapter.InviteAdapter;
 import com.example.geoshare.Adapter.RequestAdapter;
+import com.example.geoshare.Database.Authentication.Authentication;
+import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
 import com.example.geoshare.Model.User;
 import com.example.geoshare.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -94,8 +96,8 @@ public class FriendFragment extends Fragment {
     }
 
     private void getFriendList(){
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Friends").child(currentUser.getUid());
+        FirebaseUser currentUser = Authentication.getInstance().getCurrentUser();
+        DatabaseReference reference = RealtimeDatabase.getInstance().getFriendsReference().child(currentUser.getUid());
         reference.child("friendList").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -103,7 +105,7 @@ public class FriendFragment extends Fragment {
                 for (DataSnapshot friendSnapshot : dataSnapshot.getChildren()) {
                     String friendId = friendSnapshot.getValue(String.class);
                     if(!friendId.equals("empty")) {
-                        DatabaseReference friendRef = FirebaseDatabase.getInstance().getReference("Users").child(friendId);
+                        DatabaseReference friendRef = RealtimeDatabase.getInstance().getUsersReference().child(friendId);
                         friendRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {

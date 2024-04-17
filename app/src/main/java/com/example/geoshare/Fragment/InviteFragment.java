@@ -26,6 +26,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.geoshare.Adapter.InviteAdapter;
 import com.example.geoshare.DataOutput;
+import com.example.geoshare.Database.Authentication.Authentication;
+import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
+import com.example.geoshare.Database.Storage.Storage;
 import com.example.geoshare.Invite;
 import com.example.geoshare.Model.User;
 import com.example.geoshare.QR;
@@ -131,8 +134,8 @@ public class InviteFragment extends Fragment {
                         @Override
                         public void onUserIdChecked(boolean result) {
                             if(result) {
-                                DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("Users");
-                                String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                DatabaseReference usersRef = RealtimeDatabase.getInstance().getUsersReference();
+                                String currentUserId = Authentication.getInstance().getCurrentUserId();
 
                                 if(currentUserId.equals(id)){
                                     show_dialog("User Not Valid","Do not enter your own id.",InviteFragment.this.getContext() );
@@ -146,8 +149,8 @@ public class InviteFragment extends Fragment {
                                         linearLayoutUserFound.setVisibility(View.VISIBLE);
 
                                         if(!userFound.getImageURL().equals("default")){
-                                            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-                                            storageRef.child("usersAvatar/" + userFound.getImageURL()).getDownloadUrl()
+                                            StorageReference storageRef = Storage.getInstance().getUsersAvatarReference();
+                                            storageRef.child(userFound.getImageURL()).getDownloadUrl()
                                                     .addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                         @Override
                                                         public void onSuccess(Uri uri) {
@@ -213,8 +216,7 @@ public class InviteFragment extends Fragment {
     }
 
     private void checkUserIdExistence(String uidToCheck, UserIdCheckListener listener) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference usersRef = database.getReference("Users");
+        DatabaseReference usersRef = RealtimeDatabase.getInstance().getUsersReference();
         usersRef.child(uidToCheck).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

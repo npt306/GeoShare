@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.geoshare.ChatMessage;
+import com.example.geoshare.Database.Authentication.Authentication;
 import com.example.geoshare.Message;
 import com.example.geoshare.Model.User;
 import com.example.geoshare.R;
@@ -52,7 +53,7 @@ public class ChatboxAdapter extends RecyclerView.Adapter<ChatboxAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ChatMessage message = messageList.get(position);
-        if(Objects.equals(message.getSender(), FirebaseAuth.getInstance().getCurrentUser().getUid()))
+        if(Objects.equals(message.getSender(), Authentication.getInstance().getCurrentUserId()))
         {
             holder.textViewSendMessage.setText(message.getMessage());
             holder.textViewSendMessageTime.setText(message.getDateFromTimeStamp());
@@ -63,7 +64,7 @@ public class ChatboxAdapter extends RecyclerView.Adapter<ChatboxAdapter.ViewHold
     }
     @Override
     public int getItemViewType(int position) {
-        if( messageList.get(position).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+        if( messageList.get(position).getSender().equals(Authentication.getInstance().getCurrentUserId())) {
             return VIEW_TYPE_SEND;
         }else {
             return VIEW_TYPE_RECEIVE;

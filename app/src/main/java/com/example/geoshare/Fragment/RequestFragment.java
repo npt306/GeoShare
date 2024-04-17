@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 
 import com.example.geoshare.Adapter.InviteAdapter;
 import com.example.geoshare.Adapter.RequestAdapter;
+import com.example.geoshare.Database.Authentication.Authentication;
+import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
 import com.example.geoshare.Model.User;
 import com.example.geoshare.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -91,8 +93,8 @@ public class RequestFragment extends Fragment {
         return view;
     }
     private void getPendingList(){
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference friendsRef = FirebaseDatabase.getInstance().getReference("Friends").child(currentUser.getUid());
+        FirebaseUser currentUser = Authentication.getInstance().getCurrentUser();
+        DatabaseReference friendsRef = RealtimeDatabase.getInstance().getFriendsReference().child(currentUser.getUid());
         friendsRef.child("pendingList").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -103,7 +105,7 @@ public class RequestFragment extends Fragment {
                     if(friendId.equals("empty")) {
                        return;
                     }
-                    DatabaseReference pendingUserRef = FirebaseDatabase.getInstance().getReference("Users").child(friendId);
+                    DatabaseReference pendingUserRef = RealtimeDatabase.getInstance().getUsersReference().child(friendId);
                     Log.d("findFriend", friendId);
                     pendingUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
