@@ -31,7 +31,7 @@ import java.util.UUID;
 
 public class DataOutput {
     private static StorageReference storageReference = Storage.getInstance().getUsersAvatarReference();
-    //Update location of current user
+
     public static void updateNewLoc(double locLat, double locLong) {
         FirebaseDatabase database = FirebaseSingleton.getInstance().getFirebaseDatabase();
         FirebaseUser user = Authentication.getInstance().getCurrentUser();
@@ -42,7 +42,6 @@ public class DataOutput {
         myRef.child("locLong").setValue(Double.toString(locLong));
     }
 
-    //Update status of current user
     public static void updateNewStatus(String status) {
         FirebaseDatabase database = FirebaseSingleton.getInstance().getFirebaseDatabase();
         FirebaseUser user = Authentication.getInstance().getCurrentUser();
@@ -51,6 +50,7 @@ public class DataOutput {
 
         myRef.child("status").setValue(status);
     }
+
     public static void updateNewImage(Uri newImage) {
         FirebaseDatabase database = FirebaseSingleton.getInstance().getFirebaseDatabase();
         FirebaseUser user = Authentication.getInstance().getCurrentUser();
@@ -89,6 +89,7 @@ public class DataOutput {
 
         myRef.child("username").setValue(username);
     }
+
     public static void updateNewDOB(String DOB) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         FirebaseUser user = Authentication.getInstance().getCurrentUser();
@@ -151,6 +152,7 @@ public class DataOutput {
             }
         });
     }
+
     public static void acceptNewFriend(String friendId) {
         FirebaseDatabase database = FirebaseSingleton.getInstance().getFirebaseDatabase();
         FirebaseUser user = Authentication.getInstance().getCurrentUser();
@@ -225,6 +227,7 @@ public class DataOutput {
             }
         });
     }
+
     public static void sendNewMessage(ChatMessage newMessage, String senderRoom, String receiverRoom) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         FirebaseUser user = Authentication.getInstance().getCurrentUser();

@@ -100,7 +100,7 @@ public class PlacesResultParserTask extends AsyncTask<String, Integer, List<Stri
                 SystemClock.sleep(2000);
 
                 // Draw path
-                Location location = LocationManager.getInstance(MainActivity.getInstance()).getCurrentLocation();
+                Location location = LocationManager.getInstance().getCurrentLocation();
                 LatLng curLocation = new LatLng(location.getLatitude(), location.getLongitude());
                 getDirection(curLocation,
                         new LatLng(Double.parseDouble(result.get(position)[2]),

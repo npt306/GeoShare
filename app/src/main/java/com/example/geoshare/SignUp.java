@@ -154,6 +154,8 @@ public class SignUp extends AppCompatActivity {
                                     userFriends.put("inviteSentList", Arrays.asList(new String[]{"empty"}));
                                     friendsRef.setValue(userFriends);
 
+                                    LocationManager.getInstance().setLocationVisibility(true);
+
 //                                    ArrayList<String> defaultFriendList = new ArrayList<>(Arrays.asList(new String[]{"i0dlD9bphthZkMWOuz6z5yQ28oq1"}));
 //                                    ArrayList<String> defaultFriendList = new ArrayList<>(Arrays.asList(new String[]{"empty"}));
 //                                    User newUser = new User(id,username,"","default", dob, defaultFriendList,"100.123","100.123");

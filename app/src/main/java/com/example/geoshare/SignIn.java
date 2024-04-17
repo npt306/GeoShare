@@ -64,7 +64,6 @@ public class SignIn extends AppCompatActivity {
         textViewForgotPassword = findViewById(R.id.txtForgotPassword);
 
         layout = findViewById(R.id.signInLayout);
-//        getUser();
 
         layout.setOnTouchListener((v, event) -> {
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

@@ -37,6 +37,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -45,14 +46,14 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     FirebaseAuth mAuth;
     FirebaseUser firebaseUser;
-    ImageButton buttonProfile, buttonInvite, buttonLocation, buttonChat, buttonSearch, buttonSetting;
+    ImageButton buttonProfile, buttonInvite, buttonLocation, buttonChat, buttonSearch, buttonSetting, buttonGhost;
     private GoogleMap maps;
     private final int FINE_PERMISSION_CODE = 1;
-    private MarkerManager markerManager;
     private long pressedTime;
     Location currentLocation;
     FusedLocationProviderClient fusedLocationProviderClient;
-    public GoogleMap getMaps(){
+
+    public GoogleMap getMaps() {
         return maps;
     }
 
@@ -74,17 +75,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
-        if (mAuth == null){
+        if (mAuth == null) {
             mAuth.signOut();
         }
-        firebaseUser = FirebaseSingleton.getInstance().getFirebaseAuth().getCurrentUser();
 
-        if(firebaseUser == null){
+        firebaseUser = FirebaseSingleton.getInstance().getFirebaseAuth().getCurrentUser();
+        if (firebaseUser == null) {
             Intent intent = new Intent(getApplicationContext(), SignIn.class);
             startActivity(intent);
             finish();
         }
-
 
         // check if user is an admin
         // not complete!
@@ -95,67 +95,79 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         boolean isAdmin = false;
 //        isAdmin = true;
 
-        if (isAdmin){
+        if (isAdmin) {
             Intent intent = new Intent(getApplicationContext(), AdminActivity.class);
             startActivity(intent);
             finish();
         }
 
+// Vertical button
+        buttonProfile = findViewById(R.id.btnProfile);
         buttonInvite = findViewById(R.id.btnInvite);
-        buttonProfile =findViewById(R.id.btnProfile);
-        buttonLocation = findViewById(R.id.btnCurrentLocation);
         buttonChat = findViewById(R.id.btnChat);
-        buttonSearch = findViewById(R.id.btnSearch);
         buttonSetting = findViewById(R.id.btnSetting);
-        buttonSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), Search.class);
-                startActivity(intent);
-//                finish();
-            }
-        });
-        buttonInvite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), Invite.class);
-                startActivity(intent);
-//                finish();
-            }
-        });
+
         buttonProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), Profile.class);
                 startActivity(intent);
-//                finish();
             }
         });
+
+        buttonInvite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), Invite.class);
+                startActivity(intent);
+            }
+        });
+
+        buttonChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), Chat.class);
+                startActivity(intent);
+            }
+        });
+
+        buttonSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            }
+        });
+
+// Horizontal button
+        buttonSearch = findViewById(R.id.btnSearch);
+        buttonLocation = findViewById(R.id.btnCurrentLocation);
+        buttonGhost = findViewById(R.id.btnGhost);
+
+        buttonSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), Search.class);
+                startActivity(intent);
+            }
+        });
+
         buttonLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 focusToMyLocation();
             }
         });
-        buttonChat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), Chat.class);
-                startActivity(intent);
-//                finish();
-            }
-        });
-        buttonSetting.setOnClickListener(new View.OnClickListener() {
+
+        buttonGhost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                StatusManager status = new StatusManager();
-//                status.updateUserStatus("hello");
-
-
+                Boolean visibility = LocationManager.getInstance().getLocationVisibility();
+                LocationManager.getInstance().setLocationVisibility(!visibility);
+                MarkerManager.getInstance().hideMarker(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
             }
         });
 
-        if(firebaseUser != null) {
+
+        if (firebaseUser != null) {
             // Bắt đầu battery service
             Intent batteryService = new Intent(this, BatteryService.class);
             startService(batteryService);
@@ -170,8 +182,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
+    }
 
-        markerManager = new MarkerManager(MainActivity.this);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            LocationManager.getInstance().startLocationUpdates();
+            LocationManager.getInstance().getLocationForFriends();
+        }
     }
 
     public void onBackPressed() {
@@ -185,20 +204,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-
     private void getLastLocation() {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[] {android.Manifest.permission.ACCESS_FINE_LOCATION}, FINE_PERMISSION_CODE);
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, FINE_PERMISSION_CODE);
             return;
         }
         Task<Location> task = fusedLocationProviderClient.getLastLocation();
         task.addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-                if(location != null) {
+                if (location != null) {
                     currentLocation = location;
 
                     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.maps);
+                    assert mapFragment != null;
                     mapFragment.getMapAsync(MainActivity.this);
                 }
             }
@@ -230,18 +249,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         maps.setOnMapLongClickListener(markLocation);
 
         LatLng myLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        markerManager.createMarker(myLocation, "My location");
         maps.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == FINE_PERMISSION_CODE) {
+        if (requestCode == FINE_PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getLastLocation();
-            }else {
-                Toast.makeText(this,"Location permission is denied, please allow permission", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Location permission is denied, please allow permission", Toast.LENGTH_SHORT).show();
             }
         }
     }
