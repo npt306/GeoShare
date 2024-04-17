@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.geoshare.Database.Authentication.Authentication;
 import com.example.geoshare.Fragment.FriendFragment;
 import com.example.geoshare.Fragment.InviteFragment;
 import com.example.geoshare.Fragment.RequestFragment;
@@ -35,7 +36,7 @@ public class Invite extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invite);
 
-        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuth = Authentication.getInstance().getFirebaseAuth();
 
         navigationView = findViewById(R.id.navigation);
 //        editTextInviteID = findViewById(R.id.editTextInviteID);

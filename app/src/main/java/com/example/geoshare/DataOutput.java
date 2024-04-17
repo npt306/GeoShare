@@ -6,6 +6,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.geoshare.Database.Authentication.Authentication;
+import com.example.geoshare.Database.FirebaseSingleton;
+import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
+import com.example.geoshare.Database.Storage.Storage;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,11 +30,11 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class DataOutput {
-    private static StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+    private static StorageReference storageReference = Storage.getInstance().getUsersAvatarReference();
     //Update location of current user
     public static void updateNewLoc(double locLat, double locLong) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseDatabase database = FirebaseSingleton.getInstance().getFirebaseDatabase();
+        FirebaseUser user = Authentication.getInstance().getCurrentUser();
         String id = user.getUid();
         DatabaseReference myRef = database.getReference("Users").child(id);
 
@@ -40,21 +44,21 @@ public class DataOutput {
 
     //Update status of current user
     public static void updateNewStatus(String status) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseDatabase database = FirebaseSingleton.getInstance().getFirebaseDatabase();
+        FirebaseUser user = Authentication.getInstance().getCurrentUser();
         String id = user.getUid();
         DatabaseReference myRef = database.getReference("Users").child(id);
 
         myRef.child("status").setValue(status);
     }
     public static void updateNewImage(Uri newImage) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseDatabase database = FirebaseSingleton.getInstance().getFirebaseDatabase();
+        FirebaseUser user = Authentication.getInstance().getCurrentUser();
         String id = user.getUid();
         DatabaseReference myRef = database.getReference("Users").child(id);
 
         String imageUUID = UUID.randomUUID().toString();
-        StorageReference reference = storageReference.child("usersAvatar/" + imageUUID);
+        StorageReference reference = storageReference.child(imageUUID);
         reference.putFile(newImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -78,8 +82,8 @@ public class DataOutput {
     }
 
     public static void updateNewUsername(String username) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseDatabase database = FirebaseSingleton.getInstance().getFirebaseDatabase();
+        FirebaseUser user = Authentication.getInstance().getCurrentUser();
         String id = user.getUid();
         DatabaseReference myRef = database.getReference("Users").child(id);
 
@@ -87,7 +91,7 @@ public class DataOutput {
     }
     public static void updateNewDOB(String DOB) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = Authentication.getInstance().getCurrentUser();
         String id = user.getUid();
         DatabaseReference myRef = database.getReference("Users").child(id);
 
@@ -95,8 +99,8 @@ public class DataOutput {
     }
 
     public static void inviteNewFriend(String friendId) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseDatabase database = FirebaseSingleton.getInstance().getFirebaseDatabase();
+        FirebaseUser user = Authentication.getInstance().getCurrentUser();
         String id = user.getUid();
         DatabaseReference friendsRef = database.getReference("Friends").child(id);
 
@@ -148,8 +152,8 @@ public class DataOutput {
         });
     }
     public static void acceptNewFriend(String friendId) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseDatabase database = FirebaseSingleton.getInstance().getFirebaseDatabase();
+        FirebaseUser user = Authentication.getInstance().getCurrentUser();
         String id = user.getUid();
 
         DatabaseReference friendsRef = database.getReference("Friends").child(id);
@@ -223,10 +227,10 @@ public class DataOutput {
     }
     public static void sendNewMessage(ChatMessage newMessage, String senderRoom, String receiverRoom) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = Authentication.getInstance().getCurrentUser();
         String id = user.getUid();
 
-        DatabaseReference chatsRef = FirebaseDatabase.getInstance().getReference("Chats");
+        DatabaseReference chatsRef = RealtimeDatabase.getInstance().getChatsReference();
         chatsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -285,10 +289,10 @@ public class DataOutput {
     }
     public static void reportUSer(Report report) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = Authentication.getInstance().getCurrentUser();
         String id = user.getUid();
 
-        DatabaseReference reportsRef = FirebaseDatabase.getInstance().getReference("Reports");
+        DatabaseReference reportsRef = RealtimeDatabase.getInstance().getReportsReference();
 
         reportsRef.child(report.getReceiver()).child(report.getSender()).setValue(report);
     }

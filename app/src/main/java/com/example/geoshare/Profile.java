@@ -23,6 +23,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.geoshare.Database.Authentication.Authentication;
+import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
+import com.example.geoshare.Database.Storage.Storage;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
@@ -196,8 +198,8 @@ public class Profile extends AppCompatActivity {
             }
         });
 
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseAuth mAuth = Authentication.getInstance().getFirebaseAuth();
+        FirebaseUser currentUser = Authentication.getInstance().getCurrentUser();
 
         if (currentUser != null) {
             String userId = currentUser.getUid();
@@ -205,15 +207,15 @@ public class Profile extends AppCompatActivity {
             txtId.setText(userId);
             txtEmail.setText(email);
             // Sử dụng userId và email ở đây
-        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
+        DatabaseReference usersRef = RealtimeDatabase.getInstance().getUsersReference().child(userId);
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     String imageURL = dataSnapshot.child("imageURL").getValue(String.class);
                     if(!Objects.equals(imageURL, "default")) {
-                        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-                        storageRef.child("usersAvatar/" + imageURL).getDownloadUrl()
+                        StorageReference storageRef = Storage.getInstance().getUsersAvatarReference();
+                        storageRef.child(imageURL).getDownloadUrl()
                                 .addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {

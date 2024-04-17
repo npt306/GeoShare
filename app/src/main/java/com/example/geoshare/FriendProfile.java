@@ -27,6 +27,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.example.geoshare.Database.Authentication.Authentication;
 import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
+import com.example.geoshare.Database.Storage.Storage;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -84,8 +85,8 @@ public class FriendProfile extends AppCompatActivity {
                     if (dataSnapshot.exists()) {
                         String imageURL = dataSnapshot.child("imageURL").getValue(String.class);
                         if(!Objects.equals(imageURL, "default")) {
-                            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-                            storageRef.child("usersAvatar/" + imageURL).getDownloadUrl()
+                            StorageReference storageRef = Storage.getInstance().getUsersAvatarReference();
+                            storageRef.child(imageURL).getDownloadUrl()
                                     .addOnSuccessListener(new OnSuccessListener<Uri>() {
                                         @Override
                                         public void onSuccess(Uri uri) {
