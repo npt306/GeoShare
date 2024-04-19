@@ -3,13 +3,21 @@ package com.example.geoshare;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.geoshare.Adapter.ReportAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class AdminReportActivity extends AppCompatActivity {
+    private List<ReportListItem> itemList;
+    private ListView listView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,14 +33,13 @@ public class AdminReportActivity extends AppCompatActivity {
             }
         });
 
-        Button showButton = (Button) findViewById(R.id.show_button);
-        showButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //do sth
-                Toast.makeText(getBaseContext(), "Show Button has been pressed", Toast.LENGTH_SHORT).show();
+        listView = findViewById(R.id.custom_listview);
 
-            }
-        });
+        itemList = new ArrayList<>();
+        itemList.add(new ReportListItem("Thanh Phuong", R.drawable.user_ranking));
+        itemList.add(new ReportListItem("Thanh", R.drawable.user_ranking));
+
+        ReportAdapter adapter = new ReportAdapter(this, itemList);
+        listView.setAdapter(adapter);
     }
 }
