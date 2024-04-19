@@ -1,5 +1,6 @@
 package com.example.geoshare;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -51,6 +52,19 @@ public class UrlDownloader extends AsyncTask<String, Void, String>{
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
+
+        if (result.contains("error_message")){
+            Log.d("DEBUG TAG", "Request Is Denied");
+            AlertDialog.Builder builder = new AlertDialog.Builder(Search.getInstance());
+            builder.setTitle("Search results")
+                    .setMessage("Over query limit. Please try again tomorrow.")
+                    .setPositiveButton("OK", null);
+
+            // build dialog
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            return;
+        }
 
         if (api.equals("directions")){
             Log.d("DEBUG TAG", "API Directions");
