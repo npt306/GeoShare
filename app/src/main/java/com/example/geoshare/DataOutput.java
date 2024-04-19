@@ -290,13 +290,14 @@ public class DataOutput {
 //                });
 
     }
-    public static void reportUSer(Report report) {
+    public static void reportUser(Report report) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         FirebaseUser user = Authentication.getInstance().getCurrentUser();
         String id = user.getUid();
 
         DatabaseReference reportsRef = RealtimeDatabase.getInstance().getReportsReference();
 
-        reportsRef.child(report.getReceiver()).child(report.getSender()).setValue(report);
+        reportsRef.child(report.getReceiver()).setValue(report);
+//        reportsRef.child(report.getReceiver()).child(report.getSender()).setValue(report);
     }
 }

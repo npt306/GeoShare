@@ -230,7 +230,7 @@ public class FriendProfile extends AppCompatActivity {
 //                        DataOutput.updateNewUsername(newUsername);
 //                    }
                     report.setReportDescription(problemDescription);
-                    DataOutput.reportUSer(report);
+                    DataOutput.reportUser(report);
                     dialog.dismiss();
                     Toast.makeText(FriendProfile.this, "Your report will be consider, sorry for your inconvenience.", Toast.LENGTH_SHORT).show();
                 } else {
