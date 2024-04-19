@@ -100,23 +100,15 @@ public class PlacesResultParserTask extends AsyncTask<String, Integer, List<Stri
                 SystemClock.sleep(2000);
 
                 // Draw path
-                Location location = LocationManager.getInstance().getCurrentLocation();
+                Location location = MainActivity.getInstance().getCurrentLocation();
                 LatLng curLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                getDirection(curLocation,
-                        new LatLng(Double.parseDouble(result.get(position)[2]),
-                                Double.parseDouble(result.get(position)[3])));
+                LatLng desLocation = new LatLng(Double.parseDouble(result.get(position)[2]),
+                        Double.parseDouble(result.get(position)[3]));
+                MainActivity.getInstance().getDirection(curLocation, desLocation);
             }
         });
 
         Log.d("DEBUG TAG", "Showed alert dialog");
-    }
-
-    private void getDirection(LatLng origin, LatLng dest){
-        // Getting URL to the Google Directions API
-        String url = UrlGenerator.getDirectionsUrl(origin, dest);
-        // Start downloading json data from Google Directions API
-        // and draw routes
-        UrlDownloader.getInstance(MainActivity.getInstance()).execute(url);
     }
 }
 
