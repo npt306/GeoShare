@@ -24,8 +24,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -297,7 +300,9 @@ public class DataOutput {
 
         DatabaseReference reportsRef = RealtimeDatabase.getInstance().getReportsReference();
 
-        reportsRef.child(report.getReceiver()).setValue(report);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String currentDateTime = dateFormat.format(new Date()); // Find todays date
+        reportsRef.child(currentDateTime).child(report.getSender()).setValue(report);
 //        reportsRef.child(report.getReceiver()).child(report.getSender()).setValue(report);
     }
 }
