@@ -72,7 +72,7 @@ public class UrlDownloader extends AsyncTask<String, Void, String>{
             parserTask.execute(result);
         }
 
-        if (api.equals("place")){
+        if (api.equals("places")){
             Log.d("DEBUG TAG", "API Place");
 
             PlacesResultParserTask parserTask = new PlacesResultParserTask();
