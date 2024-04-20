@@ -3,19 +3,25 @@ package com.example.geoshare;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.geoshare.Adapter.ReportAdapter;
+import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AdminReportActivity extends AppCompatActivity {
     private List<ReportListItem> itemList;
+    private List<String> timeList;
     private ListView listView;
 
     @Override
@@ -34,12 +40,41 @@ public class AdminReportActivity extends AppCompatActivity {
         });
 
         listView = findViewById(R.id.custom_listview);
-
         itemList = new ArrayList<>();
-        itemList.add(new ReportListItem("Thanh Phuong", R.drawable.user_ranking));
-        itemList.add(new ReportListItem("Thanh", R.drawable.user_ranking));
-
-        ReportAdapter adapter = new ReportAdapter(this, itemList);
+        ReportAdapter adapter = new ReportAdapter(AdminReportActivity.this, itemList);
         listView.setAdapter(adapter);
+
+        // add data from db
+        DatabaseReference reference = RealtimeDatabase.getInstance().getReportsReference().orderByValue().getRef();
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot timestampSnapshot : snapshot.getChildren()) {
+                    for (DataSnapshot reportSnapshot : timestampSnapshot.getChildren()) {
+//                        String senderId = reportSnapshot.getKey();
+                        String receiverId = reportSnapshot.child("receiver").getValue(String.class);
+//                        reportSnapshot.child()
+                        DatabaseReference receiverRef = RealtimeDatabase.getInstance()
+                                .getUsersReference().child(receiverId).child("username");
+
+                        receiverRef.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                String userName = snapshot.getValue(String.class);
+                                itemList.add(new ReportListItem(userName, R.drawable.user_ranking));
+                                adapter.notifyDataSetChanged();
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
     }
 }
