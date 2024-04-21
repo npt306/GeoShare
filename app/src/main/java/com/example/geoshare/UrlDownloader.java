@@ -12,28 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class UrlDownloader extends AsyncTask<String, Void, String>{
-    Context callerContext;
-
-    private static UrlDownloader instance;
-
-    private UrlDownloader() {
-
-    }
-
-    public static UrlDownloader getInstance(Context context){
-        if (instance == null) {
-            synchronized (LocationManager.class) {
-                if (instance == null) {
-                    instance = new UrlDownloader();
-                }
-            }
-        }
-        instance.callerContext = context;
-        return instance;
-    }
-
     String api = "";
-
 
     @Override
     protected String doInBackground(String... url) {
@@ -56,7 +35,7 @@ public class UrlDownloader extends AsyncTask<String, Void, String>{
         if (result.contains("error_message")){
             Log.d("DEBUG TAG", "Request Is Denied");
             AlertDialog.Builder builder = new AlertDialog.Builder(Search.getInstance());
-            builder.setTitle("Search results")
+            builder.setTitle("Search results: " + api.toUpperCase() + " API")
                     .setMessage("Over query limit. Please try again tomorrow.")
                     .setPositiveButton("OK", null);
 
@@ -68,15 +47,13 @@ public class UrlDownloader extends AsyncTask<String, Void, String>{
 
         if (api.equals("directions")){
             Log.d("DEBUG TAG", "API Directions");
-            DirectionsResultParserTask parserTask = new DirectionsResultParserTask(callerContext);
-            parserTask.execute(result);
+            new DirectionsResultParserTask().execute(result);
         }
 
         if (api.equals("places")){
             Log.d("DEBUG TAG", "API Place");
 
-            PlacesResultParserTask parserTask = new PlacesResultParserTask();
-            parserTask.execute(result);
+            new PlacesResultParserTask().execute(result);
         }
     }
 
