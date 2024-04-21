@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.geoshare.Battery.BatteryService;
 import com.example.geoshare.Database.FirebaseSingleton;
@@ -25,6 +26,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,12 +41,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private final int FINE_PERMISSION_CODE = 1;
     private MarkerManager markerManager;
     private long pressedTime;
-    Location currentLocation;
-    FusedLocationProviderClient fusedLocationProviderClient;
+    private Location currentLocation;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private Polyline currentPolyline = null;
+    public void setCurrentPolyline(Polyline polyline){this.currentPolyline = polyline;}
     public GoogleMap getMaps(){
         return maps;
     }
     public Location getCurrentLocation(){return currentLocation;}
+    public Polyline getCurrentPolyline(){return currentPolyline;}
 
 
     // Implement to get context from other Intent
@@ -99,8 +104,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), Search.class);
-                startActivity(intent);
+
+                if (currentPolyline == null){
+                    Intent intent = new Intent(getApplicationContext(), Search.class);
+                    startActivity(intent);
+//                    LatLng des = new LatLng(10.8270849, 106.6892387);
+//                    Location location = MainActivity.getInstance().getCurrentLocation();
+//                    LatLng curLocation = new LatLng(location.getLatitude(), location.getLongitude());
+//                    getDirection(curLocation, des);
+                } else {
+                    currentPolyline.remove();
+                    currentPolyline = null;
+                    buttonSearch.setImageDrawable(ContextCompat.getDrawable(
+                            MainActivity.this, R.drawable.ic_search));
+                }
 //                finish();
             }
         });
@@ -226,9 +243,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void getDirection(LatLng origin, LatLng dest){
         // Getting URL to the Google Directions API
+        Log.d("DEBUG TAG", "Preparing to draw path");
         String url = UrlGenerator.getDirectionsUrl(origin, dest);
         // Start downloading json data from Google Directions API
         // and draw routes
-        UrlDownloader.getInstance(MainActivity.this).execute(url);
+        new UrlDownloader().execute(url);
+
+        // change search button
+        buttonSearch.setImageDrawable(ContextCompat.getDrawable(
+                MainActivity.this, R.drawable.ic_search_close));
+
     }
 }
