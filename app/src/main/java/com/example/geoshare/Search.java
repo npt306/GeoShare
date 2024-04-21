@@ -104,7 +104,7 @@ public class Search extends AppCompatActivity {
 //                searchInput.setText(query);
                 String url = UrlGenerator.getPlaceQueryUrl(query);
                 Log.d("DEBUG TAG", "Handling place query");
-                UrlDownloader.getInstance(Search.this).execute(url);
+                new UrlDownloader().execute(url);
                 return false;
             }
 
