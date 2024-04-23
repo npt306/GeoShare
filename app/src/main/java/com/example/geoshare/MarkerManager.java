@@ -18,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 
+import com.example.geoshare.Database.Authentication.Authentication;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -86,6 +87,7 @@ public class MarkerManager {
     }
 
     public void createMarker(LatLng location, String MarkerID) {
+//        Log.d("Marker manager marker id: ", MarkerID);
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(location)
                 .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.drawable.avatar, "100%")));
@@ -99,8 +101,8 @@ public class MarkerManager {
             Marker newMarker = callerContext.getMaps().addMarker(markerOptions);
             markerHashMap.put(MarkerID, newMarker);
 
-            if (Objects.equals(Objects.requireNonNull(newMarker).getTitle(), "My location")){
-                addListener(newMarker);
+            if (Objects.equals(MarkerID, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())) {
+                addListener(markerHashMap.get(Authentication.getInstance().getCurrentUserId()));
             }
         }
     }
@@ -151,40 +153,40 @@ public class MarkerManager {
 
 
     // Hàm để tạo Bitmap từ layout XML
-    private Bitmap createMarkerBitmap() {
-        View customMarkerView = callerContext.getLayoutInflater().inflate(R.layout.market_custom, null);
-        ImageView avatarImageView = customMarkerView.findViewById(R.id.avatarImageView);
-        TextView batteryTextView = customMarkerView.findViewById(R.id.batteryTextView);
-//        String batteryPercentage = String.valueOf(getCurrentBatteryLevel());
-        String batteryPercentage = "";
-        Integer batteryInteger;
-
-        DatabaseReference batteryRef = FirebaseDatabase.getInstance().getReference().child("batteryLevel").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        batteryRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    Integer battery = dataSnapshot.child("currentBattery").getValue(Integer.class);
-                    Toast.makeText(callerContext, String.valueOf(battery),Toast.LENGTH_SHORT).show();
-                    batteryTextView.setText(battery + "%");
-//                    transfer(battery, batteryPercentage);
-                } else {
-                    // Không tìm thấy thông tin người dùng, xử lý tương ứng
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Xử lý lỗi nếu cần
-            }
-        });
-
-        batteryTextView.setText(batteryPercentage + "%");
-        customMarkerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        customMarkerView.layout(0, 0, customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight());
-        customMarkerView.buildDrawingCache();
-        Bitmap bitmap = Bitmap.createBitmap(customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        customMarkerView.draw(canvas);
-        return bitmap;
-    }
+//    private Bitmap createMarkerBitmap() {
+//        View customMarkerView = callerContext.getLayoutInflater().inflate(R.layout.market_custom, null);
+//        ImageView avatarImageView = customMarkerView.findViewById(R.id.avatarImageView);
+//        TextView batteryTextView = customMarkerView.findViewById(R.id.batteryTextView);
+////        String batteryPercentage = String.valueOf(getCurrentBatteryLevel());
+//        String batteryPercentage = "";
+//        Integer batteryInteger;
+//
+//        DatabaseReference batteryRef = FirebaseDatabase.getInstance().getReference().child("batteryLevel").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+//        batteryRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.exists()) {
+//                    Integer battery = dataSnapshot.child("currentBattery").getValue(Integer.class);
+//                    Toast.makeText(callerContext, String.valueOf(battery),Toast.LENGTH_SHORT).show();
+//                    batteryTextView.setText(battery + "%");
+////                    transfer(battery, batteryPercentage);
+//                } else {
+//                    // Không tìm thấy thông tin người dùng, xử lý tương ứng
+//                }
+//            }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                // Xử lý lỗi nếu cần
+//            }
+//        });
+//
+//        batteryTextView.setText(batteryPercentage + "%");
+//        customMarkerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+//        customMarkerView.layout(0, 0, customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight());
+//        customMarkerView.buildDrawingCache();
+//        Bitmap bitmap = Bitmap.createBitmap(customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+//        Canvas canvas = new Canvas(bitmap);
+//        customMarkerView.draw(canvas);
+//        return bitmap;
+//    }
 }

@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.geoshare.Battery.BatteryService;
+import com.example.geoshare.Database.Authentication.Authentication;
 import com.example.geoshare.Database.FirebaseSingleton;
 import com.example.geoshare.MarkLocation.MarkLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -68,17 +69,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mAuth = FirebaseAuth.getInstance();
-//        if (mAuth == null){
-//            mAuth.signOut();
-//        }
         firebaseUser = FirebaseSingleton.getInstance().getFirebaseAuth().getCurrentUser();
-
         if(firebaseUser == null){
             Intent intent = new Intent(getApplicationContext(), SignIn.class);
             startActivity(intent);
             finish();
         }
+
 
 
         // check if user is an admin
@@ -152,14 +149,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+        if(firebaseUser != null) {
+            // Bắt đầu battery service
+            Intent batteryService = new Intent(this, BatteryService.class);
+            startService(batteryService);
+            // chưa kết thúc battery service
+        }
+
         // Bắt đầu battery service
-        Intent batteryService = new Intent(this, BatteryService.class);
-        startService(batteryService);
+//        Intent batteryService = new Intent(this, BatteryService.class);
+//        startService(batteryService);
         // chưa kết thúc battery service
 
         // Bắt đầu my location service
-        Intent myLocationService = new Intent(this, MyLocationService.class);
-        startService(myLocationService);
+//        Intent myLocationService = new Intent(this, MyLocationService.class);
+//        startService(myLocationService);
         // chưa kết thúc my location service
 
 
@@ -225,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         maps.setOnMapLongClickListener(markLocation);
 
         LatLng myLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        markerManager.createMarker(myLocation, "My location");
+        markerManager.createMarker(myLocation, Authentication.getInstance().getCurrentUserId());
         maps.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
     }
 
