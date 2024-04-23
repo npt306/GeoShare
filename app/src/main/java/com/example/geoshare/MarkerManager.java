@@ -87,12 +87,13 @@ public class MarkerManager {
     }
 
     public void createMarker(LatLng location, String MarkerID) {
-//        Log.d("Marker manager marker id: ", MarkerID);
+
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(location)
                 .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.drawable.avatar, "100%")));
 
         if (markerHashMap.containsKey(MarkerID)) {
+            Log.d("Old marker id: ", MarkerID);
             Marker oldMarker = markerHashMap.get(MarkerID);
             assert oldMarker != null;
             oldMarker.setVisible(true);
@@ -101,6 +102,7 @@ public class MarkerManager {
             Marker newMarker = callerContext.getMaps().addMarker(markerOptions);
             markerHashMap.put(MarkerID, newMarker);
 
+            Log.d("New marker id: ", MarkerID);
             if (Objects.equals(MarkerID, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())) {
                 addListener(markerHashMap.get(Authentication.getInstance().getCurrentUserId()));
             }

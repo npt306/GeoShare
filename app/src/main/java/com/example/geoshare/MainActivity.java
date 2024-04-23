@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
 
-        markerManager = new MarkerManager(MainActivity.this);
+//        markerManager = new MarkerManager(MainActivity.this);
     }
 
     public void onBackPressed() {
@@ -214,9 +214,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         maps.setOnMapLongClickListener(markLocation);
 
         LatLng myLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        markerManager.createMarker(myLocation, Authentication.getInstance().getCurrentUserId());
+        MarkerManager.getInstance().createMarker(myLocation, Authentication.getInstance().getCurrentUserId());
 
-        float zoomLevel = 14.0f;
+        float zoomLevel = 12.0f;
         maps.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, zoomLevel));
 
     }
@@ -233,6 +233,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+
     public void getDirection(LatLng origin, LatLng dest){
         // Getting URL to the Google Directions API
         Log.d("DEBUG TAG", "Preparing to draw path");
@@ -245,5 +246,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         buttonSearch.setImageDrawable(ContextCompat.getDrawable(
                 MainActivity.this, R.drawable.ic_search_close));
 
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (FirebaseAuth.getInstance().getCurrentUser() != null){
+            LocationManager.getInstance().startLocationUpdates();
+//            LocationManager.getInstance().getLocationForFriends();
+        }
     }
 }

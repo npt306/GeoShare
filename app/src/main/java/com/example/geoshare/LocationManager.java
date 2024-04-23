@@ -64,7 +64,7 @@ public class LocationManager {
             return;
         }
 
-        LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_LOW_POWER, 10000)
+        LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 100)
                 .build();
 
         LocationCallback locationCallback = new LocationCallback() {
@@ -78,7 +78,7 @@ public class LocationManager {
                     handler.removeCallbacksAndMessages(null);
                     handler.postDelayed(() -> updateLocationToFirebase(location.getLatitude(), location.getLongitude()), UPDATE_INTERVAL_MS);
 
-                    UPDATE_INTERVAL_MS = 10000;
+                    UPDATE_INTERVAL_MS = 100;
                     // UPDATE_INTERVAL_MS = TimeUnit.MINUTES.toMillis(1);
                 }
             }
@@ -108,7 +108,7 @@ public class LocationManager {
         newLocation.setLatitude(latitude);
         newLocation.setLongitude(longitude);
 
-        long MIN_DISTANCE_FOR_UPDATE = 50;
+        long MIN_DISTANCE_FOR_UPDATE = 5;
         if (currentLocation == null || newLocation.distanceTo(currentLocation) > MIN_DISTANCE_FOR_UPDATE) {
             if (currentLocation == null)
                 currentLocation = new Location("gps");
