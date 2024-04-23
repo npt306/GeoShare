@@ -17,7 +17,6 @@ import androidx.core.content.ContextCompat;
 import com.example.geoshare.Battery.BatteryService;
 import com.example.geoshare.Database.Authentication.Authentication;
 import com.example.geoshare.Database.FirebaseSingleton;
-import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
 import com.example.geoshare.MarkLocation.MarkLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -33,12 +32,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.Objects;
 
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -83,27 +76,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             finish();
         }
 
+
+
         // check if user is an admin
-        DatabaseReference userRef = RealtimeDatabase.getInstance().getUsersReference()
-                .child(FirebaseSingleton.getInstance().getFirebaseAuth().getCurrentUser().getUid());
+        // not complete!
+//        DatabaseReference firebaseRef = FirebaseDatabase.getInstance().getReference()
+//                .child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+//                .child("isAdmin");
 
-        userRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String value = snapshot.child("isAdmin").getValue(String.class);
+        boolean isAdmin = false;
+//        isAdmin = true;
 
-                if (Objects.equals(value, "true")){
-                    Intent intent = new Intent(getApplicationContext(), AdminActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        if (isAdmin){
+            Intent intent = new Intent(getApplicationContext(), AdminActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         buttonInvite = findViewById(R.id.btnInvite);
         buttonProfile =findViewById(R.id.btnProfile);
@@ -167,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
 
-//        markerManager = new MarkerManager(MainActivity.this);
+        markerManager = new MarkerManager(MainActivity.this);
     }
 
     public void onBackPressed() {
@@ -226,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         maps.setOnMapLongClickListener(markLocation);
 
         LatLng myLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        MarkerManager.getInstance().createMarker(myLocation, Authentication.getInstance().getCurrentUserId());
+        markerManager.createMarker(myLocation, Authentication.getInstance().getCurrentUserId());
 
         float zoomLevel = 12.0f;
         maps.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, zoomLevel));
