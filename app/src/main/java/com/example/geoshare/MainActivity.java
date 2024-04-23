@@ -127,7 +127,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     buttonSearch.setImageDrawable(ContextCompat.getDrawable(
                             MainActivity.this, R.drawable.ic_search));
                 }
-//                finish();
             }
         });
         buttonInvite.setOnClickListener(new View.OnClickListener() {
@@ -135,7 +134,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), Invite.class);
                 startActivity(intent);
-//                finish();
             }
         });
         buttonProfile.setOnClickListener(new View.OnClickListener() {
@@ -143,7 +141,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), Profile.class);
                 startActivity(intent);
-//                finish();
             }
         });
         buttonLocation.setOnClickListener(new View.OnClickListener() {
@@ -157,7 +154,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), Chat.class);
                 startActivity(intent);
-//                finish();
             }
         });
 
@@ -167,17 +163,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             startService(batteryService);
             // chưa kết thúc battery service
         }
-
-        // Bắt đầu battery service
-//        Intent batteryService = new Intent(this, BatteryService.class);
-//        startService(batteryService);
-        // chưa kết thúc battery service
-
-        // Bắt đầu my location service
-//        Intent myLocationService = new Intent(this, MyLocationService.class);
-//        startService(myLocationService);
-        // chưa kết thúc my location service
-
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
@@ -221,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         getLastLocation();
         CameraPosition camPos = new CameraPosition.Builder()
                 .target(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
-                .zoom(12)
+                .zoom(17)
                 .bearing(currentLocation.getBearing())
                 .tilt(70)
                 .build();
@@ -242,7 +227,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         LatLng myLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
         markerManager.createMarker(myLocation, Authentication.getInstance().getCurrentUserId());
-        maps.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
+
+        float zoomLevel = 14.0f;
+        maps.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, zoomLevel));
+
     }
 
     @Override
