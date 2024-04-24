@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.geoshare.DataOutput;
 import com.example.geoshare.Database.Storage.Storage;
 import com.example.geoshare.FriendProfile;
 import com.example.geoshare.Invite;
@@ -74,19 +75,10 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
         holder.delete_friend_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "Delete btn pressed: " + holder.username.getText(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "Delete btn pressed: " + holder.username.getText(), Toast.LENGTH_SHORT).show();
+                DataOutput.deleteFriend(friend.getId());
             }
         });
-        // Xác định sự kiện click cho button
-//        holder.inviteButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Xử lý sự kiện khi button được nhấn
-////                Toast.makeText(mContext, "Invite button clicked for user: " + user.getUsername(), Toast.LENGTH_SHORT).show();
-//                // Gửi yêu cầu kết bạn đến ID tương ứng
-//                sendFriendRequest(user.getId());
-//            }
-//        });
     }
     public void addFriendToList(User friend) {
         this.mFriends = new ArrayList<>(this.mFriends);

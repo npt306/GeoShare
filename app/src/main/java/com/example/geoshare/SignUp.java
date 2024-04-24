@@ -169,7 +169,7 @@ public class SignUp extends AppCompatActivity {
                                     show_notification("Account created");
                                 } else {
                                     // If sign in fails, display a message to the user.
-                                    show_notification("Authentication failed. Password was too short.");
+                                    show_notification("Authentication failed.");
                                 }
                             }
                         });
