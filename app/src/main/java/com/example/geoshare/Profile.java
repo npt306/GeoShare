@@ -179,8 +179,6 @@ public class Profile extends AppCompatActivity {
         buttonProfileBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
                 finish();
             }
         });
@@ -189,6 +187,7 @@ public class Profile extends AppCompatActivity {
             public void onClick(View view) {
                 Authentication.getInstance().signOut();
                 Intent intent = new Intent(getApplicationContext(), SignIn.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
             }

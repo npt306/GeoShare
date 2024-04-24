@@ -3,26 +3,35 @@ package com.example.geoshare;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.example.geoshare.Database.Authentication.Authentication;
 import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
 import com.example.geoshare.Database.Storage.Storage;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -44,7 +53,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MarkerManager {
     private static volatile MarkerManager instance;
     private HashMap<String, Marker> markerHashMap = new HashMap<>();
-
+    private GoogleMap googleMap;
     MainActivity callerContext;
 
     public interface MarkerImageCallback {
@@ -52,10 +61,14 @@ public class MarkerManager {
     }
 
     public MarkerManager(Context callerContext) {
+        Log.d("Marker manager","vo dc");
         this.callerContext = (MainActivity) callerContext;
         this.markerHashMap = new HashMap<>();
     }
 
+    public void setGoogleMap(GoogleMap map){
+        this.googleMap = map;
+    }
     public static MarkerManager getInstance() {
         if (instance == null) {
             synchronized (MarkerManager.class) {
@@ -98,6 +111,7 @@ public class MarkerManager {
         return cropCircleFromBitmap(bitmap);
     }
 
+
     public void createMarker(LatLng location, String markerId) {
         loadMarkerBitmapFromView(markerId, "100%", new MarkerImageCallback() {
             @Override
@@ -112,23 +126,29 @@ public class MarkerManager {
                     assert oldMarker != null;
                     oldMarker.setVisible(true);
                     Objects.requireNonNull(oldMarker).setPosition(location);
+//                    googleMap.addMarker(markerOptions);
                 } else {
-                    Marker newMarker = callerContext.getMaps().addMarker(markerOptions);
+                    Marker newMarker = googleMap.addMarker(markerOptions);
+                    assert newMarker != null;
+                    newMarker.setTag(markerId);
                     markerHashMap.put(markerId, newMarker);
 
                     Log.d("New marker id: ", markerId);
-                    if (Objects.equals(markerId, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())) {
-                        addBatteryChangeListener(newMarker, markerId);
-                    }
+//                    if (Objects.equals(markerId, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())) {
+//                        addBatteryChangeListener(newMarker, markerId);
+//                    }
+                    addBatteryChangeListener(newMarker, markerId);
+
                 }
             }
         });
     }
 
     private void addBatteryChangeListener(Marker marker, String markerId) {
+        Log.d("battery listener", markerId);
         DatabaseReference firebaseRef = FirebaseDatabase.getInstance().getReference()
                 .child("batteryLevel")
-                .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
+                .child(markerId);
         firebaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -163,7 +183,8 @@ public class MarkerManager {
     private void loadMarkerBitmapFromView(String userId, String batteryInfo, MarkerImageCallback callback) {
         View customMarkerView = ((LayoutInflater) callerContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.market_custom, null);
         CircleImageView markerImageView = customMarkerView.findViewById(R.id.avatarImageView);
-
+        TextView markerBattery = customMarkerView.findViewById(R.id.batteryTextView);
+        markerBattery.setText(batteryInfo);
         RealtimeDatabase.getInstance()
                 .getUsersReference()
                 .child(userId)
@@ -189,6 +210,7 @@ public class MarkerManager {
                                         });
                             } else {
                                 markerImageView.setImageResource(R.drawable.avatar);
+
                                 callback.onMarkerImageLoaded(generateMarkerBitmapFromView(customMarkerView));
                             }
                         } else {
@@ -217,5 +239,100 @@ public class MarkerManager {
         Canvas canvas = new Canvas(returnedBitmap);
         customMarkerView.draw(canvas);
         return returnedBitmap;
+    }
+
+    // Sự kiện khi nhấn vào marker
+    public void setMarkerClickListener() {
+
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(@NonNull Marker m) {
+                String tag = (String) m.getTag();
+                assert tag != null;
+                showCustomDialog(tag);
+                return true;
+            }
+        });
+    }
+
+    // Hiển thị custom dialog khi nhấn vào marker
+    private void showCustomDialog(String markerId) {
+        Log.d("show diaglog profile", markerId + "click");
+
+        // Viết code để hiển thị custom dialog ở đây
+        // Ví dụ:
+        // CustomDialog dialog = new CustomDialog(callerContext);
+        // dialog.show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(callerContext);
+        View dialogView;
+        CircleImageView avatar;
+        TextView name;
+        TextView dob;
+        EditText status;
+        TextView battery;
+        TextView speed;
+        TextView totalFriend;
+        Button buttonUpdateStatus;
+        ImageView buttonClose;
+
+        if(markerId.equals(Authentication.getInstance().getCurrentUserId())){
+            dialogView = LayoutInflater.from(callerContext).inflate(R.layout.dialog_profile, null);
+            buttonUpdateStatus = dialogView.findViewById(R.id.button_update_status_dialog_profile);
+        }
+        else {
+            dialogView = LayoutInflater.from(callerContext).inflate(R.layout.dialog_friend_profile, null);
+        }
+        builder.setView(dialogView);
+
+        avatar = dialogView.findViewById(R.id.avatar_dialog_profile);
+        name = dialogView.findViewById(R.id.name_dialog_profile);
+        dob = dialogView.findViewById(R.id.dob_dialog_profile);
+        status = dialogView.findViewById(R.id.status_dialog_profile);
+        battery = dialogView.findViewById(R.id.battery_dialog_profile);
+        speed = dialogView.findViewById(R.id.speed_dialog_profile);
+        totalFriend = dialogView.findViewById(R.id.total_friend_dialog_profile);
+        buttonClose = dialogView.findViewById(R.id.button_close_dialog_profile);
+
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        DatabaseReference usersRef = RealtimeDatabase.getInstance().getUsersReference().child(markerId);
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String imageURL = dataSnapshot.child("imageURL").getValue(String.class);
+                    if(!Objects.equals(imageURL, "default")) {
+                        StorageReference storageRef = Storage.getInstance().getUsersAvatarReference();
+                        storageRef.child(imageURL).getDownloadUrl()
+                                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        Glide.with(callerContext.getApplicationContext()).load(uri).into(avatar);
+                                    }
+                                });
+                    }
+                    String username = dataSnapshot.child("username").getValue(String.class);
+                    name.setText(username);
+                    String userDob = dataSnapshot.child("dob").getValue(String.class);
+                    dob.setText(userDob);
+                } else {
+                    // Không tìm thấy thông tin người dùng, xử lý tương ứng
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý lỗi nếu cần
+            }
+        });
+
+        buttonClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 }

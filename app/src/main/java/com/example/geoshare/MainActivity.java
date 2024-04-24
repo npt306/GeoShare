@@ -27,6 +27,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -35,12 +37,11 @@ import com.google.firebase.auth.FirebaseUser;
 
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
-    FirebaseAuth mAuth;
+
     FirebaseUser firebaseUser;
     ImageButton buttonProfile, buttonInvite, buttonLocation, buttonChat, buttonSearch;
     private GoogleMap maps;
     private final int FINE_PERMISSION_CODE = 1;
-    private MarkerManager markerManager;
     private long pressedTime;
     private Location currentLocation;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public MainActivity() {
         instance = this;
+        Log.d("Mainactivity", "tao moi");
     }
 
     public static MainActivity getInstance() {
@@ -155,7 +157,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
 
-        markerManager = new MarkerManager(MainActivity.this);
     }
 
     public void onBackPressed() {
@@ -208,16 +209,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
+        if (maps == null) {
+            Log.d("onMapReady", "Map is not ready" );
+        }
+
+        if (maps != googleMap) {
+            Log.d("onMapReady", "Map is ready");
+        }
         maps = googleMap;
+        MarkerManager.getInstance().setGoogleMap(maps);
         MarkLocation markLocation = new MarkLocation(MainActivity.this, maps);
         markLocation.readMarkersFromDatabase();
+        MarkerManager.getInstance().setMarkerClickListener();
         maps.setOnMapLongClickListener(markLocation);
 
+
         LatLng myLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        markerManager.createMarker(myLocation, Authentication.getInstance().getCurrentUserId());
+//        LocationManager.getInstance().startLocationUpdates();
+
+        MarkerManager.getInstance().createMarker(myLocation, Authentication.getInstance().getCurrentUserId());
 
         float zoomLevel = 12.0f;
         maps.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, zoomLevel));
+
 
     }
 
@@ -252,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onResume();
         if (FirebaseAuth.getInstance().getCurrentUser() != null){
             LocationManager.getInstance().startLocationUpdates();
-//            LocationManager.getInstance().getLocationForFriends();
+            LocationManager.getInstance().getLocationForFriends();
         }
     }
 }

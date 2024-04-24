@@ -43,8 +43,7 @@ public class SignUp extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
+
             finish();
         }
     }
@@ -154,7 +153,7 @@ public class SignUp extends AppCompatActivity {
                                     userFriends.put("inviteSentList", Arrays.asList(new String[]{"empty"}));
                                     friendsRef.setValue(userFriends);
 
-                                    LocationManager.getInstance().setLocationVisibility(true);
+//                                    LocationManager.getInstance().setLocationVisibility(true);
 
 //                                    ArrayList<String> defaultFriendList = new ArrayList<>(Arrays.asList(new String[]{"i0dlD9bphthZkMWOuz6z5yQ28oq1"}));
 //                                    ArrayList<String> defaultFriendList = new ArrayList<>(Arrays.asList(new String[]{"empty"}));
@@ -162,14 +161,14 @@ public class SignUp extends AppCompatActivity {
 //                                    myRef.setValue(newUser);
 
 
-                                    Intent intent = new Intent(getApplicationContext(), SignIn.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
                                     finish();
                                     show_notification("Account created");
                                 } else {
                                     // If sign in fails, display a message to the user.
-                                    show_notification("Authentication failed. Password was too short.");
+                                    show_notification("Authentication failed.");
                                 }
                             }
                         });
