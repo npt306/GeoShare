@@ -48,6 +48,9 @@ public class RealtimeDatabase {
     public DatabaseReference getStatusReference(){
         return mDatabase.getReference("status");
     }
+    public DatabaseReference getCommunityReference(){
+        return mDatabase.getReference("Community");
+    }
     public DatabaseReference getCurrentBatteryLevelReference(){
         return RealtimeDatabase.getInstance()
                 .getBatteryLevelReference()
