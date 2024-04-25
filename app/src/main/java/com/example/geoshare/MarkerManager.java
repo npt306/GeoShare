@@ -3,45 +3,74 @@ package com.example.geoshare;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.example.geoshare.Database.Authentication.Authentication;
+import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
+import com.example.geoshare.Database.Storage.Storage;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 import java.util.Objects;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MarkerManager {
     private static volatile MarkerManager instance;
     private HashMap<String, Marker> markerHashMap = new HashMap<>();
-
+    private GoogleMap googleMap;
     MainActivity callerContext;
-    public MarkerManager(Context callerContext){
+
+    public interface MarkerImageCallback {
+        void onMarkerImageLoaded(Bitmap bitmap);
+    }
+
+    public MarkerManager(Context callerContext) {
+        Log.d("Marker manager","vo dc");
         this.callerContext = (MainActivity) callerContext;
         this.markerHashMap = new HashMap<>();
     }
 
+    public void setGoogleMap(GoogleMap map){
+        this.googleMap = map;
+    }
     public static MarkerManager getInstance() {
         if (instance == null) {
             synchronized (MarkerManager.class) {
@@ -53,9 +82,8 @@ public class MarkerManager {
         return instance;
     }
 
-    // crop middle circle from a bitmap
-    private Bitmap cropCircleFromBitmap(Bitmap bitmap){
-
+    // Crop middle circle from a bitmap
+    private Bitmap cropCircleFromBitmap(Bitmap bitmap) {
         final int r = bitmap.getHeight();
         final Bitmap outputBitmap = Bitmap.createBitmap(r, r, Bitmap.Config.ARGB_8888);
 
@@ -77,56 +105,75 @@ public class MarkerManager {
         return outputBitmap;
     }
 
-    private Bitmap getBitmapFromImage(@DrawableRes int resId){
-        BitmapDrawable bitmapdraw = (BitmapDrawable)callerContext.getResources().getDrawable(resId);
+    private Bitmap getBitmapFromImage(@DrawableRes int resId) {
+        BitmapDrawable bitmapdraw = (BitmapDrawable) callerContext.getResources().getDrawable(resId);
         Bitmap bitmap = bitmapdraw.getBitmap();
         bitmap = Bitmap.createScaledBitmap(bitmap, 128, 128, false);
 
         return cropCircleFromBitmap(bitmap);
     }
 
-    public void createMarker(LatLng location, String MarkerID) {
-        MarkerOptions markerOptions = new MarkerOptions()
-                .position(location)
-                .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.drawable.avatar, "100%")));
 
-        if (markerHashMap.containsKey(MarkerID)) {
-            Marker oldMarker = markerHashMap.get(MarkerID);
-            assert oldMarker != null;
-            oldMarker.setVisible(true);
-            Objects.requireNonNull(oldMarker).setPosition(location);
-        } else {
-            Marker newMarker = callerContext.getMaps().addMarker(markerOptions);
-            markerHashMap.put(MarkerID, newMarker);
-
-            if (Objects.equals(Objects.requireNonNull(newMarker).getTitle(), "My location")){
-                addListener(newMarker);
-            }
-        }
-    }
-
-    private void addListener(Marker marker){
-        DatabaseReference firebaseRef = FirebaseDatabase.getInstance().getReference()
-                .child("batteryLevel")
-                .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
-        firebaseRef.addValueEventListener(new ValueEventListener() {
+    public void createMarker(LatLng location, String markerId) {
+        loadMarkerBitmapFromView(markerId, "100%", new MarkerImageCallback() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Lấy dữ liệu từ dataSnapshot và cập nhật giá trị pin
-                String batteryInfo = dataSnapshot.child("currentBattery").getValue(String.class);
-                // Cập nhật thông tin pin của marker
-                marker.setIcon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.drawable.avatar, batteryInfo)));
-//                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromImage(R.drawable.avatar)));
-                Log.d("DEBUG TAG", "Updating " + marker.getTitle());
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Xử lý lỗi nếu có
+            public void onMarkerImageLoaded(Bitmap bitmap) {
+                MarkerOptions markerOptions = new MarkerOptions()
+                        .position(location)
+                        .icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+
+                if (markerHashMap.containsKey(markerId)) {
+                    Log.d("Old marker id: ", markerId);
+                    Marker oldMarker = markerHashMap.get(markerId);
+                    assert oldMarker != null;
+                    oldMarker.setVisible(true);
+                    Objects.requireNonNull(oldMarker).setPosition(location);
+//                    googleMap.addMarker(markerOptions);
+                } else {
+                    Marker newMarker = googleMap.addMarker(markerOptions);
+                    assert newMarker != null;
+                    newMarker.setTag(markerId);
+                    markerHashMap.put(markerId, newMarker);
+
+                    Log.d("New marker id: ", markerId);
+//                    if (Objects.equals(markerId, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())) {
+//                        addBatteryChangeListener(newMarker, markerId);
+//                    }
+                    addBatteryChangeListener(newMarker, markerId);
+
+                }
             }
         });
     }
 
-    // Hàm để ẩn marker nhưng không xóa khỏi HashMap
+    private void addBatteryChangeListener(Marker marker, String markerId) {
+        Log.d("battery listener", markerId);
+        DatabaseReference firebaseRef = FirebaseDatabase.getInstance().getReference()
+                .child("batteryLevel")
+                .child(markerId);
+        firebaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Get data from dataSnapshot and update battery value
+                String batteryInfo = dataSnapshot.child("currentBattery").getValue(String.class);
+                // Update marker's battery info
+                loadMarkerBitmapFromView(markerId, batteryInfo, new MarkerImageCallback() {
+                    @Override
+                    public void onMarkerImageLoaded(Bitmap bitmap) {
+                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+                        Log.d("DEBUG TAG", "Updating " + marker.getTitle());
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors if any
+            }
+        });
+    }
+
+    // Function to hide marker without removing from HashMap
     public void hideMarker(String friendId) {
         Marker marker = markerHashMap.get(friendId);
         if (marker != null) {
@@ -134,12 +181,59 @@ public class MarkerManager {
         }
     }
 
-    private Bitmap getMarkerBitmapFromView(@DrawableRes int resId, String batteryInfo) {
+    // Tải bitmap từ layout view
+    private void loadMarkerBitmapFromView(String userId, String batteryInfo, MarkerImageCallback callback) {
         View customMarkerView = ((LayoutInflater) callerContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.market_custom, null);
-        ImageView markerImageView = customMarkerView.findViewById(R.id.avatarImageView);
-        TextView markerBatteryTextView = customMarkerView.findViewById(R.id.batteryTextView);
-        markerImageView.setImageResource(resId);
-        markerBatteryTextView.setText(batteryInfo);
+        CircleImageView markerImageView = customMarkerView.findViewById(R.id.avatarImageView);
+        TextView markerBattery = customMarkerView.findViewById(R.id.batteryTextView);
+        markerBattery.setText(batteryInfo + "%");
+        RealtimeDatabase.getInstance()
+                .getUsersReference()
+                .child(userId)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            String imageURL = dataSnapshot.child("imageURL").getValue(String.class);
+                            if (!Objects.equals(imageURL, "default")) {
+                                StorageReference storageRef = Storage.getInstance().getUsersAvatarReference();
+                                storageRef.child(imageURL).getDownloadUrl()
+                                        .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                            @Override
+                                            public void onSuccess(Uri uri) {
+                                                Glide.with(callerContext.getApplicationContext()).asBitmap().load(uri).into(new SimpleTarget<Bitmap>() {
+                                                    @Override
+                                                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                                        markerImageView.setImageBitmap(resource);
+                                                        callback.onMarkerImageLoaded(generateMarkerBitmapFromView(customMarkerView));
+                                                    }
+                                                });
+                                            }
+                                        });
+                            } else {
+                                markerImageView.setImageResource(R.drawable.avatar);
+
+                                callback.onMarkerImageLoaded(generateMarkerBitmapFromView(customMarkerView));
+                            }
+                        } else {
+                            // User info not found, handle accordingly
+                            markerImageView.setImageResource(R.drawable.avatar);
+                            Log.d("Load image to marker", "User not available");
+                            callback.onMarkerImageLoaded(generateMarkerBitmapFromView(customMarkerView));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        // Handle errors if needed
+                        Log.d("Load image to marker", databaseError.getMessage());
+                        callback.onMarkerImageLoaded(generateMarkerBitmapFromView(customMarkerView));
+                    }
+                });
+    }
+
+    // Tạo bitmap từ layout view
+    private Bitmap generateMarkerBitmapFromView(View customMarkerView) {
         customMarkerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         customMarkerView.layout(0, 0, customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight());
         customMarkerView.buildDrawingCache();
@@ -149,25 +243,111 @@ public class MarkerManager {
         return returnedBitmap;
     }
 
+    // Sự kiện khi nhấn vào marker
+    public void setMarkerClickListener() {
 
-    // Hàm để tạo Bitmap từ layout XML
-    private Bitmap createMarkerBitmap() {
-        View customMarkerView = callerContext.getLayoutInflater().inflate(R.layout.market_custom, null);
-        ImageView avatarImageView = customMarkerView.findViewById(R.id.avatarImageView);
-        TextView batteryTextView = customMarkerView.findViewById(R.id.batteryTextView);
-//        String batteryPercentage = String.valueOf(getCurrentBatteryLevel());
-        String batteryPercentage = "";
-        Integer batteryInteger;
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(@NonNull Marker m) {
+                String tag = (String) m.getTag();
+                assert tag != null;
+                showCustomDialog(tag);
+                return true;
+            }
+        });
+    }
 
-        DatabaseReference batteryRef = FirebaseDatabase.getInstance().getReference().child("batteryLevel").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        batteryRef.addValueEventListener(new ValueEventListener() {
+    // Hiển thị custom dialog khi nhấn vào marker
+    private void showCustomDialog(String markerId) {
+        Log.d("show diaglog profile", markerId + "click");
+
+        // Viết code để hiển thị custom dialog ở đây
+        // Ví dụ:
+        // CustomDialog dialog = new CustomDialog(callerContext);
+        // dialog.show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(callerContext);
+        View dialogView;
+        CircleImageView avatar;
+        TextView name;
+        TextView dob;
+        EditText status;
+        TextView battery;
+        TextView speed;
+        TextView totalFriend;
+        Button buttonUpdateStatus;
+        ImageView buttonClose;
+
+        if(markerId.equals(Authentication.getInstance().getCurrentUserId())){
+            dialogView = LayoutInflater.from(callerContext).inflate(R.layout.dialog_profile, null);
+            status = dialogView.findViewById(R.id.status_dialog_profile);
+            buttonUpdateStatus = dialogView.findViewById(R.id.button_update_status_dialog_profile);
+            buttonUpdateStatus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String statusInf = String.valueOf(status.getText());
+                    if(statusInf.length() >= 30){
+                        Toast.makeText(callerContext.getApplicationContext(), "Status too long. Please enter again (Maximum 30 characters)", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    DatabaseReference statusRef = FirebaseDatabase.getInstance().getReference()
+                            .child("Users")
+                            .child(markerId)
+                            .child("status");
+                    statusRef.setValue(statusInf).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(callerContext.getApplicationContext(), "Update status completed", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // Xử lý khi có lỗi xảy ra
+                                    Toast.makeText(callerContext.getApplicationContext(), "Update status failed", Toast.LENGTH_SHORT).show();
+
+                                }
+                            });;
+                }
+            });
+        }
+        else {
+            dialogView = LayoutInflater.from(callerContext).inflate(R.layout.dialog_friend_profile, null);
+            status = dialogView.findViewById(R.id.status_dialog_profile);
+            status.setEnabled(false);
+        }
+        builder.setView(dialogView);
+
+        avatar = dialogView.findViewById(R.id.avatar_dialog_profile);
+        name = dialogView.findViewById(R.id.name_dialog_profile);
+        dob = dialogView.findViewById(R.id.dob_dialog_profile);
+        battery = dialogView.findViewById(R.id.battery_dialog_profile);
+        speed = dialogView.findViewById(R.id.speed_dialog_profile);
+        totalFriend = dialogView.findViewById(R.id.total_friend_dialog_profile);
+        buttonClose = dialogView.findViewById(R.id.button_close_dialog_profile);
+
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        DatabaseReference usersRef = RealtimeDatabase.getInstance().getUsersReference().child(markerId);
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    Integer battery = dataSnapshot.child("currentBattery").getValue(Integer.class);
-                    Toast.makeText(callerContext, String.valueOf(battery),Toast.LENGTH_SHORT).show();
-                    batteryTextView.setText(battery + "%");
-//                    transfer(battery, batteryPercentage);
+                    String imageURL = dataSnapshot.child("imageURL").getValue(String.class);
+                    if(!Objects.equals(imageURL, "default")) {
+                        StorageReference storageRef = Storage.getInstance().getUsersAvatarReference();
+                        storageRef.child(imageURL).getDownloadUrl()
+                                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        Glide.with(callerContext.getApplicationContext()).load(uri).into(avatar);
+                                    }
+                                });
+                    }
+                    String username = dataSnapshot.child("username").getValue(String.class);
+                    name.setText(username);
+                    String userDob = dataSnapshot.child("dob").getValue(String.class);
+                    dob.setText(userDob);
                 } else {
                     // Không tìm thấy thông tin người dùng, xử lý tương ứng
                 }
@@ -178,13 +358,87 @@ public class MarkerManager {
             }
         });
 
-        batteryTextView.setText(batteryPercentage + "%");
-        customMarkerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        customMarkerView.layout(0, 0, customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight());
-        customMarkerView.buildDrawingCache();
-        Bitmap bitmap = Bitmap.createBitmap(customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        customMarkerView.draw(canvas);
-        return bitmap;
+        DatabaseReference batteryRef = FirebaseDatabase.getInstance().getReference()
+                .child("batteryLevel")
+                .child(markerId);
+        batteryRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Get data from dataSnapshot and update battery value
+                String batteryInfo = dataSnapshot.child("currentBattery").getValue(String.class);
+                // Update marker's battery info
+                battery.setText(batteryInfo + "%");
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors if any
+            }
+        });
+
+        DatabaseReference speedRef = FirebaseDatabase.getInstance().getReference()
+                .child("Locations")
+                .child(markerId);
+        batteryRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Get data from dataSnapshot and update battery value
+                String speedInf = dataSnapshot.child("speed").getValue(String.class);
+                if (speedInf != null) {
+                    // Có giá trị cho trường "speed"
+                    speed.setText(speedInf + " km/h");
+                } else {
+                    // Không có giá trị cho trường "speed"
+                    speed.setText("0 km/h");
+                }
+                // Update marker's battery info
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors if any
+            }
+        });
+
+        DatabaseReference totalFriendRef = FirebaseDatabase.getInstance().getReference()
+                .child("Friends")
+                .child(markerId)
+                .child("friendList");
+        totalFriendRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                long totalFriends = dataSnapshot.getChildrenCount();
+                // Sử dụng totalFriends theo nhu cầu của bạn
+                Log.d("FriendCount", "Số lượng bạn bè: " + totalFriends);
+                totalFriend.setText(String.valueOf(totalFriends));
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors if any
+            }
+        });
+
+        DatabaseReference statusRef = FirebaseDatabase.getInstance().getReference()
+                .child("Users")
+                .child(markerId);
+        statusRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String statusInf = dataSnapshot.child("status").getValue(String.class);
+                status.setText(statusInf);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors if any
+            }
+        });
+
+        buttonClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 }

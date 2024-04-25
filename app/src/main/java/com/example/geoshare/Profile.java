@@ -26,16 +26,12 @@ import com.example.geoshare.Database.Authentication.Authentication;
 import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
 import com.example.geoshare.Database.Storage.Storage;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.Calendar;
@@ -183,8 +179,6 @@ public class Profile extends AppCompatActivity {
         buttonProfileBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
                 finish();
             }
         });
@@ -193,6 +187,7 @@ public class Profile extends AppCompatActivity {
             public void onClick(View view) {
                 Authentication.getInstance().signOut();
                 Intent intent = new Intent(getApplicationContext(), SignIn.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
             }

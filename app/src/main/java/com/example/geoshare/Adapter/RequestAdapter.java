@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -64,17 +65,24 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
                     });
         }
         // Xác định sự kiện click cho button
-//        holder.inviteButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Xử lý sự kiện khi button được nhấn
-////                Toast.makeText(mContext, "Invite button clicked for user: " + user.getUsername(), Toast.LENGTH_SHORT).show();
-//                // Gửi yêu cầu kết bạn đến ID tương ứng
-////                acceptFriendRequest(user.getId());
-//                DataOutput.acceptNewFriend(String.valueOf(holder.pendingFriendID.getText()));
-//
-//            }
-//        });
+        holder.buttonAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Xử lý sự kiện khi button được nhấn
+//                Toast.makeText(mContext, "Invite button clicked for user: " + user.getUsername(), Toast.LENGTH_SHORT).show();
+                DataOutput.acceptNewFriend(String.valueOf(holder.pendingFriendID.getText()));
+
+            }
+        });
+        holder.buttonReject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Xử lý sự kiện khi button được nhấn
+//                Toast.makeText(mContext, "Invite button clicked for user: " + user.getUsername(), Toast.LENGTH_SHORT).show();
+                DataOutput.deletePending(String.valueOf(holder.pendingFriendID.getText()));
+
+            }
+        });
     }
     // Phương thức để gửi yêu cầu kết bạn
     private void acceptFriendRequest(String invitedId) {

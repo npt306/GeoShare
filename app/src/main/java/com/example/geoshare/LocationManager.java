@@ -1,6 +1,7 @@
 package com.example.geoshare;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Handler;
@@ -10,6 +11,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
+import com.example.geoshare.Database.Authentication.Authentication;
+import com.example.geoshare.Database.FirebaseSingleton;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -17,9 +20,11 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -59,12 +64,14 @@ public class LocationManager {
     }
 
     public void startLocationUpdates() {
+
         if (ActivityCompat.checkSelfPermission(MainActivity.getInstance(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(MainActivity.getInstance(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-
-        LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_LOW_POWER, 10000)
+//        MarkerManager.getInstance().reloadMarker();
+        Log.d("Loacation Manager","location request");
+        LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 100)
                 .build();
 
         LocationCallback locationCallback = new LocationCallback() {
@@ -72,13 +79,14 @@ public class LocationManager {
             public void onLocationResult(@NonNull LocationResult locationResult) {
                 for (Location location : locationResult.getLocations()) {
                     // Update the current location marker on the map
+
                     updateCurrentLocationMarker(location);
 
                     // Update Firebase with a delay
                     handler.removeCallbacksAndMessages(null);
                     handler.postDelayed(() -> updateLocationToFirebase(location.getLatitude(), location.getLongitude()), UPDATE_INTERVAL_MS);
 
-                    UPDATE_INTERVAL_MS = 10000;
+                    UPDATE_INTERVAL_MS = 100;
                     // UPDATE_INTERVAL_MS = TimeUnit.MINUTES.toMillis(1);
                 }
             }
@@ -90,11 +98,20 @@ public class LocationManager {
     }
 
     private void updateCurrentLocationMarker(Location location) {
-        if (!getLocationVisibility()) {
+
+        FirebaseUser firebaseUser = FirebaseSingleton.getInstance().getFirebaseAuth().getCurrentUser();
+        Log.d("check login", String.valueOf(firebaseUser));
+        if(firebaseUser == null){
             return;
         }
 
-        currentLocation = location;
+
+        if (!getLocationVisibility()) {
+            return;
+        }
+        Log.d("Loacation Manager","update current location");
+
+//        currentLocation = location;
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
 
@@ -102,13 +119,18 @@ public class LocationManager {
     }
 
     private void updateLocationToFirebase(double latitude, double longitude) {
+        FirebaseUser firebaseUser = FirebaseSingleton.getInstance().getFirebaseAuth().getCurrentUser();
+        Log.d("check login", String.valueOf(firebaseUser));
+        if(firebaseUser == null){
+            return;
+        }
         String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
 
         Location newLocation = new Location("gps");
         newLocation.setLatitude(latitude);
         newLocation.setLongitude(longitude);
 
-        long MIN_DISTANCE_FOR_UPDATE = 50;
+        long MIN_DISTANCE_FOR_UPDATE = 5;
         if (currentLocation == null || newLocation.distanceTo(currentLocation) > MIN_DISTANCE_FOR_UPDATE) {
             if (currentLocation == null)
                 currentLocation = new Location("gps");
@@ -181,6 +203,11 @@ public class LocationManager {
     }
 
     public void updateFriendLocation(String friendId, Location location) {
+        FirebaseUser firebaseUser = FirebaseSingleton.getInstance().getFirebaseAuth().getCurrentUser();
+        Log.d("check login", String.valueOf(firebaseUser));
+        if(firebaseUser == null){
+            return;
+        }
         Log.d("LocationManager", "FriendID: " + friendId + " Location: " + location.toString());
 
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());

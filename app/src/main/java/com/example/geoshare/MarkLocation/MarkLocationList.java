@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.geoshare.Database.RealtimeDatabase.MarkLocationDatabase;
 import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
+import com.example.geoshare.LocationManager;
 import com.example.geoshare.MainActivity;
 import com.example.geoshare.R;
 import com.google.android.gms.maps.model.LatLng;
@@ -42,8 +43,9 @@ public class MarkLocationList extends AppCompatActivity {
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+
+                finish();
+                LocationManager.getInstance().startLocationUpdates();
             }
         });
 
