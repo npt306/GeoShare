@@ -75,4 +75,8 @@ public class RealtimeDatabase {
                     }
                 });
     }
+    public DatabaseReference getCurrentUserStatusReference(){
+        return mDatabase.getReference("status")
+                .child(Authentication.getInstance().getCurrentUserId());
+    }
 }

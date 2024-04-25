@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.geoshare.Battery.BatteryService;
+import com.example.geoshare.Database.Authentication.Authentication;
 import com.example.geoshare.Database.FirebaseSingleton;
 import com.example.geoshare.MarkLocation.MarkLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -26,6 +27,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -34,12 +37,11 @@ import com.google.firebase.auth.FirebaseUser;
 
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
-    FirebaseAuth mAuth;
+
     FirebaseUser firebaseUser;
     ImageButton buttonProfile, buttonInvite, buttonLocation, buttonChat, buttonSearch;
     private GoogleMap maps;
     private final int FINE_PERMISSION_CODE = 1;
-    private MarkerManager markerManager;
     private long pressedTime;
     private Location currentLocation;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -57,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public MainActivity() {
         instance = this;
+        Log.d("Mainactivity", "tao moi");
     }
 
     public static MainActivity getInstance() {
@@ -68,17 +71,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mAuth = FirebaseAuth.getInstance();
-//        if (mAuth == null){
-//            mAuth.signOut();
-//        }
         firebaseUser = FirebaseSingleton.getInstance().getFirebaseAuth().getCurrentUser();
-
         if(firebaseUser == null){
             Intent intent = new Intent(getApplicationContext(), SignIn.class);
             startActivity(intent);
             finish();
         }
+
 
 
         // check if user is an admin
@@ -118,7 +117,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     buttonSearch.setImageDrawable(ContextCompat.getDrawable(
                             MainActivity.this, R.drawable.ic_search));
                 }
-//                finish();
             }
         });
         buttonInvite.setOnClickListener(new View.OnClickListener() {
@@ -126,7 +124,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), Invite.class);
                 startActivity(intent);
-//                finish();
             }
         });
         buttonProfile.setOnClickListener(new View.OnClickListener() {
@@ -134,7 +131,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), Profile.class);
                 startActivity(intent);
-//                finish();
             }
         });
         buttonLocation.setOnClickListener(new View.OnClickListener() {
@@ -148,25 +144,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), Chat.class);
                 startActivity(intent);
-//                finish();
             }
         });
 
-        // Bắt đầu battery service
-//        Intent batteryService = new Intent(this, BatteryService.class);
-//        startService(batteryService);
-        // chưa kết thúc battery service
-
-        // Bắt đầu my location service
-        Intent myLocationService = new Intent(this, MyLocationService.class);
-        startService(myLocationService);
-        // chưa kết thúc my location service
-
+        if(firebaseUser != null) {
+            // Bắt đầu battery service
+            Intent batteryService = new Intent(this, BatteryService.class);
+            startService(batteryService);
+            // chưa kết thúc battery service
+        }
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
 
-        markerManager = new MarkerManager(MainActivity.this);
     }
 
     public void onBackPressed() {
@@ -205,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         getLastLocation();
         CameraPosition camPos = new CameraPosition.Builder()
                 .target(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
-                .zoom(12)
+                .zoom(17)
                 .bearing(currentLocation.getBearing())
                 .tilt(70)
                 .build();
@@ -219,14 +209,30 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
+        if (maps == null) {
+            Log.d("onMapReady", "Map is not ready" );
+        }
+
+        if (maps != googleMap) {
+            Log.d("onMapReady", "Map is ready");
+        }
         maps = googleMap;
+        MarkerManager.getInstance().setGoogleMap(maps);
         MarkLocation markLocation = new MarkLocation(MainActivity.this, maps);
         markLocation.readMarkersFromDatabase();
+        MarkerManager.getInstance().setMarkerClickListener();
         maps.setOnMapLongClickListener(markLocation);
 
+
         LatLng myLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        markerManager.createMarker(myLocation, "My location");
-        maps.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
+//        LocationManager.getInstance().startLocationUpdates();
+
+        MarkerManager.getInstance().createMarker(myLocation, Authentication.getInstance().getCurrentUserId());
+
+        float zoomLevel = 12.0f;
+        maps.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, zoomLevel));
+
+
     }
 
     @Override
@@ -241,6 +247,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+
     public void getDirection(LatLng origin, LatLng dest){
         // Getting URL to the Google Directions API
         Log.d("DEBUG TAG", "Preparing to draw path");
@@ -253,5 +260,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         buttonSearch.setImageDrawable(ContextCompat.getDrawable(
                 MainActivity.this, R.drawable.ic_search_close));
 
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (FirebaseAuth.getInstance().getCurrentUser() != null){
+            LocationManager.getInstance().startLocationUpdates();
+            LocationManager.getInstance().getLocationForFriends();
+        }
     }
 }

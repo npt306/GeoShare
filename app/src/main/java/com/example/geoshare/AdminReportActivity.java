@@ -49,19 +49,20 @@ public class AdminReportActivity extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // get list of timestamps
                 for (DataSnapshot timestampSnapshot : snapshot.getChildren()) {
+                    // get list of reports represented by senderId in that timestamp
                     for (DataSnapshot reportSnapshot : timestampSnapshot.getChildren()) {
-//                        String senderId = reportSnapshot.getKey();
                         String receiverId = reportSnapshot.child("receiver").getValue(String.class);
-//                        reportSnapshot.child()
                         DatabaseReference receiverRef = RealtimeDatabase.getInstance()
                                 .getUsersReference().child(receiverId).child("username");
 
+                        // get receiver name from that report
                         receiverRef.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 String userName = snapshot.getValue(String.class);
-                                itemList.add(new ReportListItem(userName, R.drawable.user_ranking));
+                                itemList.add(new ReportListItem(userName, reportSnapshot.getKey(), timestampSnapshot.getKey(), R.drawable.user_ranking));
                                 adapter.notifyDataSetChanged();
                             }
                             @Override

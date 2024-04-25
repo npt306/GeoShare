@@ -410,7 +410,7 @@ public class DataOutput {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String currentDateTime = dateFormat.format(new Date()); // Find todays date
-        reportsRef.child(currentDateTime).child(report.getSender()).setValue(report);
+        reportsRef.child(currentDateTime).child(report.getSenderId()).setValue(report);
 //        reportsRef.child(report.getReceiver()).child(report.getSender()).setValue(report);
     }
 }
