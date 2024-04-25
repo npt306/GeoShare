@@ -7,6 +7,8 @@ import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.geoshare.Database.Authentication.Authentication;
+
 public class AdminActivity extends AppCompatActivity {
     LinearLayout reportButton;
     @Override
@@ -20,6 +22,17 @@ public class AdminActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), AdminReportActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        LinearLayout backButton = (LinearLayout) findViewById(R.id.back_layout);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Authentication.getInstance().signOut();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 
