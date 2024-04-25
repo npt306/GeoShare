@@ -72,7 +72,7 @@ public class AdminReportDetail extends AppCompatActivity{
         TextView userName = findViewById(R.id.userName);
         TextView reportTime = findViewById(R.id.reportTime);
         TextView reportDetail = findViewById(R.id.user_reportDetail);
-//        TextView reportDescription = findViewById(R.id.reportDescription);
+        TextView reportDescription = findViewById(R.id.reportDescription);
 
         DatabaseReference receiverRef = RealtimeDatabase.getInstance()
                 .getUsersReference().child(chosenItem.getReceiverId()).child("username");
@@ -93,7 +93,7 @@ public class AdminReportDetail extends AppCompatActivity{
 
                 reportTime.setText(chosenItem.getTimestamp());
                 reportDetail.setText(builder.toString());
-//                reportDescription.setText(chosenItem.getReportDescription());
+                reportDescription.setText(chosenItem.getReportDescription());
             }
 
             @Override
