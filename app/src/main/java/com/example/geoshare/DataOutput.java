@@ -231,6 +231,114 @@ public class DataOutput {
         });
     }
 
+    public static void deleteFriend(String friendId) {
+        FirebaseDatabase database = FirebaseSingleton.getInstance().getFirebaseDatabase();
+        FirebaseUser user = Authentication.getInstance().getCurrentUser();
+        String id = user.getUid();
+
+        DatabaseReference friendsRef = database.getReference("Friends").child(id);
+        friendsRef.child("friendList").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    ArrayList<String> listFriendArray = new ArrayList<>();
+
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        if(!Objects.equals(snapshot.getValue(String.class), friendId))
+                            listFriendArray.add(snapshot.getValue(String.class));
+                    }
+                    if(listFriendArray.isEmpty()) {
+                        listFriendArray.add("empty");
+                    }
+                    friendsRef.child("friendList").setValue(listFriendArray);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        DatabaseReference friendIDRef = database.getReference("Friends").child(friendId);
+        friendIDRef.child("friendList").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    ArrayList<String> pendingArray = new ArrayList<>();
+
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        if(!Objects.equals(snapshot.getValue(String.class), id))
+                            pendingArray.add(snapshot.getValue(String.class));
+                    }
+                    if(pendingArray.isEmpty()) {
+                        pendingArray.add("empty");
+                    }
+                    friendIDRef.child("friendList").setValue(pendingArray);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public static void deletePending(String friendId) {
+        FirebaseDatabase database = FirebaseSingleton.getInstance().getFirebaseDatabase();
+        FirebaseUser user = Authentication.getInstance().getCurrentUser();
+        String id = user.getUid();
+
+        DatabaseReference friendsRef = database.getReference("Friends").child(id);
+        friendsRef.child("pendingList").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    ArrayList<String> listFriendArray = new ArrayList<>();
+
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        if(!Objects.equals(snapshot.getValue(String.class), friendId))
+                            listFriendArray.add(snapshot.getValue(String.class));
+                    }
+                    if(listFriendArray.isEmpty()) {
+                        listFriendArray.add("empty");
+                    }
+                    friendsRef.child("pendingList").setValue(listFriendArray);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+//        DatabaseReference friendIDRef = database.getReference("Friends").child(friendId);
+//        friendIDRef.child("friendList").addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if(dataSnapshot.exists()){
+//                    ArrayList<String> pendingArray = new ArrayList<>();
+//
+//                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                        if(!Objects.equals(snapshot.getValue(String.class), id))
+//                            pendingArray.add(snapshot.getValue(String.class));
+//                    }
+//                    if(pendingArray.isEmpty()) {
+//                        pendingArray.add("empty");
+//                    }
+//                    friendIDRef.child("friendList").setValue(pendingArray);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+    }
+
     public static void sendNewMessage(ChatMessage newMessage, String senderRoom, String receiverRoom) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         FirebaseUser user = Authentication.getInstance().getCurrentUser();
