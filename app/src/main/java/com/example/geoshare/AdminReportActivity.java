@@ -1,6 +1,5 @@
 package com.example.geoshare;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -26,7 +25,6 @@ import java.util.Objects;
 
 public class AdminReportActivity extends AppCompatActivity {
     private List<ReportListItem> itemList;
-    private List<String> timeList;
     private ListView listView;
 
     @Override
@@ -38,8 +36,6 @@ public class AdminReportActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), AdminActivity.class);
-                startActivity(intent);
                 finish();
             }
         });
@@ -67,7 +63,6 @@ public class AdminReportActivity extends AppCompatActivity {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 String userName = snapshot.child("username").getValue(String.class);
-                                Uri userImg = null;
                                 String imageURL = snapshot.child("imageURL").getValue(String.class);
 
                                 if(!Objects.equals(imageURL, "default")) {
