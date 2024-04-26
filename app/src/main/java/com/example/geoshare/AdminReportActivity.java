@@ -3,6 +3,7 @@ package com.example.geoshare;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -29,7 +30,7 @@ public class AdminReportActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_report);
 
-        LinearLayout backButton = (LinearLayout) findViewById(R.id.back_layout);
+        ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

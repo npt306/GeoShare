@@ -3,6 +3,7 @@ package com.example.geoshare;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -45,7 +46,7 @@ public class AdminReportDetail extends AppCompatActivity{
 
         chosenItem = (Report) getIntent().getSerializableExtra("chosenReport");
 
-        LinearLayout backButton = (LinearLayout) findViewById(R.id.back_layout);
+        ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
