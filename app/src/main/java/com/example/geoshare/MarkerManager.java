@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -36,6 +37,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -184,7 +186,7 @@ public class MarkerManager {
         View customMarkerView = ((LayoutInflater) callerContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.market_custom, null);
         CircleImageView markerImageView = customMarkerView.findViewById(R.id.avatarImageView);
         TextView markerBattery = customMarkerView.findViewById(R.id.batteryTextView);
-        markerBattery.setText(batteryInfo);
+        markerBattery.setText(batteryInfo + "%");
         RealtimeDatabase.getInstance()
                 .getUsersReference()
                 .child(userId)
@@ -277,17 +279,47 @@ public class MarkerManager {
 
         if(markerId.equals(Authentication.getInstance().getCurrentUserId())){
             dialogView = LayoutInflater.from(callerContext).inflate(R.layout.dialog_profile, null);
+            status = dialogView.findViewById(R.id.status_dialog_profile);
             buttonUpdateStatus = dialogView.findViewById(R.id.button_update_status_dialog_profile);
+            buttonUpdateStatus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String statusInf = String.valueOf(status.getText());
+                    if(statusInf.length() >= 30){
+                        Toast.makeText(callerContext.getApplicationContext(), "Status too long. Please enter again (Maximum 30 characters)", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    DatabaseReference statusRef = FirebaseDatabase.getInstance().getReference()
+                            .child("Users")
+                            .child(markerId)
+                            .child("status");
+                    statusRef.setValue(statusInf).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(callerContext.getApplicationContext(), "Update status completed", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // Xử lý khi có lỗi xảy ra
+                                    Toast.makeText(callerContext.getApplicationContext(), "Update status failed", Toast.LENGTH_SHORT).show();
+
+                                }
+                            });;
+                }
+            });
         }
         else {
             dialogView = LayoutInflater.from(callerContext).inflate(R.layout.dialog_friend_profile, null);
+            status = dialogView.findViewById(R.id.status_dialog_profile);
+            status.setEnabled(false);
         }
         builder.setView(dialogView);
 
         avatar = dialogView.findViewById(R.id.avatar_dialog_profile);
         name = dialogView.findViewById(R.id.name_dialog_profile);
         dob = dialogView.findViewById(R.id.dob_dialog_profile);
-        status = dialogView.findViewById(R.id.status_dialog_profile);
         battery = dialogView.findViewById(R.id.battery_dialog_profile);
         speed = dialogView.findViewById(R.id.speed_dialog_profile);
         totalFriend = dialogView.findViewById(R.id.total_friend_dialog_profile);
@@ -323,6 +355,80 @@ public class MarkerManager {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Xử lý lỗi nếu cần
+            }
+        });
+
+        DatabaseReference batteryRef = FirebaseDatabase.getInstance().getReference()
+                .child("batteryLevel")
+                .child(markerId);
+        batteryRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Get data from dataSnapshot and update battery value
+                String batteryInfo = dataSnapshot.child("currentBattery").getValue(String.class);
+                // Update marker's battery info
+                battery.setText(batteryInfo + "%");
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors if any
+            }
+        });
+
+        DatabaseReference speedRef = FirebaseDatabase.getInstance().getReference()
+                .child("Locations")
+                .child(markerId);
+        batteryRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Get data from dataSnapshot and update battery value
+                String speedInf = dataSnapshot.child("speed").getValue(String.class);
+                if (speedInf != null) {
+                    // Có giá trị cho trường "speed"
+                    speed.setText(speedInf + " km/h");
+                } else {
+                    // Không có giá trị cho trường "speed"
+                    speed.setText("0 km/h");
+                }
+                // Update marker's battery info
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors if any
+            }
+        });
+
+        DatabaseReference totalFriendRef = FirebaseDatabase.getInstance().getReference()
+                .child("Friends")
+                .child(markerId)
+                .child("friendList");
+        totalFriendRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                long totalFriends = dataSnapshot.getChildrenCount();
+                // Sử dụng totalFriends theo nhu cầu của bạn
+                Log.d("FriendCount", "Số lượng bạn bè: " + totalFriends);
+                totalFriend.setText(String.valueOf(totalFriends));
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors if any
+            }
+        });
+
+        DatabaseReference statusRef = FirebaseDatabase.getInstance().getReference()
+                .child("Users")
+                .child(markerId);
+        statusRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String statusInf = dataSnapshot.child("status").getValue(String.class);
+                status.setText(statusInf);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors if any
             }
         });
 

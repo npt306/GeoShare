@@ -55,6 +55,8 @@
         <activity android:name=".Invite"/>
         <activity android:name=".Chat"/>
         <activity android:name=".ChatBox"/>
+        <activity android:name=".Community"/>
+        <activity android:name=".CreateCommunity"/>
         <activity android:name=".CaptureAct"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"

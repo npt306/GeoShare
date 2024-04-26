@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#101D25"
+        android:padding="16dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
+
+        <LinearLayout
+            android:id="@+id/back_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/back_button"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="10dp"
+                android:background="#101D25"
+                android:src="@drawable/back_button" />
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Create community"
+                android:textColor="#C28C3A"
+                android:textSize="25dp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+
+        <!-- Mode Toggle -->
+        <LinearLayout
+            android:id="@+id/avatar_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="150dp"
+            android:layout_below="@+id/back_layout"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/avatarlayout_border_radius"
+            android:gravity="center">
+
+            <FrameLayout
+                android:id="@+id/profile_image_section"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/border_radius">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/community_image"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/user"
+                    app:civ_border_color="#C28C3A"
+                    app:civ_border_width="2dp" />
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:background="@drawable/picture_border_radius">
+
+                    <ImageButton
+                        android:id="@+id/btnUploadImage"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="bottom|end"
+                        android:background="@drawable/camera_icon"
+                        android:padding="4dp"
+                        android:text="Upload"
+                        android:textSize="8dp" />
+                </FrameLayout>
+
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/switch_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/avatar_layout"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical">
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:orientation="horizontal">-->
+            <!--                <LinearLayout-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:orientation="horizontal">-->
+            <!--                    <TextView-->
+            <!--                        android:layout_width="0dp"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:layout_weight="1"-->
+            <!--                        android:text="Ghost Mode"-->
+            <!--                        android:textSize="18dp"-->
+            <!--                        android:textStyle="bold"-->
+            <!--                        android:textColor="#FFFFFF"/>-->
+            <!--                    <ImageButton-->
+            <!--                        android:layout_width="wrap_content"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:src="@drawable/question"-->
+            <!--                        android:background="#101D25"/>-->
+            <!--                </LinearLayout>-->
+            <!--                <View-->
+            <!--                    android:layout_width="0dp"-->
+            <!--                    android:layout_height="0dp"-->
+            <!--                    android:layout_weight="1" />-->
+            <!--                <Switch-->
+            <!--                    android:id="@+id/switch_ghost_mode"-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:thumb="@drawable/switch_thumb"-->
+            <!--                    android:track="@drawable/switch_track"/>-->
+            <!--            </LinearLayout>-->
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:orientation="horizontal"-->
+            <!--                android:layout_marginTop="10dp">-->
+            <!--                <LinearLayout-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:orientation="horizontal">-->
+            <!--                    <TextView-->
+            <!--                        android:layout_width="0dp"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:layout_weight="1"-->
+            <!--                        android:text="Blur Mode"-->
+            <!--                        android:textSize="18dp"-->
+            <!--                        android:textStyle="bold"-->
+            <!--                        android:textColor="#FFFFFF"/>-->
+            <!--                    <ImageButton-->
+            <!--                        android:layout_width="wrap_content"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:src="@drawable/question"-->
+            <!--                        android:background="#101D25"/>-->
+            <!--                </LinearLayout>-->
+            <!--                <View-->
+            <!--                    android:layout_width="0dp"-->
+            <!--                    android:layout_height="0dp"-->
+            <!--                    android:layout_weight="1" />-->
+            <!--                <Switch-->
+            <!--                    android:id="@+id/switch_blur_mode"-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:thumb="@drawable/switch_thumb"-->
+            <!--                    android:track="@drawable/switch_track"/>-->
+            <!--            </LinearLayout>-->
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/info_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/switch_layout"
+            android:background="@drawable/avatarlayout_border_radius"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="25dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+<!--                    <ImageView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginRight="20dp"-->
+<!--                        android:src="@drawable/id_ic" />-->
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Community name"
+                            android:textColor="#646F75"
+                            android:textSize="13dp" />
+
+                        <TextView
+                            android:id="@+id/community_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:hint="Enter something"
+                            android:textColor="#FFFFFF"
+                            android:textColorHint="#FFFFFF"
+                            android:textSize="18dp" />
+
+                    </LinearLayout>
+                    <ImageButton
+                        android:id="@+id/btnCommunity_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginLeft="200dp"
+                        android:background="#2D383E"
+                        android:src="@drawable/fix_ic" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4">
+
+<!--                    <ImageView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginRight="13dp"-->
+<!--                        android:src="@drawable/mail_ic" />-->
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Community description"
+                            android:textColor="#646F75"
+                            android:textSize="13dp" />
+
+                        <EditText
+                            android:id="@+id/editTextCommunityDescription"
+                            android:layout_width="360dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="20dp"
+                            android:background="@drawable/custom_signin_editext"
+                            android:hint="Describe your community"
+                            android:lines="5"
+                            android:maxLines="10"
+                            android:minLines="1"
+                            android:paddingVertical="12dp"
+                            android:paddingLeft="10dp"
+                            android:textColorHint="#C6C6C6" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Repeat the pattern for Name and Email with edit buttons -->
+
+<!--        <com.google.android.material.appbar.MaterialToolbar-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="600dp"-->
+<!--            android:id="@+id/toolbar"-->
+<!--            app:titleCentered="true"-->
+<!--            app:titleTextColor="?attr/colorSurface"-->
+<!--            android:background="?attr/colorPrimary"/>-->
+
+<!--        <com.google.android.material.progressindicator.LinearProgressIndicator-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:id="@+id/progress"-->
+<!--            android:layout_below="@id/toolbar"/>-->
+
+        <Button
+            android:id="@+id/btnCreate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/info_layout"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/logout_button"
+            android:text="Create new community"
+            android:textColor="#FFFFFF" />
+
+    </RelativeLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
