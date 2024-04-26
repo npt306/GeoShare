@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ReportAdapter extends ArrayAdapter<ReportListItem> {
     private Context context;
     private List<ReportListItem> items;
@@ -46,14 +48,16 @@ public class ReportAdapter extends ArrayAdapter<ReportListItem> {
 
         ReportListItem chosenItem = items.get(position);
 
-        ImageView itemImage = convertView.findViewById(R.id.user_image);
+        // get UI elements
+        CircleImageView itemImage = convertView.findViewById(R.id.user_image);
         TextView itemName = convertView.findViewById(R.id.user_name);
         Button showButton = convertView.findViewById(R.id.show_button);
         TextView report_time = convertView.findViewById(R.id.report_time);
 
-        itemImage.setImageResource(chosenItem.getImageId());
+        // upload UI elements
+        itemImage.setImageURI(chosenItem.getImage());
         itemName.setText(chosenItem.getReceiverName());
-
+        // get hours
         int hours = getHoursFromTimestamps(chosenItem.getTimestamp());
         if (hours > 24){
             int days = hours / 24;
@@ -74,10 +78,13 @@ public class ReportAdapter extends ArrayAdapter<ReportListItem> {
                 reportRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        // get report detail
                         String receiverId = snapshot.child("receiver").getValue(String.class);
                         String reportDescription = snapshot.child("reportDescription").getValue(String.class);
                         ArrayList<String> reportProblems = (ArrayList<String>) snapshot.child("reportProblems").getValue();
                         Report thisReport = new Report(chosenItem.getSenderId(), receiverId, reportDescription, reportProblems, chosenItem.getTimestamp());
+
+                        // start activity
                         Intent intent = new Intent(context, AdminReportDetail.class);
                         intent.putExtra("chosenReport", thisReport);
                         context.startActivity(intent);
