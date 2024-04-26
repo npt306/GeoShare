@@ -7,11 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.bumptech.glide.Glide;
 import com.example.geoshare.AdminReportDetail;
 import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
 import com.example.geoshare.R;
@@ -55,7 +55,10 @@ public class ReportAdapter extends ArrayAdapter<ReportListItem> {
         TextView report_time = convertView.findViewById(R.id.report_time);
 
         // upload UI elements
-        itemImage.setImageURI(chosenItem.getImage());
+        if (chosenItem.getImage() != null){
+            Glide.with(context).load(chosenItem.getImage()).into(itemImage);
+        }
+
         itemName.setText(chosenItem.getReceiverName());
         // get hours
         int hours = getHoursFromTimestamps(chosenItem.getTimestamp());
