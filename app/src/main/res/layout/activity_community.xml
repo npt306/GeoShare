@@ -33,6 +33,13 @@
             android:text="Community"
             android:textStyle="bold"
             android:textColor="@color/primary_back_arrow_background"/>
+        <ImageButton
+            android:id="@+id/btnNewCommunity"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_plus"
+            android:background="#101D25"
+            android:layout_marginLeft="170dp"/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"

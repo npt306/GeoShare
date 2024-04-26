@@ -34,6 +34,7 @@ import java.util.UUID;
 
 public class DataOutput {
     private static StorageReference storageReference = Storage.getInstance().getUsersAvatarReference();
+    private static StorageReference storageCommAvtReference = Storage.getInstance().getCommunityAvatarReference();
 
     public static void updateNewLoc(double locLat, double locLong) {
         FirebaseDatabase database = FirebaseSingleton.getInstance().getFirebaseDatabase();
@@ -412,5 +413,37 @@ public class DataOutput {
         String currentDateTime = dateFormat.format(new Date()); // Find todays date
         reportsRef.child(currentDateTime).child(report.getSenderId()).setValue(report);
 //        reportsRef.child(report.getReceiver()).child(report.getSender()).setValue(report);
+    }
+
+    public static void createNewCommunity(CommunityGroup group, Uri newImage) {
+        FirebaseDatabase database = FirebaseSingleton.getInstance().getFirebaseDatabase();
+        DatabaseReference communityRef = database.getReference("Community");
+
+        String groupUUID = UUID.randomUUID().toString();
+        group.setGroupID(groupUUID);
+
+        String imageUUID = UUID.randomUUID().toString();
+        group.setGroupImageURL(imageUUID);
+        StorageReference reference = storageCommAvtReference.child(imageUUID);
+        reference.putFile(newImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d("AHUHU", "Upload success");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("AHUHU", "Upload failed");
+            }
+        });
+//                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+//                progress.setMax(Math.toIntExact(snapshot.getTotalByteCount()));
+//                progress.setProgress(Math.toIntExact(snapshot.getBytesTransferred()));
+//            }
+//        });
+
+        communityRef.child(group.getGroupID()).setValue(group);
     }
 }

@@ -66,7 +66,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.View
 //            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
         }
         else {
-            StorageReference storageRef = Storage.getInstance().getUsersAvatarReference();
+            StorageReference storageRef = Storage.getInstance().getCommunityAvatarReference();
             storageRef.child(group.getGroupImageURL()).getDownloadUrl()
                     .addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override

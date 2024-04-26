@@ -17,10 +17,10 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/community_image"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginLeft="50dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="35dp"
             android:layout_marginBottom="10dp"
             android:layout_centerVertical="true"
             android:src="@mipmap/ic_launcher" />
@@ -30,8 +30,8 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="35dp"
-            android:text="Username"
+            android:layout_marginLeft="40dp"
+            android:text="Community"
             android:textColor="#FFFFFF"
             android:textSize="18dp" />
 
@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="45dp"
+            android:layout_marginLeft="55dp"
             android:text="Members"
             android:textColor="#FFFFFF"
             android:textSize="14dp" />

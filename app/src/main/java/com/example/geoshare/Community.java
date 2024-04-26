@@ -1,5 +1,6 @@
 package com.example.geoshare;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -25,16 +26,17 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Objects;
 
 public class Community extends AppCompatActivity {
-    ImageButton buttonBack;
+    ImageButton buttonBack, buttonCreate;
     RecyclerView recyclerViewCommunityList;
     CommunityAdapter communityAdapter;
     public static int numberOfColumns = 2;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
-        recyclerViewCommunityList = findViewById(R.id.recycles_view_chat_list);
-        buttonBack = findViewById(R.id.btnChatBack);
+        setContentView(R.layout.activity_community);
+        recyclerViewCommunityList = findViewById(R.id.recycles_view_Community_list);
+        buttonBack = findViewById(R.id.btnCommunityBack);
+        buttonCreate = findViewById(R.id.btnNewCommunity);
 
         communityAdapter = new CommunityAdapter(getApplicationContext());
         recyclerViewCommunityList.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
@@ -43,6 +45,13 @@ public class Community extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+        buttonCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), CreateCommunity.class);
+                startActivity(intent);
             }
         });
 

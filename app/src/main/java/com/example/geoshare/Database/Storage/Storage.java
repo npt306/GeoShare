@@ -27,4 +27,8 @@ public class Storage {
     public StorageReference getUsersAvatarReference(){
         return mStorage.getReference("usersAvatar");
     }
+
+    public StorageReference getCommunityAvatarReference(){
+        return mStorage.getReference("communityAvatar");
+    }
 }

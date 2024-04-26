@@ -12,12 +12,19 @@ public class CommunityGroup {
     public CommunityGroup() {
 
     }
-    public CommunityGroup(String groupID, String groupName, String groupDescription, String groupImageURL) {
-        this.groupID = groupID;
+    public CommunityGroup(String groupName, String groupDescription) {
         this.groupName = groupName;
         this.groupDescription = groupDescription;
-        this.groupImageURL = groupImageURL;
+        this.groupImageURL = "default";
         this.membersList = new ArrayList<>(Arrays.asList("empty"));
+    }
+
+    public void setGroupID(String groupID) {
+        this.groupID = groupID;
+    }
+
+    public void setGroupImageURL(String groupImageURL) {
+        this.groupImageURL = groupImageURL;
     }
 
     public String getGroupID() {
