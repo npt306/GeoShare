@@ -217,8 +217,8 @@ public class LocationManager {
         databaseRef.child(friendId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                boolean visible = (boolean) dataSnapshot.child("visible").getValue();
-                if (visible) {
+                String visible = dataSnapshot.child("visible").getValue(String.class);
+                if (Objects.equals(visible, "true")) {
                     double latitude = (double) dataSnapshot.child("latitude").getValue();
                     double longitude = (double) dataSnapshot.child("longitude").getValue();
                     LatLng latLng = new LatLng(latitude, longitude);
