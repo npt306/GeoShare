@@ -1,10 +1,10 @@
 package com.example.geoshare;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -12,13 +12,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.geoshare.Adapter.ReportAdapter;
 import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
+import com.example.geoshare.Database.Storage.Storage;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class AdminReportActivity extends AppCompatActivity {
     private List<ReportListItem> itemList;
@@ -56,15 +60,26 @@ public class AdminReportActivity extends AppCompatActivity {
                     for (DataSnapshot reportSnapshot : timestampSnapshot.getChildren()) {
                         String receiverId = reportSnapshot.child("receiver").getValue(String.class);
                         DatabaseReference receiverRef = RealtimeDatabase.getInstance()
-                                .getUsersReference().child(receiverId).child("username");
+                                .getUsersReference().child(receiverId);
 
                         // get receiver name from that report
                         receiverRef.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                String userName = snapshot.getValue(String.class);
-                                itemList.add(new ReportListItem(userName, reportSnapshot.getKey(), timestampSnapshot.getKey(), R.drawable.user_ranking));
-                                adapter.notifyDataSetChanged();
+                                String userName = snapshot.child("username").getValue(String.class);
+                                Uri userImg = null;
+                                String imageURL = snapshot.child("imageURL").getValue(String.class);
+
+                                if(!Objects.equals(imageURL, "default")) {
+                                    StorageReference storageRef = Storage.getInstance().getUsersAvatarReference();
+                                    storageRef.child(imageURL).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                            itemList.add(new ReportListItem(userName, reportSnapshot.getKey(), timestampSnapshot.getKey(), uri));
+                                            adapter.notifyDataSetChanged();
+                                        }
+                                    });
+                                }
                             }
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
