@@ -222,7 +222,7 @@ public class FriendProfile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String problemDescription = editTextProblemDescription.getText().toString().trim();
-                if (!problemDescription.isEmpty()) {
+                if (!problemDescription.isEmpty() && !report.getReportProblems().isEmpty()) {
                     // Cập nhật username ở đây
 //                    updateUsername(newUsername);
 //                    if(!newUsername.isEmpty()) {
@@ -234,7 +234,7 @@ public class FriendProfile extends AppCompatActivity {
                     dialog.dismiss();
                     Toast.makeText(FriendProfile.this, "Your report will be consider, sorry for your inconvenience.", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(FriendProfile.this, "Problem description cannot be emty.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FriendProfile.this, "Problems and description cannot be empty.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
