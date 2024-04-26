@@ -82,7 +82,7 @@ public class ReportAdapter extends ArrayAdapter<ReportListItem> {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         // get report detail
-                        String receiverId = snapshot.child("receiver").getValue(String.class);
+                        String receiverId = snapshot.child("receiverId").getValue(String.class);
                         String reportDescription = snapshot.child("reportDescription").getValue(String.class);
                         ArrayList<String> reportProblems = (ArrayList<String>) snapshot.child("reportProblems").getValue();
                         Report thisReport = new Report(chosenItem.getSenderId(), receiverId, reportDescription, reportProblems, chosenItem.getTimestamp());
