@@ -17,6 +17,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.core.OrderBy;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -46,7 +48,7 @@ public class AdminReportActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
 
         // add data from db
-        DatabaseReference reference = RealtimeDatabase.getInstance().getReportsReference().orderByValue().getRef();
+        DatabaseReference reference = RealtimeDatabase.getInstance().getReportsReference().orderByKey().getRef();
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -54,7 +56,7 @@ public class AdminReportActivity extends AppCompatActivity {
                 for (DataSnapshot timestampSnapshot : snapshot.getChildren()) {
                     // get list of reports represented by senderId in that timestamp
                     for (DataSnapshot reportSnapshot : timestampSnapshot.getChildren()) {
-                        String receiverId = reportSnapshot.child("receiver").getValue(String.class);
+                        String receiverId = reportSnapshot.child("receiverId").getValue(String.class);
                         DatabaseReference receiverRef = RealtimeDatabase.getInstance()
                                 .getUsersReference().child(receiverId);
 

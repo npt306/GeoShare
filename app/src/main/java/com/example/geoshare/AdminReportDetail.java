@@ -64,12 +64,17 @@ public class AdminReportDetail extends AppCompatActivity{
         skipBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                RealtimeDatabase.getInstance()
+                        .getReportsReference()
+                        .child(chosenItem.getTimestamp())
+                        .child(chosenItem.getSenderId()).removeValue();
+//                finish(); // weird error
+                System.exit(0);
             }
         });
 
         Button banBtn = (Button) findViewById(R.id.ban_Btn);
-        skipBtn.setOnClickListener(new View.OnClickListener() {
+        banBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
@@ -94,7 +99,7 @@ public class AdminReportDetail extends AppCompatActivity{
                 StringBuilder builder = new StringBuilder();
 
                 for (String problem : chosenItem.getReportProblems()) {
-                    if (builder.length() != 0){
+                    if (builder.length() != 0) {
                         builder.append(", ");
                     }
                     builder.append(problem);
@@ -103,7 +108,7 @@ public class AdminReportDetail extends AppCompatActivity{
                 // get image
                 String imageURL = snapshot.child("imageURL").getValue(String.class);
 
-                if(imageURL != null && !Objects.equals(imageURL, "default")) {
+                if (imageURL != null && !Objects.equals(imageURL, "default")) {
                     StorageReference storageRef = Storage.getInstance().getUsersAvatarReference();
                     storageRef.child(imageURL).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
@@ -125,7 +130,6 @@ public class AdminReportDetail extends AppCompatActivity{
 
             }
         });
-
 
     }
 }
