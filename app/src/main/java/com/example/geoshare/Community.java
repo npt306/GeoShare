@@ -38,7 +38,7 @@ public class Community extends AppCompatActivity {
         buttonBack = findViewById(R.id.btnCommunityBack);
         buttonCreate = findViewById(R.id.btnNewCommunity);
 
-        communityAdapter = new CommunityAdapter(getApplicationContext());
+        communityAdapter = new CommunityAdapter(getApplicationContext(), this);
         recyclerViewCommunityList.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
 
         buttonBack.setOnClickListener(new View.OnClickListener() {

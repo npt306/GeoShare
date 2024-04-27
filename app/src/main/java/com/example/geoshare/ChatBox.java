@@ -72,8 +72,7 @@ public class ChatBox extends AppCompatActivity {
         btnMessageBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), Chat.class);
-                startActivity(intent);
+                finish();
             }
         });
 

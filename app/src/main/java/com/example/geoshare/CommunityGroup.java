@@ -2,6 +2,7 @@ package com.example.geoshare;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class CommunityGroup {
     private String groupID;
@@ -47,6 +48,19 @@ public class CommunityGroup {
         return membersList;
     }
     public boolean groupIsEmpty() {
-        return membersList.get(0) == "empty";
+        return Objects.equals(membersList.get(0), "empty");
+    }
+    public void addNewMember(String newMemberID) {
+        if(groupIsEmpty()) {
+            this.membersList.set(0, newMemberID);
+        }else {
+            this.membersList.add(newMemberID);
+        }
+    }
+    public void removeMember(String memberID) {
+        this.membersList.remove(memberID);
+        if(this.membersList.isEmpty()) {
+            this.membersList.add("empty");
+        }
     }
 }
