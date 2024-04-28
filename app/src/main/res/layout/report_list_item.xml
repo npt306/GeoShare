@@ -44,7 +44,8 @@
             android:textColor="#A8A8A8"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center|end"
+            android:layout_weight="1"
             android:text="5h"/>
         <Button
             android:id="@+id/show_button"
@@ -53,7 +54,8 @@
             android:text="Show"
             android:layout_marginLeft="10dp"
             android:background="@drawable/button_style"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center|end"
+            android:layout_weight="0"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
             android:padding="1dp"/>
