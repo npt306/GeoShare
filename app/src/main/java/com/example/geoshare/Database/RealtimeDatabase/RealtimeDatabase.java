@@ -51,6 +51,9 @@ public class RealtimeDatabase {
     public DatabaseReference getCommunityReference(){
         return mDatabase.getReference("Community");
     }
+    public DatabaseReference getUsersCommunityReference(){
+        return mDatabase.getReference("UsersCommunity");
+    }
     public DatabaseReference getCurrentBatteryLevelReference(){
         return RealtimeDatabase.getInstance()
                 .getBatteryLevelReference()

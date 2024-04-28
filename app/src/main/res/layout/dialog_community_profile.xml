@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/avatarlayout_border_radius"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginBottom="20dp">
+        <FrameLayout
+            android:id="@+id/profile_image_section"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/border_radius">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/community_image"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:layout_margin="10dp"
+                android:src="@drawable/user"/>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:background="@drawable/picture_border_radius">
+
+<!--                <ImageButton-->
+<!--                    android:id="@+id/btnUploadImage"-->
+<!--                    android:layout_width="40dp"-->
+<!--                    android:layout_height="40dp"-->
+<!--                    android:layout_gravity="bottom|end"-->
+<!--                    android:background="@drawable/camera_icon"-->
+<!--                    android:padding="4dp"-->
+<!--                    android:text="Upload"-->
+<!--                    android:textSize="8dp" />-->
+            </FrameLayout>
+
+        </FrameLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewCommunityName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Community name"
+        android:textColor="#FFFFFF"
+        android:textAlignment="center"
+        android:textSize="25dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/community_section"
+        android:padding="15dp"
+        android:layout_marginBottom="20dp">
+
+        <TextView
+            android:paddingLeft="10dp"
+            android:id="@+id/textViewCommunityDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="#C6C6C6"
+            android:layout_marginBottom="20dp"
+            android:text="Community description"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btnJoinCommunity"
+            android:layout_width="match_parent"
+            android:background="@drawable/custom_signup_button"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginBottom="20dp"
+            android:text="Join" />
+
+        <Button
+            android:id="@+id/btnLeaveCommunity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background="@drawable/custom_signin_button"
+            android:text="Leave this community"
+            android:layout_marginBottom="20dp"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/btnReportCommunity"
+            android:layout_width="match_parent"
+            android:background="@drawable/report_button"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="Report" />
+
+    </LinearLayout>
+</LinearLayout>

@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.Group;
 
 import com.example.geoshare.Database.Authentication.Authentication;
 import com.example.geoshare.Database.FirebaseSingleton;
@@ -24,6 +25,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.sql.Array;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -445,5 +447,99 @@ public class DataOutput {
 //        });
 
         communityRef.child(group.getGroupID()).setValue(group);
+    }
+
+    public static void joinCommunity(String groupID) {
+        FirebaseDatabase database = FirebaseSingleton.getInstance().getFirebaseDatabase();
+        DatabaseReference communityRef = database.getReference("Community");
+
+        communityRef.child(groupID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                CommunityGroup group = snapshot.getValue(CommunityGroup.class);
+                group.addNewMember(Authentication.getInstance().getCurrentUserId());
+
+                communityRef.child(groupID).setValue(group);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        DatabaseReference usersCommunityRef = database.getReference("UsersCommunity");
+
+        usersCommunityRef.child(Authentication.getInstance().getCurrentUserId()).child("CommunityList").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<String> commList = new ArrayList<>();
+                if(!snapshot.exists()) {
+                    commList.add(groupID);
+                }
+                else{
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        if(Objects.equals(dataSnapshot.getValue(String.class), "empty")) {
+                            break;
+                        }else {
+                            commList.add(dataSnapshot.getValue(String.class));
+                        }
+                    }
+                    commList.add(groupID);
+                }
+                usersCommunityRef.child(Authentication.getInstance()
+                                .getCurrentUserId()).child("CommunityList")
+                        .setValue(commList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    public static void leaveCommunity(String groupID) {
+        FirebaseDatabase database = FirebaseSingleton.getInstance().getFirebaseDatabase();
+        DatabaseReference communityRef = database.getReference("Community");
+
+        communityRef.child(groupID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                CommunityGroup group = snapshot.getValue(CommunityGroup.class);
+                group.removeMember(Authentication.getInstance().getCurrentUserId());
+
+                communityRef.child(groupID).setValue(group);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        DatabaseReference usersCommunityRef = database.getReference("UsersCommunity");
+
+        usersCommunityRef.child(Authentication.getInstance().getCurrentUserId()).child("CommunityList").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<String> commList = new ArrayList<>();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if(!Objects.equals(dataSnapshot.getValue(String.class), groupID)) {
+                        commList.add(dataSnapshot.getValue(String.class));
+                    }
+                }
+                if(commList.isEmpty()) {
+                    commList.add("empty");
+                }
+                usersCommunityRef.child(Authentication.getInstance()
+                                .getCurrentUserId()).child("CommunityList")
+                        .setValue(commList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }
