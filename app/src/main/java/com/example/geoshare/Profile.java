@@ -186,7 +186,7 @@ public class Profile extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Authentication.getInstance().signOut();
-                Intent intent = new Intent(getApplicationContext(), SignIn.class);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
