@@ -1,5 +1,7 @@
 package com.example.geoshare;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -41,6 +43,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 
 
@@ -93,12 +98,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String value = snapshot.child("isAdmin").getValue(String.class);
+                // check admin
+                String valueAdmin = snapshot.child("isAdmin").getValue(String.class);
 
-                if (Objects.equals(value, "true")){
+                if (Objects.equals(valueAdmin, "true")){
+                    Toast.makeText(getBaseContext(), "This is an admin account, redirecting...", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getApplicationContext(), AdminActivity.class);
                     startActivity(intent);
                     finish();
+                }
+
+                // check ban
+                String strUnbanDate = snapshot.child("unbanDate").getValue(String.class);
+
+                if (strUnbanDate != null){
+                    // check if ban dates is over
+                    checkBan(strUnbanDate);
                 }
             }
 
@@ -178,6 +193,52 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
 
+    }
+
+    private void checkBan(String strUnbanDate){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date unbanDate;
+        try {
+            unbanDate = dateFormat.parse(strUnbanDate);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        Date currentDate = new Date();
+        long millis = currentDate.getTime() - unbanDate.getTime();
+
+        if (millis >= 0){
+            // unban
+            RealtimeDatabase.getInstance()
+                    .getUsersReference()
+                    .child(Authentication.getInstance().getCurrentUserId())
+                    .child("unbanDate").removeValue();
+        } else {
+            // configure builder
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle("Notification")
+                    .setMessage("Your account is being banned until " + strUnbanDate + ".")
+                    .setPositiveButton("Log out", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Authentication.getInstance().signOut();
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                        }
+                    })
+                    .setNeutralButton("Confirm", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            System.exit(0);
+                        }
+                    });
+
+            // build dialog
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+            Log.d("DEBUG TAG", "Showed dialog");
+        }
     }
 
     public void onBackPressed() {
