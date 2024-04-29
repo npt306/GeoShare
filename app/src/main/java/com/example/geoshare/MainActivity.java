@@ -50,7 +50,6 @@ import java.util.Objects;
 
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
-
     FirebaseUser firebaseUser;
     ImageButton buttonProfile, buttonInvite, buttonLocation, buttonChat, buttonCommunity, buttonSearch;
     private GoogleMap maps;
@@ -65,19 +64,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
     public Location getCurrentLocation(){return currentLocation;}
     public Polyline getCurrentPolyline(){return currentPolyline;}
-
-
     // Implement to get context from other Intent
     private static MainActivity instance;
+
 
     public MainActivity() {
         instance = this;
         Log.d("Mainactivity", "tao moi");
     }
 
+
     public static MainActivity getInstance() {
         return instance;
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,8 +102,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 String valueAdmin = snapshot.child("isAdmin").getValue(String.class);
 
                 if (Objects.equals(valueAdmin, "true")){
-                    Toast.makeText(getBaseContext(), "This is an admin account, redirecting...", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getApplicationContext(), AdminActivity.class);
+                    Toast.makeText(MainActivity.this, "This is an admin account, redirecting...", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, AdminActivity.class);
                     startActivity(intent);
                     finish();
                 }
@@ -115,6 +115,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     // check if ban dates is over
                     checkBan(strUnbanDate);
                 }
+
+                // initialize screen
+                createView();
+
+                if(firebaseUser != null) {
+                    // Bắt đầu battery service
+                    Intent batteryService = new Intent(MainActivity.this, BatteryService.class);
+                    startService(batteryService);
+                    // chưa kết thúc battery service
+                }
+
+                fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
+                getLastLocation();
             }
 
             @Override
@@ -122,7 +135,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             }
         });
+    }
 
+
+    private void createView(){
         buttonInvite = findViewById(R.id.btnInvite);
         buttonProfile =findViewById(R.id.btnProfile);
         buttonLocation = findViewById(R.id.btnCurrentLocation);
@@ -182,18 +198,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(intent);
             }
         });
-
-        if(firebaseUser != null) {
-            // Bắt đầu battery service
-            Intent batteryService = new Intent(this, BatteryService.class);
-            startService(batteryService);
-            // chưa kết thúc battery service
-        }
-
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        getLastLocation();
-
     }
+
 
     private void checkBan(String strUnbanDate){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -240,6 +246,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Log.d("DEBUG TAG", "Showed dialog");
         }
     }
+
 
     public void onBackPressed() {
         if (pressedTime + 2000 > System.currentTimeMillis()) {
@@ -317,6 +324,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -341,8 +349,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // change search button
         buttonSearch.setImageDrawable(ContextCompat.getDrawable(
                 MainActivity.this, R.drawable.ic_search_close));
-
     }
+
+
     @Override
     protected void onResume() {
         super.onResume();
