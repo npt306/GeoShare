@@ -45,6 +45,9 @@ public class RealtimeDatabase {
     public DatabaseReference getUsersReference(){
         return mDatabase.getReference("Users");
     }
+    public DatabaseReference getBannedUsersReference(){
+        return mDatabase.getReference("BannedUsers");
+    }
     public DatabaseReference getStatusReference(){
         return mDatabase.getReference("status");
     }
