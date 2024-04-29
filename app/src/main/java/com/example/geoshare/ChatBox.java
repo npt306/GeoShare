@@ -49,6 +49,7 @@ public class ChatBox extends AppCompatActivity {
     EditText editTextMessage;
     ChatboxAdapter chatboxAdapter;
     RecyclerView recyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +58,7 @@ public class ChatBox extends AppCompatActivity {
         chatFriendID = getIntent().getStringExtra("chatFriendID");
         chatFriendUsername = getIntent().getStringExtra("chatFriendUsername");
         chatFriendImageURL = getIntent().getStringExtra("chatFriendImageURL");
-        if(chatFriendID != null) {
+        if (chatFriendID != null) {
             senderRoom = Authentication.getInstance().getCurrentUserId() + "-" + chatFriendID;
             receiverRoom = chatFriendID + "-" + Authentication.getInstance().getCurrentUserId();
         }
@@ -78,10 +79,9 @@ public class ChatBox extends AppCompatActivity {
 
         textViewChatFriendUsername.setText(chatFriendUsername);
 
-        if(chatFriendImageURL.equals("default")){
+        if (chatFriendImageURL.equals("default")) {
 //            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
-        }
-        else {
+        } else {
             StorageReference storageRef = Storage.getInstance().getUsersAvatarReference();
             storageRef.child(chatFriendImageURL).getDownloadUrl()
                     .addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -100,23 +100,24 @@ public class ChatBox extends AppCompatActivity {
         chatsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChild(senderRoom)) {
+                if (snapshot.hasChild(senderRoom)) {
                     DatabaseReference senderRoomRef = chatsRef.child(senderRoom);
                     Query chatQuery = senderRoomRef.orderByChild("timeStamp");
                     chatQuery.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if(snapshot.exists()) {
+                            if (snapshot.exists()) {
                                 List<ChatMessage> chatMessageList = new ArrayList<>();
-                                for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                     ChatMessage message = dataSnapshot.getValue(ChatMessage.class);
-                                    if(dataSnapshot.child("timeStamp").getValue(Long.class) != null) {
+                                    if (dataSnapshot.child("timeStamp").getValue(Long.class) != null) {
+                                        assert message != null;
                                         message.setTimeStamp(dataSnapshot.child("timeStamp").getValue(Long.class));
                                     }
                                     chatMessageList.add(message);
                                 }
                                 chatboxAdapter.clearMessageList();
-                                for(ChatMessage chatMessage : chatMessageList) {
+                                for (ChatMessage chatMessage : chatMessageList) {
                                     chatboxAdapter.addNewMessage(chatMessage);
                                 }
                                 recyclerView.scrollToPosition(chatboxAdapter.getItemCount() - 1);
@@ -128,20 +129,20 @@ public class ChatBox extends AppCompatActivity {
 
                         }
                     });
-                }else if(snapshot.hasChild(receiverRoom)) {
+                } else if (snapshot.hasChild(receiverRoom)) {
                     DatabaseReference receiverRoomRef = chatsRef.child(receiverRoom);
                     Query chatQuery = receiverRoomRef.orderByChild("timeStamp");
                     chatQuery.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if(snapshot.exists()) {
+                            if (snapshot.exists()) {
                                 List<ChatMessage> chatMessageList = new ArrayList<>();
-                                for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                     ChatMessage message = dataSnapshot.getValue(ChatMessage.class);
                                     chatMessageList.add(message);
                                 }
                                 chatboxAdapter.clearMessageList();
-                                for(ChatMessage chatMessage : chatMessageList) {
+                                for (ChatMessage chatMessage : chatMessageList) {
                                     chatboxAdapter.addNewMessage(chatMessage);
                                 }
                                 recyclerView.scrollToPosition(chatboxAdapter.getItemCount() - 1);
@@ -165,16 +166,16 @@ public class ChatBox extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String message = Normalizer.normalize(editTextMessage.getText().toString(), Normalizer.Form.NFC);
-//                String message = String.valueOf(editTextMessage.getText());
-                if(message.trim().length() > 0) {
+
+                if (!message.trim().isEmpty()) {
                     String messageID = UUID.randomUUID().toString();
-                    ChatMessage sendMessage = new ChatMessage(messageID,message,
+                    ChatMessage sendMessage = new ChatMessage(messageID, message,
                             Authentication.getInstance().getCurrentUserId(), chatFriendID);
                     chatboxAdapter.addNewMessage(sendMessage);
                     DataOutput.sendNewMessage(sendMessage, senderRoom, receiverRoom);
                     editTextMessage.setText("");
                     recyclerView.smoothScrollToPosition(chatboxAdapter.getItemCount() - 1);
-                }else {
+                } else {
                     Toast.makeText(ChatBox.this, "Message empty", Toast.LENGTH_SHORT).show();
                 }
 
@@ -185,8 +186,6 @@ public class ChatBox extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater menuInflater = getMenuInflater();
-//        menuInflater.inflate(R.menu.menu_invite_nav, menu);
         return super.onCreateOptionsMenu(menu);
     }
 }

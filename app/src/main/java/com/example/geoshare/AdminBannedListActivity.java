@@ -9,7 +9,7 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.geoshare.Adapter.BannedListAdapter;
+// import com.example.geoshare.Adapter.BannedListAdapter;
 import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
 import com.example.geoshare.Database.Storage.Storage;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class AdminBannedListActivity extends AppCompatActivity {
-    private List<BannedListItem> itemList;
+//    private List<BannedListItem> itemList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +39,10 @@ public class AdminBannedListActivity extends AppCompatActivity {
             }
         });
 
-        ListView listView = findViewById(R.id.custom_listview);
-        itemList = new ArrayList<>();
-        BannedListAdapter adapter = new BannedListAdapter(AdminBannedListActivity.this, itemList);
-        listView.setAdapter(adapter);
+//        ListView listView = findViewById(R.id.custom_listview);
+//        itemList = new ArrayList<>();
+//        BannedListAdapter adapter = new BannedListAdapter(AdminBannedListActivity.this, itemList);
+//        listView.setAdapter(adapter);
 
         // add data from db
         DatabaseReference reference = RealtimeDatabase.getInstance().getReportsReference().orderByKey().getRef();
@@ -70,7 +70,7 @@ public class AdminBannedListActivity extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(Uri uri) {
 //                                            itemList.add(new BannedListItem(userName, reportSnapshot.getKey(), timestampSnapshot.getKey(), uri));
-                                            adapter.notifyDataSetChanged();
+//                                            adapter.notifyDataSetChanged();
                                         }
                                     });
                                 }

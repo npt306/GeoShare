@@ -26,6 +26,7 @@ public class QR extends AppCompatActivity {
     ImageView imageQrCode;
     Button buttonScanQR;
     ImageButton buttonBack;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,20 +52,21 @@ public class QR extends AppCompatActivity {
         });
         generateQR();
     }
-    private void generateQR(){
+
+    private void generateQR() {
         String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
         MultiFormatWriter writer = new MultiFormatWriter();
-        try{
+        try {
             BitMatrix matrix = writer.encode(id, BarcodeFormat.QR_CODE, 300, 300);
             BarcodeEncoder encoder = new BarcodeEncoder();
             Bitmap bitmap = encoder.createBitmap(matrix);
             imageQrCode.setImageBitmap(bitmap);
-        }
-        catch (WriterException e){
+        } catch (WriterException e) {
             e.printStackTrace();
         }
     }
-    private void scanQrCode(){
+
+    private void scanQrCode() {
         ScanOptions options = new ScanOptions();
         options.setPrompt("Volume up to flash on");
         options.setBeepEnabled(true);
@@ -73,8 +75,8 @@ public class QR extends AppCompatActivity {
         barLaucher.launch(options);
     }
 
-    ActivityResultLauncher<ScanOptions> barLaucher = registerForActivityResult(new ScanContract(), result ->{
-        if(result.getContents() != null){
+    ActivityResultLauncher<ScanOptions> barLaucher = registerForActivityResult(new ScanContract(), result -> {
+        if (result.getContents() != null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Scan QR result");
             builder.setMessage(result.getContents());
