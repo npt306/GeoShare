@@ -67,7 +67,6 @@ public class AdminReportDetail extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 removeCurrentReport();
-                System.exit(0);
             }
         });
 
@@ -85,7 +84,6 @@ public class AdminReportDetail extends AppCompatActivity{
                 usersReference.child("unbanDate").setValue(currentDateTime);
 
                 removeCurrentReport();
-                System.exit(0);
             }
         });
 
@@ -146,6 +144,7 @@ public class AdminReportDetail extends AppCompatActivity{
                 .getReportsReference()
                 .child(chosenItem.getTimestamp())
                 .child(chosenItem.getSenderId()).removeValue();
+        System.exit(0);
     }
 }
 
