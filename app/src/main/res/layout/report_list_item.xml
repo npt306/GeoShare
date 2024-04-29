@@ -18,20 +18,24 @@
             android:id="@+id/user_image"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
             android:src="@drawable/user_ranking"/>
         <TextView
             android:id="@+id/user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
             android:textSize="14sp"
             android:textStyle="bold"
             android:textColor="#FFF"
             android:layout_gravity="center_vertical"
-            android:text="Thanh Phuong "/>
+            android:text="Thanh Phuong"/>
         <TextView
             android:id="@+id/report_action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
             android:textSize="14sp"
             android:textColor="#FFF"
             android:layout_gravity="center_vertical"
@@ -40,10 +44,9 @@
             android:id="@+id/report_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
             android:textSize="14sp"
             android:textColor="#A8A8A8"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_gravity="center|end"
             android:layout_weight="1"
             android:text="5h"/>
@@ -52,7 +55,7 @@
             android:layout_width="80dp"
             android:layout_height="30dp"
             android:text="Show"
-            android:layout_marginLeft="10dp"
+            android:layout_marginEnd="5dp"
             android:background="@drawable/button_style"
             android:layout_gravity="center|end"
             android:layout_weight="0"

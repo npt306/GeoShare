@@ -18,34 +18,40 @@
             android:id="@+id/header_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginTop="35dp"
             android:layout_marginBottom="35dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
-            <LinearLayout
-                android:id="@+id/back_layout"
+            <TextView
+                android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
-                <ImageButton
-                    android:id="@+id/back_button"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginRight="10dp"
-                    android:background="#101D25"
-                    android:src="@drawable/back_button" />
+                android:layout_gravity="center|end"
+                android:layout_weight="1"
+                android:text="Admin"
+                android:textColor="#C28C3A"
+                android:layout_marginLeft="10dp"
+                android:textSize="25dp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tv_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Admin"
-                    android:textColor="#C28C3A"
-                    android:layout_marginLeft="10dp"
-                    android:textSize="25dp"
-                    android:textStyle="bold" /></LinearLayout>
+            <Button
+                android:id="@+id/btnLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|end"
+                android:layout_weight="0"
+                android:layout_marginEnd="5dp"
+                android:drawableEnd="@drawable/ic_logout"
+                android:drawablePadding="5dp"
+                android:drawableTint="#C28C3A"
+                android:background="#101D25"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                android:text="Logout"
+                android:textAllCaps="false"
+                android:textColor="#C28C3A" />
+
         </LinearLayout>
 
         <LinearLayout
