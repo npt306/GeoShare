@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -31,7 +30,7 @@
                 android:layout_weight="1"
                 android:text="Admin"
                 android:textColor="#C28C3A"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:textSize="25dp"
                 android:textStyle="bold" />
 
@@ -55,38 +54,57 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/layout_userInfo"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/header_layout"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/avatarlayout_border_radius"
-            android:orientation="vertical"
-            android:padding="10dp"
-            android:clickable="true">
+            android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/reports_btn"
+                android:layout_marginTop="40dp"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:padding="20dp"
                 android:orientation="horizontal"
+                android:background="@drawable/avatarlayout_border_radius"
+                android:clickable="true"
                 android:gravity="center_vertical">
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/info_fill"
-                    android:layout_marginRight="10dp"/>
+                    android:layout_marginEnd="10dp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Report"
+                    android:text="Reports"
                     android:textStyle="bold"
                     android:textSize="16sp"
-                    android:textColor="#FFF"/>
+                    android:textColor="#FFFFFF"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/banned_users_btn"
+                android:layout_marginTop="40dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:orientation="horizontal"
+                android:background="@drawable/avatarlayout_border_radius"
+                android:clickable="true"
+                android:gravity="center_vertical">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/info_fill"
+                    android:layout_marginEnd="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Banned Users"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="#FFFFFF"/>
             </LinearLayout>
         </LinearLayout>
-        <!-- Repeat the pattern for Name and Email with edit buttons -->
-
     </RelativeLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
