@@ -11,13 +11,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.geoshare.Database.Authentication.Authentication;
 
 public class AdminActivity extends AppCompatActivity {
-    LinearLayout reportButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
 
-        reportButton = (LinearLayout) findViewById(R.id.layout_userInfo);
+        // report list route
+        LinearLayout reportButton = (LinearLayout) findViewById(R.id.reports_btn);
         reportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -26,6 +27,17 @@ public class AdminActivity extends AppCompatActivity {
             }
         });
 
+        // banned list route
+        LinearLayout bannedUsersButton = (LinearLayout) findViewById(R.id.banned_users_btn);
+        bannedUsersButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), AdminBannedListActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // logout route
         Button btnLogout = findViewById(R.id.btnLogout);
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
