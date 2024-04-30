@@ -54,8 +54,8 @@ public class AdminBanDetail extends AppCompatActivity{
         unbanDate.setText(chosenItem.getUnbanDate());
         reportDescription.setText(chosenItem.getReportDescription());
 
-        if (chosenItem.getImage() != null){
-            Glide.with(getApplicationContext()).load(chosenItem.getImage()).into(userImage);
+        if (chosenItem.getURIImage() != null){
+            Glide.with(getApplicationContext()).load(chosenItem.getUriImage()).into(userImage);
         }
 
         // get ban reasons

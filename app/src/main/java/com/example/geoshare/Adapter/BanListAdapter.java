@@ -42,8 +42,8 @@ public class BanListAdapter extends ArrayAdapter<BanListItem> {
         Button showButton = convertView.findViewById(R.id.show_button);
 
         // upload UI elements
-        if (chosenItem.getImage() != null){
-            Glide.with(context).load(chosenItem.getImage()).into(itemImage);
+        if (chosenItem.getURIImage() != null){
+            Glide.with(context).load(chosenItem.getUriImage()).into(itemImage);
         }
 
         itemName.setText(chosenItem.getUserName());
