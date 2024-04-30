@@ -9,33 +9,20 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-
 import com.bumptech.glide.Glide;
-import com.example.geoshare.AdminReportDetail;
-import com.example.geoshare.BannedListItem;
-import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
+import com.example.geoshare.AdminBanDetail;
+import com.example.geoshare.BanListItem;
 import com.example.geoshare.R;
-import com.example.geoshare.Report;
-import com.example.geoshare.ReportListItem;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class BannedListAdapter extends ArrayAdapter<BannedListItem> {
+public class BanListAdapter extends ArrayAdapter<BanListItem> {
     private Context context;
-    private List<BannedListItem> items;
+    private List<BanListItem> items;
 
-    public BannedListAdapter(Context context, List<BannedListItem> items) {
+    public BanListAdapter(Context context, List<BanListItem> items) {
         super(context, 0, items);
         this.context = context;
         this.items = items;
@@ -47,7 +34,7 @@ public class BannedListAdapter extends ArrayAdapter<BannedListItem> {
             convertView = LayoutInflater.from(context).inflate(R.layout.banned_list_item, parent, false);
         }
 
-        BannedListItem chosenItem = items.get(position);
+        BanListItem chosenItem = items.get(position);
 
         // get UI elements
         CircleImageView itemImage = convertView.findViewById(R.id.user_image);
@@ -64,7 +51,10 @@ public class BannedListAdapter extends ArrayAdapter<BannedListItem> {
         showButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                // start activity
+                Intent intent = new Intent(context, AdminBanDetail.class);
+                intent.putExtra("chosenBan", chosenItem);
+                context.startActivity(intent);
             }
         });
 

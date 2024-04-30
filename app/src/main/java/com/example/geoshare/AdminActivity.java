@@ -32,7 +32,7 @@ public class AdminActivity extends AppCompatActivity {
         bannedUsersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), AdminBannedListActivity.class);
+                Intent intent = new Intent(getApplicationContext(), AdminBanListActivity.class);
                 startActivity(intent);
             }
         });

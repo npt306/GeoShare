@@ -14,14 +14,14 @@ import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AdminBanDetail extends AppCompatActivity{
-    private BannedListItem chosenItem;
+    private BanListItem chosenItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.admin_ban_detail);
 
-        chosenItem = (BannedListItem) getIntent().getSerializableExtra("chosenBan");
+        chosenItem = (BanListItem) getIntent().getSerializableExtra("chosenBan");
 
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(new View.OnClickListener() {

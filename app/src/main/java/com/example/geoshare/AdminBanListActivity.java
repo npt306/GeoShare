@@ -9,7 +9,7 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.geoshare.Adapter.BannedListAdapter;
+import com.example.geoshare.Adapter.BanListAdapter;
 import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
 import com.example.geoshare.Database.Storage.Storage;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class AdminBannedListActivity extends AppCompatActivity {
-    private List<BannedListItem> itemList;
+public class AdminBanListActivity extends AppCompatActivity {
+    private List<BanListItem> itemList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +41,7 @@ public class AdminBannedListActivity extends AppCompatActivity {
 
         ListView listView = findViewById(R.id.custom_listview);
         itemList = new ArrayList<>();
-        BannedListAdapter adapter = new BannedListAdapter(AdminBannedListActivity.this, itemList);
+        BanListAdapter adapter = new BanListAdapter(AdminBanListActivity.this, itemList);
         listView.setAdapter(adapter);
 
         // add data from db
@@ -59,7 +59,7 @@ public class AdminBannedListActivity extends AppCompatActivity {
                     String banDate = bannedUserSnapshot.child("banDate").getValue(String.class);
                     String unbanDate = bannedUserSnapshot.child("unbanDate").getValue(String.class);
                     String reportDescription = bannedUserSnapshot.child("reportDescription").getValue(String.class);
-                    ArrayList<String> banProblems = (ArrayList<String>) bannedUserSnapshot.child("banProblems").getValue();
+                    ArrayList<String> banReasons = (ArrayList<String>) bannedUserSnapshot.child("banReasons").getValue();
 
                     // get banned user's name and image
                     userRef.addValueEventListener(new ValueEventListener() {
@@ -73,12 +73,12 @@ public class AdminBannedListActivity extends AppCompatActivity {
                                 storageRef.child(imageURL).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
-                                        itemList.add(new BannedListItem(bannedUserId, userName, banDate, unbanDate, reportDescription, banProblems, uri));
+                                        itemList.add(new BanListItem(bannedUserId, userName, banDate, unbanDate, reportDescription, banReasons, uri));
                                         adapter.notifyDataSetChanged();
                                     }
                                 });
                             } else{
-                                itemList.add(new BannedListItem(bannedUserId, userName, banDate, unbanDate, reportDescription, banProblems, null));
+                                itemList.add(new BanListItem(bannedUserId, userName, banDate, unbanDate, reportDescription, banReasons, null));
                                 adapter.notifyDataSetChanged();
                             }
                         }
