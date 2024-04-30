@@ -76,6 +76,9 @@ public class AdminReportActivity extends AppCompatActivity {
                                             adapter.notifyDataSetChanged();
                                         }
                                     });
+                                } else {
+                                    itemList.add(new ReportListItem(userName, reportSnapshot.getKey(), timestampSnapshot.getKey(), null));
+                                    adapter.notifyDataSetChanged();
                                 }
                             }
                             @Override
