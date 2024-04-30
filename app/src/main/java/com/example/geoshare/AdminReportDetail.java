@@ -1,8 +1,13 @@
 package com.example.geoshare;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -66,8 +71,41 @@ public class AdminReportDetail extends AppCompatActivity{
         banBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // upload to ban list
-                new uploadBanDataTask().execute(chosenItem);
+                DatabaseReference bannedUsersRef = RealtimeDatabase.getInstance().getBannedUsersReference();
+                bannedUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.hasChild(chosenItem.getReceiverId())){
+                            // configure builder
+                            AlertDialog.Builder builder = new AlertDialog.Builder(AdminReportDetail.this);
+                            builder.setTitle("Notification")
+                                    .setMessage("This user is currently banned. Would you like to re-ban?")
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // upload to ban list
+                                            new uploadBanDataTask().execute(chosenItem);
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel", null);
+
+                            // build dialog
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
+
+                            Log.d("DEBUG TAG", "Showed dialog");
+                        } else {
+
+                            // upload to ban list
+                            new uploadBanDataTask().execute(chosenItem);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
 
