@@ -1,10 +1,16 @@
 package com.example.geoshare;
 
+import android.app.AlertDialog;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
 import com.example.geoshare.Database.Storage.Storage;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -74,15 +81,7 @@ public class AdminReportDetail extends AppCompatActivity{
         banBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatabaseReference usersReference = RealtimeDatabase.getInstance().getUsersReference().child(chosenItem.getReceiverId());
-//                String banTime = "30d";
-                Date today = new Date();
-                Date unbanDate = new Date(today.getTime() + (long)(30L * 3600 * 1000 * 24)); // 30d in millis
-
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                String currentDateTime = dateFormat.format(unbanDate);
-                usersReference.child("unbanDate").setValue(currentDateTime);
-
+                uploadToBannedList();
                 removeCurrentReport();
             }
         });
@@ -137,6 +136,18 @@ public class AdminReportDetail extends AppCompatActivity{
             }
         });
 
+    }
+
+    private void uploadToBannedList(){
+        DatabaseReference bannedUsersRef = RealtimeDatabase.getInstance().getBannedUsersReference().child(chosenItem.getReceiverId());
+        Date banDate = new Date();
+        Date unbanDate = new Date(banDate.getTime() + (long)(30L * 3600 * 1000 * 24)); // 30d in millis
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        bannedUsersRef.child("unbanDate").setValue(dateFormat.format(unbanDate));
+        bannedUsersRef.child("banDate").setValue(dateFormat.format(banDate));
+        bannedUsersRef.child("reportDescription").setValue(chosenItem.getReportDescription());
+        bannedUsersRef.child("banReasons").setValue(chosenItem.getReportProblems());
     }
 
     private void removeCurrentReport(){
