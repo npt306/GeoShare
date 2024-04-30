@@ -1,16 +1,10 @@
 package com.example.geoshare;
 
-import android.app.AlertDialog;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
 import com.example.geoshare.Database.Storage.Storage;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,24 +28,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AdminReportDetail extends AppCompatActivity{
     private Report chosenItem;
-
-    // Implement to get context from other Intent
-    private static AdminReportDetail instance;
-
-    public AdminReportDetail() {
-        instance = this;
-    }
-
-    public static AdminReportDetail getInstance() {
-        if (instance == null){
-            instance = new AdminReportDetail();
-        }
-        return instance;
-    }
-
-    public void setChosenItem(Report item){
-        this.chosenItem = item;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
