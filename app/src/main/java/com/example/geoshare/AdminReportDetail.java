@@ -13,21 +13,31 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
 import com.example.geoshare.Database.Storage.Storage;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AdminReportDetail extends AppCompatActivity{
     private Report chosenItem;
+
+    private static AdminReportDetail instance;
+
+    public AdminReportDetail() {
+        instance = this;
+    }
+
+    public static AdminReportDetail getInstance() {
+        return instance;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +66,8 @@ public class AdminReportDetail extends AppCompatActivity{
         banBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                uploadToBannedList();
-                removeCurrentReport();
+                // upload to ban list
+                new uploadBanDataTask().execute(chosenItem);
             }
         });
 
@@ -113,24 +123,17 @@ public class AdminReportDetail extends AppCompatActivity{
 
     }
 
-    private void uploadToBannedList(){
-        DatabaseReference bannedUsersRef = RealtimeDatabase.getInstance().getBannedUsersReference().child(chosenItem.getReceiverId());
-        Date banDate = new Date();
-        Date unbanDate = new Date(banDate.getTime() + (long)(30L * 3600 * 1000 * 24)); // 30d in millis
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public void removeCurrentReport(){
 
-        bannedUsersRef.child("unbanDate").setValue(dateFormat.format(unbanDate));
-        bannedUsersRef.child("banDate").setValue(dateFormat.format(banDate));
-        bannedUsersRef.child("reportDescription").setValue(chosenItem.getReportDescription());
-        bannedUsersRef.child("banReasons").setValue(chosenItem.getReportProblems());
-    }
-
-    private void removeCurrentReport(){
         RealtimeDatabase.getInstance()
-                .getReportsReference()
-                .child(chosenItem.getTimestamp())
-                .child(chosenItem.getSenderId()).removeValue();
-        System.exit(0);
+            .getReportsReference()
+            .child(chosenItem.getTimestamp())
+            .child(chosenItem.getSenderId()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    System.exit(0);
+                }
+            });
     }
 }
 
