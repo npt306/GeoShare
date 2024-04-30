@@ -6,10 +6,13 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -73,9 +76,13 @@ public class AdminBanDetail extends AppCompatActivity{
 
     private void removeCurrentBan(){
         RealtimeDatabase.getInstance()
-                .getBannedUsersReference()
-                .child(chosenItem.getUserId()).removeValue();
-        System.exit(0);
+            .getBannedUsersReference()
+            .child(chosenItem.getUserId()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    System.exit(0);
+                }
+            });
     }
 }
 
