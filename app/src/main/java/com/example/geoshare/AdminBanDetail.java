@@ -40,12 +40,12 @@ public class AdminBanDetail extends AppCompatActivity{
         });
 
         // get UI elements for uploading
-        TextView userName = findViewById(R.id.userName);
+        TextView userName = findViewById(R.id.user_name);
         TextView banDate = findViewById(R.id.ban_date);
         TextView unbanDate = findViewById(R.id.unban_date);
         TextView banReasons = findViewById(R.id.ban_reasons);
         TextView reportDescription = findViewById(R.id.report_description);
-        CircleImageView userImage = findViewById(R.id.user_Avatar);
+        CircleImageView userImage = findViewById(R.id.user_avatar);
 
 
         // upload UI elements
