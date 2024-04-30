@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#101D25"
+        android:padding="10dp"
+        tools:layout_editor_absoluteX="196dp"
+        tools:layout_editor_absoluteY="88dp">
+
+        <LinearLayout
+            android:id="@+id/header_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="35dp"
+            android:layout_marginBottom="35dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:id="@+id/back_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:clickable="true">
+                <ImageButton
+                android:id="@+id/back_button"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="10dp"
+                android:background="#101D25"
+                android:src="@drawable/close_ic" />
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ban Detail"
+                    android:textColor="#C28C3A"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="25dp"
+                    android:textStyle="bold" /></LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_Avatar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/header_layout"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/user_Avatar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/user"
+                app:cornerRadius="100dp" />
+
+            <TextView
+                android:id="@+id/userName"
+                android:textColor="#FFF"
+                android:textSize="17sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Thanh Phuong"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_userInfo"
+            android:layout_width="fill_parent"
+            android:layout_height="380dp"
+            android:layout_below="@+id/layout_Avatar"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/avatarlayout_border_radius"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Ban Date"
+                android:textColor="#A8A8A8"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/ban_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wed Apr 03 2024 10:16:34"
+                android:textColor="#FFF"
+                android:textSize="17sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Unban Date"
+                android:textColor="#A8A8A8"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/unban_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wed Apr 03 2024 10:16:34"
+                android:textColor="#FFF"
+                android:textSize="17sp" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="#FFF" />
+
+            <TextView
+                android:id="@+id/detailTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Detail"
+                android:textColor="#A8A8A8"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/ban_reasons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Harassment or Bullying"
+                android:textColor="#FFF"
+                android:textSize="17sp" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="#FFF" />
+
+            <TextView
+                android:id="@+id/descriptionTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Description"
+                android:textColor="#A8A8A8"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/report_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" "
+                android:textColor="#FFF"
+                android:textSize="17sp" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="#FFF" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/layout_Action"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/layout_userInfo"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/unban_Btn"
+                style="@android:style/Widget.Material.Button.Colored"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:layout_weight="0.5"
+                android:background="@drawable/button_layout"
+                android:backgroundTint="#2196F3"
+                android:text="Unban"
+                android:textSize="20sp" />
+        </LinearLayout>
+        <!-- Repeat the pattern for Name and Email with edit buttons -->
+
+    </RelativeLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

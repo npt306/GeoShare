@@ -46,8 +46,9 @@
         </activity>
         <activity android:name=".AdminActivity"/>
         <activity android:name=".AdminReportActivity"/>
-        <activity android:name=".AdminBannedListActivity"/>
+        <activity android:name=".AdminBanListActivity"/>
         <activity android:name=".AdminReportDetail"/>
+        <activity android:name=".AdminBanDetail"/>
         <activity android:name=".SignUp"/>
         <activity android:name=".SignIn"/>
         <activity android:name=".ForgotPassword"/>
