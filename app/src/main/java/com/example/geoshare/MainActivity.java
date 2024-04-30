@@ -30,8 +30,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -40,7 +39,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
@@ -58,13 +56,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Location currentLocation;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Polyline currentPolyline = null;
-    public void setCurrentPolyline(Polyline polyline){this.currentPolyline = polyline;}
-    public GoogleMap getMaps(){
+
+    public void setCurrentPolyline(Polyline polyline) {
+        this.currentPolyline = polyline;
+    }
+
+    public GoogleMap getMaps() {
         return maps;
     }
-    public Location getCurrentLocation(){return currentLocation;}
-    public Polyline getCurrentPolyline(){return currentPolyline;}
-    // Implement to get context from other Intent
+
+    public Location getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public Polyline getCurrentPolyline() {
+        return currentPolyline;
+    }
+
     private static MainActivity instance;
 
 
@@ -85,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main);
 
         firebaseUser = FirebaseSingleton.getInstance().getFirebaseAuth().getCurrentUser();
-        if(firebaseUser == null){
+        if (firebaseUser == null) {
             Intent intent = new Intent(getApplicationContext(), SignIn.class);
             startActivity(intent);
             finish();
@@ -101,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 // check admin
                 String valueAdmin = snapshot.child("isAdmin").getValue(String.class);
 
-                if (Objects.equals(valueAdmin, "true")){
+                if (Objects.equals(valueAdmin, "true")) {
                     Toast.makeText(MainActivity.this, "This is an admin account, redirecting...", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(MainActivity.this, AdminActivity.class);
                     startActivity(intent);
@@ -111,19 +119,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 // check ban
                 String strUnbanDate = snapshot.child("unbanDate").getValue(String.class);
 
-                if (strUnbanDate != null){
-                    // check if ban dates is over
+                if (strUnbanDate != null) {
                     checkBan(strUnbanDate);
                 }
 
-                // initialize screen
                 createView();
 
-                if(firebaseUser != null) {
-                    // Bắt đầu battery service
+                if (firebaseUser != null) {
                     Intent batteryService = new Intent(MainActivity.this, BatteryService.class);
                     startService(batteryService);
-                    // chưa kết thúc battery service
                 }
 
                 fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
@@ -138,9 +142,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    private void createView(){
+    private void createView() {
         buttonInvite = findViewById(R.id.btnInvite);
-        buttonProfile =findViewById(R.id.btnProfile);
+        buttonProfile = findViewById(R.id.btnProfile);
         buttonLocation = findViewById(R.id.btnCurrentLocation);
         buttonChat = findViewById(R.id.btnChat);
         buttonSearch = findViewById(R.id.btnSearch);
@@ -149,13 +153,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
 
-                if (currentPolyline == null){
+                if (currentPolyline == null) {
                     Intent intent = new Intent(getApplicationContext(), Search.class);
                     startActivity(intent);
-//                    LatLng des = new LatLng(10.8270849, 106.6892387);
-//                    Location location = MainActivity.getInstance().getCurrentLocation();
-//                    LatLng curLocation = new LatLng(location.getLatitude(), location.getLongitude());
-//                    getDirection(curLocation, des);
                 } else {
                     currentPolyline.remove();
                     currentPolyline = null;
@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    private void checkBan(String strUnbanDate){
+    private void checkBan(String strUnbanDate) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date unbanDate;
         try {
@@ -213,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Date currentDate = new Date();
         long millis = currentDate.getTime() - unbanDate.getTime();
 
-        if (millis >= 0){
+        if (millis >= 0) {
             // unban
             RealtimeDatabase.getInstance()
                     .getUsersReference()
@@ -259,17 +259,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-
     private void getLastLocation() {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[] {android.Manifest.permission.ACCESS_FINE_LOCATION}, FINE_PERMISSION_CODE);
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, FINE_PERMISSION_CODE);
             return;
         }
         Task<Location> task = fusedLocationProviderClient.getLastLocation();
         task.addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-                if(location != null) {
+                if (location != null) {
                     currentLocation = location;
 
                     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.maps);
@@ -279,66 +278,54 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-
     public void focusToMyLocation() {
         getLastLocation();
+        
         CameraPosition camPos = new CameraPosition.Builder()
                 .target(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
                 .zoom(17)
                 .bearing(currentLocation.getBearing())
                 .tilt(70)
                 .build();
+
         maps.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())));
         CameraUpdate camUpd3 = CameraUpdateFactory.newCameraPosition(camPos);
         maps.animateCamera(camUpd3);
-
-        Log.d("DEBUG TAG", "Focusing on current location");
     }
-
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        if (maps == null) {
-            Log.d("onMapReady", "Map is not ready" );
-        }
-
-        if (maps != googleMap) {
-            Log.d("onMapReady", "Map is ready");
-        }
         maps = googleMap;
+
+        maps.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_night));
+
         MarkerManager.getInstance().setGoogleMap(maps);
         MarkLocation markLocation = new MarkLocation(MainActivity.this, maps);
         markLocation.readMarkersFromDatabase();
         MarkerManager.getInstance().setMarkerClickListener();
         maps.setOnMapLongClickListener(markLocation);
 
-
         LatLng myLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-//        LocationManager.getInstance().startLocationUpdates();
-
         MarkerManager.getInstance().createMarker(myLocation, Authentication.getInstance().getCurrentUserId());
 
         float zoomLevel = 12.0f;
         maps.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, zoomLevel));
-
-
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == FINE_PERMISSION_CODE) {
+        if (requestCode == FINE_PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getLastLocation();
-            }else {
-                Toast.makeText(this,"Location permission is denied, please allow permission", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Location permission is denied, please allow permission", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
 
-    public void getDirection(LatLng origin, LatLng dest){
+    public void getDirection(LatLng origin, LatLng dest) {
         // Getting URL to the Google Directions API
         Log.d("DEBUG TAG", "Preparing to draw path");
         String url = UrlGenerator.getDirectionsUrl(origin, dest);
@@ -355,7 +342,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onResume() {
         super.onResume();
-        if (FirebaseAuth.getInstance().getCurrentUser() != null){
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             LocationManager.getInstance().startLocationUpdates();
             LocationManager.getInstance().getLocationForFriends();
         }

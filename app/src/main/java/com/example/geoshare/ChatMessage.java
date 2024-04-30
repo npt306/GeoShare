@@ -50,6 +50,7 @@ public class ChatMessage {
     public String getSender() {
         return sender;
     }
+
     public String getReceiver() {
         return receiver;
     }
@@ -59,7 +60,7 @@ public class ChatMessage {
     }
 
     public String getDateFromTimeStamp() {
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm dd/MM"); //this format changeable
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm dd/MM"); // this format changeable
         dateFormatter.setTimeZone(TimeZone.getDefault());
         Log.d("timeStamp", String.valueOf(this.timeStamp));
         return dateFormatter.format(this.timeStamp);
