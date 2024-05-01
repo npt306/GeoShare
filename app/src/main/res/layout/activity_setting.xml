@@ -67,7 +67,7 @@
             android:padding="10dp">
 
             <LinearLayout
-                android:id="@+id/layout_account"
+                android:id="@+id/layout_premium"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -79,69 +79,10 @@
                     android:src="@drawable/info_fill"
                     android:layout_marginRight="10dp"/>
                 <TextView
+                    android:id="@+id/premiumTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Account"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:textColor="#FFF"/>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/layout_introduction"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginTop="10dp">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/question_fill"
-                    android:layout_marginRight="10dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Introduction"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:textColor="#FFF"/>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/layout_faq"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginTop="10dp">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/comment_fill"
-                    android:layout_marginRight="10dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="FAQ"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:textColor="#FFF"/>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/layout_policy"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginTop="10dp">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/book_check_fill"
-                    android:layout_marginRight="10dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Privacy Policy"
+                    android:text="Premium Upgrade"
                     android:textStyle="bold"
                     android:textSize="16sp"
                     android:textColor="#FFF"/>
@@ -159,6 +100,7 @@
                     android:src="@drawable/world_2"
                     android:layout_marginRight="10dp"/>
                 <TextView
+                    android:id="@+id/settingtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Map Setting"

@@ -49,7 +49,7 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     FirebaseUser firebaseUser;
-    ImageButton buttonProfile, buttonInvite, buttonLocation, buttonChat, buttonCommunity, buttonSearch;
+    ImageButton buttonProfile, buttonInvite, buttonLocation, buttonChat, buttonCommunity, buttonSearch, buttonSetting;
     private GoogleMap maps;
     private final int FINE_PERMISSION_CODE = 1;
     private long pressedTime;
@@ -149,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         buttonChat = findViewById(R.id.btnChat);
         buttonSearch = findViewById(R.id.btnSearch);
         buttonCommunity = findViewById(R.id.btnCommunity);
+        buttonSetting = findViewById(R.id.btnSetting);
         buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -168,6 +169,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), Invite.class);
+                startActivity(intent);
+            }
+        });
+        buttonSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), Setting.class);
                 startActivity(intent);
             }
         });

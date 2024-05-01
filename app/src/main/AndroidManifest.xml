@@ -59,6 +59,9 @@
         <activity android:name=".ChatBox"/>
         <activity android:name=".Community"/>
         <activity android:name=".CreateCommunity"/>
+        <activity android:name=".Setting"/>
+        <activity android:name=".MapSetting"/>
+        <activity android:name=".PremiumUpgrade"/>
         <activity android:name=".CaptureAct"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
