@@ -53,7 +53,7 @@
             android:gravity="center">
 
             <FrameLayout
-                android:id="@+id/profile_image_section"
+                android:id="@+id/community_profile_image_section"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
@@ -176,7 +176,7 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
+                android:layout_marginHorizontal="15dp"
                 android:layout_marginTop="25dp"
                 android:orientation="horizontal">
 
@@ -227,7 +227,7 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
+                android:layout_marginHorizontal="15dp"
                 android:layout_marginTop="15dp"
                 android:gravity="center"
                 android:orientation="horizontal">
@@ -244,7 +244,7 @@
 <!--                        android:src="@drawable/mail_ic" />-->
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
@@ -257,7 +257,7 @@
 
                         <EditText
                             android:id="@+id/editTextCommunityDescription"
-                            android:layout_width="360dp"
+                            android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:layout_marginBottom="20dp"

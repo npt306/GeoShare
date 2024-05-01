@@ -100,10 +100,10 @@
         <Button
             android:id="@+id/btnReportCommunity"
             android:layout_width="match_parent"
-            android:background="@drawable/report_button"
+            android:background="@drawable/custom_signin_button"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:text="Report" />
+            android:text="Close" />
 
     </LinearLayout>
 </LinearLayout>
