@@ -71,6 +71,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.View
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         CommunityGroup group = groupList.get(position);
         holder.communityName.setText(group.getGroupName());
+        holder.communityMembers.setText(group.getMembersListCount() + " members");
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

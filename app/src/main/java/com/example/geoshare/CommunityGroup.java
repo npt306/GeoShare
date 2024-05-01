@@ -63,4 +63,11 @@ public class CommunityGroup {
             this.membersList.add("empty");
         }
     }
+    public String getMembersListCount() {
+        if(groupIsEmpty()) {
+            return "0";
+        }else {
+            return String.valueOf(this.membersList.size());
+        }
+    }
 }
