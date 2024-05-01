@@ -56,7 +56,6 @@ public class CreateCommunity extends AppCompatActivity {
                     image = result.getData().getData();
                     imageViewUser = findViewById(R.id.community_image);
                     Glide.with(getApplicationContext()).load(image).into(imageViewUser);
-                    DataOutput.updateNewImage(image);
                 }
                 else {
                     Toast.makeText(CreateCommunity.this, "null con me no roi dm", Toast.LENGTH_SHORT).show();

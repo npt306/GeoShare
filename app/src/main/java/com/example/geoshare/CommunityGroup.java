@@ -70,4 +70,7 @@ public class CommunityGroup {
             return String.valueOf(this.membersList.size());
         }
     }
+    public boolean isInCommunity(String memberID) {
+        return this.membersList.contains(memberID);
+    }
 }

@@ -14,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,6 +73,9 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.View
         CommunityGroup group = groupList.get(position);
         holder.communityName.setText(group.getGroupName());
         holder.communityMembers.setText(group.getMembersListCount() + " members");
+        if(group.isInCommunity(Authentication.getInstance().getCurrentUserId())) {
+            holder.community_layout_item.setBackgroundColor(Color.parseColor("#124076"));
+        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -197,12 +201,14 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.View
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView communityName;
         public TextView communityMembers;
+        public LinearLayout community_layout_item;
         public ImageView community_image;
         public ViewHolder(View itemView){
             super(itemView);
 
             communityName = itemView.findViewById(R.id.community_name);
             communityMembers = itemView.findViewById(R.id.community_member);
+            community_layout_item = itemView.findViewById(R.id.community_layout_item);
             community_image = itemView.findViewById(R.id.community_image);
         }
     }
