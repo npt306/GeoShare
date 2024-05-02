@@ -72,6 +72,7 @@ public class DirectionsResultParserTask extends AsyncTask<String, Integer, List<
         // Drawing polyline in the Google Map for the i-th route
         Polyline polylineFinal = mapContext.getMaps().addPolyline(lineOptions);
         mapContext.setCurrentPolyline(polylineFinal);
+        mapContext.changeSearchIcon();
 //        polylineFinal.remove();
 
         LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
