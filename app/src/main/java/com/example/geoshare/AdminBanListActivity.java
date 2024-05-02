@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +26,7 @@ import java.util.Objects;
 
 public class AdminBanListActivity extends AppCompatActivity {
     private List<BanListItem> itemList;
+    private static long itemCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,10 @@ public class AdminBanListActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // get list of banned users
+                long itemSize = snapshot.getChildrenCount();
+
+                if (itemSize == 0) Toast.makeText(AdminBanListActivity.this, "The list is empty!", Toast.LENGTH_SHORT).show();
+
                 for (DataSnapshot bannedUserSnapshot : snapshot.getChildren()) {
                     String bannedUserId = bannedUserSnapshot.getKey();
                     DatabaseReference userRef = RealtimeDatabase.getInstance()
@@ -75,11 +81,15 @@ public class AdminBanListActivity extends AppCompatActivity {
                                     public void onSuccess(Uri uri) {
                                         itemList.add(new BanListItem(bannedUserId, userName, banDate, unbanDate, reportDescription, banReasons, uri));
                                         adapter.notifyDataSetChanged();
+                                        itemCount++;
+                                        if (itemCount == itemSize) Toast.makeText(AdminBanListActivity.this, "All data has been loaded!", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             } else{
                                 itemList.add(new BanListItem(bannedUserId, userName, banDate, unbanDate, reportDescription, banReasons, null));
                                 adapter.notifyDataSetChanged();
+                                itemCount++;
+                                if (itemCount == itemSize) Toast.makeText(AdminBanListActivity.this, "All data has been loaded!", Toast.LENGTH_SHORT).show();
                             }
                         }
                         @Override
