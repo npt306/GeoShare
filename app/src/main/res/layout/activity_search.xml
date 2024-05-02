@@ -39,29 +39,29 @@
         android:layout_marginBottom="10dp"
         android:background="@color/primary_back_arrow_background"
         />
-<!--    <androidx.cardview.widget.CardView-->
+
+<!--    <androidx.appcompat.widget.SearchView-->
+<!--        android:id="@+id/search"-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginRight="10dp"-->
-<!--        android:layout_marginLeft="10dp"-->
-<!--        >-->
-<!--        <fragment android:id="@+id/autocomplete_fragment"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"-->
-<!--            />-->
-<!--    </androidx.cardview.widget.CardView>-->
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/search"
+<!--        android:layout_marginStart="16dp"-->
+<!--        android:layout_marginTop="0dp"-->
+<!--        android:layout_marginEnd="16dp"-->
+<!--        android:background="@drawable/shape_bg_search"-->
+<!--        app:iconifiedByDefault="false"-->
+<!--        app:queryBackground="@null"-->
+<!--        app:submitBackground="@null" />-->
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/shape_bg_search"
-        app:iconifiedByDefault="false"
-        app:queryBackground="@null"
-        app:submitBackground="@null" />
+        android:layout_marginVertical="10dp"
+        android:layout_marginHorizontal="20dp">
+        <fragment android:id="@+id/autocomplete_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+            />
+    </androidx.cardview.widget.CardView>
 <!--    <TextView-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="wrap_content"-->

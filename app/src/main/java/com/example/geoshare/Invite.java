@@ -2,6 +2,7 @@ package com.example.geoshare;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -30,11 +31,18 @@ public class Invite extends AppCompatActivity {
     FirebaseUser firebaseUser;
     ImageButton buttonBack;
     Button btnFindID, btnInviteFriend;
+    public String qrScanResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invite);
+
+        if(getIntent().getStringExtra("scanResult") != null) {
+            qrScanResult = getIntent().getStringExtra("scanResult");
+        }else {
+            qrScanResult = "";
+        }
 
         firebaseAuth = Authentication.getInstance().getFirebaseAuth();
 
@@ -82,6 +90,10 @@ public class Invite extends AppCompatActivity {
             if(itemId == R.id.nav_invite){
                 textViewSelect.setText("Invite");
                 InviteFragment fragment = new InviteFragment();
+
+                Bundle bundle = new Bundle();
+                bundle.putString("scanResult", qrScanResult);
+
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.content, fragment, "");
                 fragmentTransaction.commit();
