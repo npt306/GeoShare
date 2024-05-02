@@ -311,8 +311,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(@NonNull GoogleMap googleMap) {
         maps = googleMap;
 
-        maps.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_night));
-
         MarkerManager.getInstance().setGoogleMap(maps);
         MarkLocation markLocation = new MarkLocation(MainActivity.this, maps);
         markLocation.readMarkersFromDatabase();

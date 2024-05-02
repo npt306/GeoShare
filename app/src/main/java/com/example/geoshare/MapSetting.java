@@ -1,6 +1,7 @@
 package com.example.geoshare;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -8,18 +9,35 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MapSetting extends AppCompatActivity{
+import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.Objects;
+
+public class MapSetting extends AppCompatActivity {
     ImageButton backButton;
+    Button lightButton;
+    Button darkButton;
+    Button satelliteButton;
+    ImageView imageView;
+    String currentMapStyle = "standard";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_setting_layout);
+
         // Initialize views
-        Button lightButton = findViewById(R.id.lightButton);
-        Button darkButton = findViewById(R.id.darkButton);
-        Button satelliteButton = findViewById(R.id.satiliteButton);
-        ImageView imageView = findViewById(R.id.mapImage);
+        lightButton = findViewById(R.id.lightButton);
+        darkButton = findViewById(R.id.darkButton);
+        satelliteButton = findViewById(R.id.satiliteButton);
+        imageView = findViewById(R.id.mapImage);
         backButton = findViewById(R.id.back_button);
+
+        // Get the current map style from Firebase
+        getCurrentMapStyleForFirebase();
+
         // Set click listeners
         lightButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -31,6 +49,8 @@ public class MapSetting extends AppCompatActivity{
                 darkButton.setTextColor(getResources().getColor(R.color.black));
                 satelliteButton.setTextColor(getResources().getColor(R.color.black));
                 imageView.setImageResource(R.drawable.light_map);
+                updateMapStyleForFirebase("standard");
+                MainActivity.getInstance().getMaps().setMapStyle(MapStyleOptions.loadRawResourceStyle(MainActivity.getInstance(), R.raw.map_standard));
             }
         });
 
@@ -44,6 +64,8 @@ public class MapSetting extends AppCompatActivity{
                 darkButton.setTextColor(getResources().getColor(R.color.white));
                 satelliteButton.setTextColor(getResources().getColor(R.color.black));
                 imageView.setImageResource(R.drawable.dark_map);
+                updateMapStyleForFirebase("dark");
+                MainActivity.getInstance().getMaps().setMapStyle(MapStyleOptions.loadRawResourceStyle(MainActivity.getInstance(), R.raw.map_dark));
             }
         });
 
@@ -57,13 +79,54 @@ public class MapSetting extends AppCompatActivity{
                 darkButton.setTextColor(getResources().getColor(R.color.black));
                 satelliteButton.setTextColor(getResources().getColor(R.color.white));
                 imageView.setImageResource(R.drawable.satilite_map);
+                updateMapStyleForFirebase("satellite");
+                MainActivity.getInstance().getMaps().setMapStyle(MapStyleOptions.loadRawResourceStyle(MainActivity.getInstance(), R.raw.map_retro));
             }
         });
+
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+    }
+
+    void getCurrentMapStyleForFirebase() {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+
+        firebaseDatabase.getReference("MapStyle").child(uid).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult().getValue() == null) {
+                    updateMapStyleForFirebase("standard");
+                    currentMapStyle = "standard";
+                } else {
+                    currentMapStyle = task.getResult().getValue().toString();
+                }
+            }
+
+            // Set the current map style
+            if (currentMapStyle.equals("standard")) {
+                imageView.setImageResource(R.drawable.light_map);
+                lightButton.setBackgroundResource(R.drawable.button_click);
+                lightButton.setTextColor(getResources().getColor(R.color.white));
+            } else if (currentMapStyle.equals("dark")) {
+                imageView.setImageResource(R.drawable.dark_map);
+                darkButton.setBackgroundResource(R.drawable.button_click);
+                darkButton.setTextColor(getResources().getColor(R.color.white));
+            } else {
+                imageView.setImageResource(R.drawable.satilite_map);
+                satelliteButton.setBackgroundResource(R.drawable.button_click);
+                satelliteButton.setTextColor(getResources().getColor(R.color.white));
+            }
+        });
+    }
+
+    void updateMapStyleForFirebase(String mapStyle) {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+
+        firebaseDatabase.getReference("MapStyle").child(uid).setValue(mapStyle);
     }
 }
