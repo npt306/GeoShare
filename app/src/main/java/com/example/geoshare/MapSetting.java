@@ -51,6 +51,7 @@ public class MapSetting extends AppCompatActivity {
                 satelliteButton.setTextColor(getResources().getColor(R.color.black));
                 imageView.setImageResource(R.drawable.light_map);
                 updateMapStyleForFirebase("standard");
+                MainActivity.getInstance().getMaps().setMapType(GoogleMap.MAP_TYPE_NORMAL);
                 MainActivity.getInstance().getMaps().setMapStyle(MapStyleOptions.loadRawResourceStyle(MainActivity.getInstance(), R.raw.map_standard));
             }
         });
@@ -66,6 +67,7 @@ public class MapSetting extends AppCompatActivity {
                 satelliteButton.setTextColor(getResources().getColor(R.color.black));
                 imageView.setImageResource(R.drawable.dark_map);
                 updateMapStyleForFirebase("dark");
+                MainActivity.getInstance().getMaps().setMapType(GoogleMap.MAP_TYPE_NORMAL);
                 MainActivity.getInstance().getMaps().setMapStyle(MapStyleOptions.loadRawResourceStyle(MainActivity.getInstance(), R.raw.map_dark));
             }
         });
