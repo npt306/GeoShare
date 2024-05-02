@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -80,7 +81,7 @@ public class MapSetting extends AppCompatActivity {
                 satelliteButton.setTextColor(getResources().getColor(R.color.white));
                 imageView.setImageResource(R.drawable.satilite_map);
                 updateMapStyleForFirebase("satellite");
-                MainActivity.getInstance().getMaps().setMapStyle(MapStyleOptions.loadRawResourceStyle(MainActivity.getInstance(), R.raw.map_retro));
+                MainActivity.getInstance().getMaps().setMapType(GoogleMap.MAP_TYPE_SATELLITE);
             }
         });
 
