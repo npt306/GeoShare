@@ -1,9 +1,11 @@
 package com.example.geoshare;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.util.Log;
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -32,29 +34,52 @@ public class UrlDownloader extends AsyncTask<String, Void, String>{
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
 
-        if (result.contains("error_message")){
-            Log.d("DEBUG TAG", "Request Is Denied");
-            AlertDialog.Builder builder = new AlertDialog.Builder(Search.getInstance());
-            builder.setTitle("Search results: " + api.toUpperCase() + " API")
-                    .setMessage("Over query limit. Please try again tomorrow.")
-                    .setPositiveButton("OK", null);
+        JSONObject jObject = null;
+        String status = "";
+        try {
+            jObject = new JSONObject(result);
+            status = jObject.getString("status");
 
-            // build dialog
-            AlertDialog dialog = builder.create();
-            dialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (status.equals("OK")){
+            if (api.equals("directions")){
+                Log.d("DEBUG TAG", "API Directions");
+
+                // wait for screen to change to MainActivity
+                Search.getInstance().finish();
+                SystemClock.sleep(2000);
+
+                new DirectionsResultParserTask().execute(result);
+            }
+
+            if (api.equals("places")){
+                Log.d("DEBUG TAG", "API Place");
+
+                new PlacesResultParserTask().execute(result);
+            }
+
             return;
         }
 
-        if (api.equals("directions")){
-            Log.d("DEBUG TAG", "API Directions");
-            new DirectionsResultParserTask().execute(result);
+        // configure dialog for error msg
+        AlertDialog.Builder builder = new AlertDialog.Builder(Search.getInstance());
+        builder.setTitle("Results: " + api.toUpperCase() + " API")
+                .setPositiveButton("OK", null);
+
+        if (status.equals("ZERO_RESULTS")){
+            builder.setMessage("No available directions found.");
         }
 
-        if (api.equals("places")){
-            Log.d("DEBUG TAG", "API Place");
-
-            new PlacesResultParserTask().execute(result);
+        if (status.equals("OVER_QUERY_LIMIT")){
+            builder.setMessage("Over query limit. Please try again tomorrow.");
         }
+
+        // build dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     /**

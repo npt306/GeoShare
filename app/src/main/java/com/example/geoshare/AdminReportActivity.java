@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,6 +29,8 @@ import java.util.Objects;
 public class AdminReportActivity extends AppCompatActivity {
     private List<ReportListItem> itemList;
     private ListView listView;
+    private static long itemCount = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +50,16 @@ public class AdminReportActivity extends AppCompatActivity {
         ReportAdapter adapter = new ReportAdapter(AdminReportActivity.this, itemList);
         listView.setAdapter(adapter);
 
+
         // add data from db
         DatabaseReference reference = RealtimeDatabase.getInstance().getReportsReference().orderByKey().getRef();
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // get list of timestamps
+                long itemSize = snapshot.getChildrenCount();
+                if (itemSize == 0) Toast.makeText(AdminReportActivity.this, "The list is empty!", Toast.LENGTH_SHORT).show();
+
                 for (DataSnapshot timestampSnapshot : snapshot.getChildren()) {
                     // get list of reports represented by senderId in that timestamp
                     for (DataSnapshot reportSnapshot : timestampSnapshot.getChildren()) {
@@ -74,11 +81,15 @@ public class AdminReportActivity extends AppCompatActivity {
                                         public void onSuccess(Uri uri) {
                                             itemList.add(new ReportListItem(userName, reportSnapshot.getKey(), timestampSnapshot.getKey(), uri));
                                             adapter.notifyDataSetChanged();
+                                            itemCount++;
+                                            if (itemCount == itemSize) Toast.makeText(AdminReportActivity.this, "All data has been loaded!", Toast.LENGTH_SHORT).show();
                                         }
                                     });
                                 } else {
                                     itemList.add(new ReportListItem(userName, reportSnapshot.getKey(), timestampSnapshot.getKey(), null));
                                     adapter.notifyDataSetChanged();
+                                    itemCount++;
+                                    if (itemCount == itemSize) Toast.makeText(AdminReportActivity.this, "All data has been loaded!", Toast.LENGTH_SHORT).show();
                                 }
                             }
                             @Override
