@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#101D25"
-        android:padding="16dp"
+        android:padding="10dp"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp">
 
@@ -29,7 +29,7 @@
                 android:layout_height="30dp"
                 android:layout_marginRight="10dp"
                 android:background="#101D25"
-                android:src="@drawable/back_button" />
+                android:src="@drawable/ic_back_arrow3" />
 
             <TextView
                 android:id="@+id/tv_title"
@@ -93,8 +93,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/avatar_layout"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
+
             android:orientation="vertical">
             <!--            <LinearLayout-->
             <!--                android:layout_width="match_parent"-->
@@ -181,6 +180,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="25dp"
+                android:layout_gravity=""
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -192,6 +192,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="20dp"
+                        android:layout_gravity="center"
                         android:src="@drawable/id_ic" />
 
                     <LinearLayout
@@ -286,6 +287,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="23dp"
+                            android:layout_gravity="center"
                             android:src="@drawable/name_ic" />
 
                         <LinearLayout
@@ -353,6 +355,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="23dp"
+                        android:layout_gravity="center"
                         android:src="@drawable/ic_birthday" />
 
                     <LinearLayout
@@ -406,16 +409,43 @@
                 <!--                    android:src="@drawable/fix_ic" />-->
             </LinearLayout>
         </LinearLayout>
-
-        <Button
-            android:id="@+id/btnReport"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/info_layout"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/report_button"
-            android:textColor="#FFFFFF"
-            android:text="Report"/>
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/btnAddFriend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/info_layout"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/friend_profile_add_friend_button_background"
+                android:textColor="#FFFFFF"
+                android:text="Add friend"/>
+
+            <Button
+                android:id="@+id/btnUnfriend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/info_layout"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/friend_profile_unfriend_button_background"
+                android:textColor="#FFFFFF"
+                android:text="Unfriend"/>
+
+            <Button
+                android:id="@+id/btnReport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="10dp"
+                android:background="@drawable/report_button"
+                android:textColor="#FFFFFF"
+                android:text="Report"/>
+        </LinearLayout>
+
+
         <!--        <com.google.android.material.appbar.MaterialToolbar-->
         <!--            android:layout_width="match_parent"-->
         <!--            android:layout_height="wrap_content"-->
