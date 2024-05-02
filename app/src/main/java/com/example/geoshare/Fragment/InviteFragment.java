@@ -45,6 +45,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,6 +94,9 @@ public class InviteFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+
+            String qrScanResult = getArguments().getString("scanResult", "123123");
+            Log.d("QR2121", qrScanResult);
         }
     }
 
@@ -105,9 +109,13 @@ public class InviteFragment extends Fragment {
     private Button buttonInviteFoundFriend;
     private ImageView imageViewInviteFriendProfile;
     private ImageButton buttonFindFriend, buttonQrCode;
+    private String qrScanResult;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Invite invite = (Invite)getActivity();
+        qrScanResult= invite.qrScanResult;
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_invite, container, false);
 //        recyclerView = view.findViewById(R.id.recycles_view);
@@ -122,6 +130,11 @@ public class InviteFragment extends Fragment {
         buttonInviteFoundFriend = view.findViewById(R.id.btnInviteFoundFriend);
         buttonQrCode = view.findViewById(R.id.btnQrCode);
 
+        if(qrScanResult.length() < 28 && !qrScanResult.isEmpty()) {
+            show_dialog("Invalid UID","Please check again friend's UID.",InviteFragment.this.getContext() );
+        }else {
+            editTextAddFriendUserId.setText(qrScanResult);
+        }
         buttonFindFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,40 +147,63 @@ public class InviteFragment extends Fragment {
                         @Override
                         public void onUserIdChecked(boolean result) {
                             if(result) {
-                                DatabaseReference usersRef = RealtimeDatabase.getInstance().getUsersReference();
+
                                 String currentUserId = Authentication.getInstance().getCurrentUserId();
 
                                 if(currentUserId.equals(id)){
                                     show_dialog("User Not Valid","Do not enter your own id.",InviteFragment.this.getContext() );
                                     return;
                                 }
-                                usersRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+                                DatabaseReference friendsRef = RealtimeDatabase.getInstance().getFriendsReference();
+                                friendsRef.child(currentUserId).child("friendList").addValueEventListener(new ValueEventListener() {
                                     @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        User userFound = dataSnapshot.getValue(User.class);
-                                        textViewInviteUserFriend.setText(userFound.getUsername());
-                                        linearLayoutUserFound.setVisibility(View.VISIBLE);
-
-                                        if(!userFound.getImageURL().equals("default")){
-                                            StorageReference storageRef = Storage.getInstance().getUsersAvatarReference();
-                                            storageRef.child(userFound.getImageURL()).getDownloadUrl()
-                                                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                                        @Override
-                                                        public void onSuccess(Uri uri) {
-                                                            Glide.with(InviteFragment.this.getContext()).load(uri).into(imageViewInviteFriendProfile);
-                                                        }
-                                                    });
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        ArrayList<String> listFriend = new ArrayList<>();
+                                        for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                            String friendID = dataSnapshot.getValue(String.class);
+                                            if(friendID != null) {
+                                                listFriend.add(friendID);
+                                            }
                                         }
 
+                                        if(listFriend.contains(id)) {
+                                            show_dialog("Already friend","You and this user are already friend.",InviteFragment.this.getContext() );
+                                        }else {
+                                            DatabaseReference usersRef = RealtimeDatabase.getInstance().getUsersReference();
+                                            usersRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                    User userFound = dataSnapshot.getValue(User.class);
+                                                    textViewInviteUserFriend.setText(userFound.getUsername());
+                                                    linearLayoutUserFound.setVisibility(View.VISIBLE);
+
+                                                    if(!userFound.getImageURL().equals("default")){
+                                                        StorageReference storageRef = Storage.getInstance().getUsersAvatarReference();
+                                                        storageRef.child(userFound.getImageURL()).getDownloadUrl()
+                                                                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                                    @Override
+                                                                    public void onSuccess(Uri uri) {
+                                                                        Glide.with(InviteFragment.this.getContext()).load(uri).into(imageViewInviteFriendProfile);
+                                                                    }
+                                                                });
+                                                    }
+
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                    // Xử lý lỗi nếu có
+                                                    Log.d("Kiem tra ban", "Da xay ra loi: " + databaseError.getMessage());
+                                                }
+                                            });
+                                        }
                                     }
 
                                     @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                                        // Xử lý lỗi nếu có
-                                        Log.d("Kiem tra ban", "Da xay ra loi: " + databaseError.getMessage());
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
                                     }
                                 });
-
                             }
                         }
                     });
@@ -190,6 +226,7 @@ public class InviteFragment extends Fragment {
         buttonQrCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                getActivity().finish();
                 Intent intent = new Intent(getActivity(), QR.class);
                 startActivity(intent);
             }

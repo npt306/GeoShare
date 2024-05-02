@@ -77,15 +77,23 @@ public class QR extends AppCompatActivity {
 
     ActivityResultLauncher<ScanOptions> barLaucher = registerForActivityResult(new ScanContract(), result -> {
         if (result.getContents() != null) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Scan QR result");
-            builder.setMessage(result.getContents());
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                }
-            }).show();
+            String scanResult = result.getContents();
+
+            Intent intent = new Intent(getApplicationContext(), Invite.class);
+            intent.putExtra("scanResult", scanResult);
+            startActivity(intent);
+            finish();
+
+//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//            builder.setTitle("You want to add friend to this userID?");
+//            builder.setMessage(scanResult);
+//            builder.setPositiveButton("Send request", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialogInterface, int i) {
+//                    DataOutput.inviteNewFriend(scanResult);
+//                    dialogInterface.dismiss();
+//                }
+//            }).show();
         }
     });
 }
