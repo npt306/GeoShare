@@ -59,12 +59,14 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:text=""
+            android:hint="Share status with friends right now"
+            android:textColorHint="@color/fourth_text"
             android:padding="10dp"
             android:id="@+id/status_dialog_profile"
             android:background="@drawable/status_border_dialog_profile"
             android:layout_marginTop="20dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginLeft="0dp"
             android:layout_marginBottom="10dp"
             />
 
@@ -150,7 +152,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <Button
-                android:layout_margin="10dp"
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Update status"

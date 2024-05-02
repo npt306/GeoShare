@@ -35,7 +35,7 @@
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Profile"
+                android:text="Friend profile"
                 android:textColor="#C28C3A"
                 android:textSize="25dp"
                 android:textStyle="bold" />

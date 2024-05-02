@@ -11,6 +11,8 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
@@ -48,7 +50,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -252,20 +257,18 @@ public class MarkerManager {
             public boolean onMarkerClick(@NonNull Marker m) {
                 String tag = (String) m.getTag();
                 assert tag != null;
-                showCustomDialog(tag);
+                showCustomDialog(tag, m.getPosition());
                 return true;
             }
         });
     }
 
     // Hiển thị custom dialog khi nhấn vào marker
-    private void showCustomDialog(String markerId) {
+    private void showCustomDialog(String markerId, LatLng position) {
         Log.d("show diaglog profile", markerId + "click");
 
         // Viết code để hiển thị custom dialog ở đây
-        // Ví dụ:
-        // CustomDialog dialog = new CustomDialog(callerContext);
-        // dialog.show();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(callerContext);
         View dialogView;
         CircleImageView avatar;
@@ -278,6 +281,7 @@ public class MarkerManager {
         Button buttonUpdateStatus;
         Button buttonProfile;
         ImageView buttonClose;
+        EditText address;
 
         if(markerId.equals(Authentication.getInstance().getCurrentUserId())){
             dialogView = LayoutInflater.from(callerContext).inflate(R.layout.dialog_profile, null);
@@ -316,6 +320,8 @@ public class MarkerManager {
             dialogView = LayoutInflater.from(callerContext).inflate(R.layout.dialog_friend_profile, null);
             status = dialogView.findViewById(R.id.status_dialog_profile);
             status.setEnabled(false);
+            address = dialogView.findViewById(R.id.friend_address_dialog_profile);
+            address.setText("Address: " + getAddressFromLatLng(position));
             buttonProfile = dialogView.findViewById(R.id.button_profile_dialog_profile);
             buttonProfile.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -435,7 +441,14 @@ public class MarkerManager {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String statusInf = dataSnapshot.child("status").getValue(String.class);
+                if(statusInf.isEmpty()){
+                    if(!markerId.equals(Authentication.getInstance().getCurrentUserId())){
+                        status.setVisibility(View.GONE);
+                    }
+                }
+                else {
                 status.setText(statusInf);
+                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -451,5 +464,21 @@ public class MarkerManager {
         });
 
         dialog.show();
+    }
+    private String getAddressFromLatLng(LatLng point){
+        Geocoder geocoder = new Geocoder(callerContext, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(point.latitude, point.longitude, 1);
+            if (addresses.size() > 0) {
+                Address address = addresses.get(0);
+                String addressLine = address.getAddressLine(0);
+                return addressLine.toString();
+            } else {
+                return point.latitude + ", " +point.longitude;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

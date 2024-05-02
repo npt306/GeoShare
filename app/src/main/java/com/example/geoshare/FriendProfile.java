@@ -70,8 +70,6 @@ public class FriendProfile extends AppCompatActivity {
         buttonProfileBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), Invite.class);
-                startActivity(intent);
                 finish();
             }
         });
