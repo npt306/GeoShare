@@ -205,7 +205,7 @@ public class LocationManager {
                 List<String> communityIds = (List<String>) task.getResult().getValue();
                 if (communityIds != null) {
                     for (String communityId : communityIds) {
-                        communityRef.child(communityId).child("memberList").get().addOnCompleteListener(task1 -> {
+                        communityRef.child(communityId).child("membersList").get().addOnCompleteListener(task1 -> {
                             if (task1.isSuccessful()) {
                                 List<String> memberIds = (List<String>) task1.getResult().getValue();
                                 if (memberIds != null) {
