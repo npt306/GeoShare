@@ -29,7 +29,7 @@
             android:id="@+id/friend_viewProfile_button"
             android:layout_width="100dp"
             android:layout_height="40dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="10dp"
             android:textColor="#FFFFFF"
             android:background="@drawable/invite_viewprofile_button"
             android:text="Profile" />

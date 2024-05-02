@@ -9,31 +9,7 @@
         android:layout_height="50dp"
         android:id="@+id/request_profile_image"
         android:src="@mipmap/ic_launcher"/>
-    <LinearLayout
-        android:id="@+id/info_layout"
-        android:layout_width="240dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="65dp"
-        android:orientation="vertical"
-        android:gravity="start">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/request_friend_username"
-            android:text="Username"
-            android:textColor="#FFFFFF"
-            android:textSize="18dp"/>
 
-        <TextView
-            android:id="@+id/request_friend_ID"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="Id"
-            android:textColor="#FFFFFF"
-            android:textSize="14dp" />
-
-    </LinearLayout>
     <!--    <TextView-->
     <!--        android:layout_width="wrap_content"-->
     <!--        android:layout_height="wrap_content"-->
@@ -46,27 +22,59 @@
     <!--        android:textColor="#FFFFFF"-->
     <!--        android:textSize="18dp"/>-->
     <LinearLayout
+        android:id="@+id/info_layout"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="65dp"
+        android:gravity="start"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/request_friend_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Username"
+            android:textColor="#FFFFFF"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/request_friend_ID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Id"
+            android:textColor="#FFFFFF"
+            android:textSize="14dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:gravity="center"
         android:layout_toRightOf="@+id/info_layout"
         android:orientation="horizontal">
-        <ImageView
+        <Button
             android:id="@+id/button_request_accept"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_accept"/>
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="10dp"
+            android:text="Accept"
+            android:textColor="#FFF"
+            android:background="@drawable/button_accept"/>
 
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1"/>
-        <ImageView
+        <Button
             android:id="@+id/button_request_reject"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_reject"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:textColor="#FFF"
+            android:text="Deny"
+            android:background="@drawable/button_deny"
             />
     </LinearLayout>
 
