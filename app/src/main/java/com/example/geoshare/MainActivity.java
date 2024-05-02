@@ -43,7 +43,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Location currentLocation;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Polyline currentPolyline = null;
+    private List<String> searchHistoryList;
 
     public void setCurrentPolyline(Polyline polyline) {
         this.currentPolyline = polyline;
@@ -72,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public Polyline getCurrentPolyline() {
         return currentPolyline;
     }
+
+    public List<String> getSearchHistoryList() { return searchHistoryList; }
 
     private static MainActivity instance;
 
@@ -143,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     private void createView() {
+        searchHistoryList = new ArrayList<>();
         buttonInvite = findViewById(R.id.btnInvite);
         buttonProfile = findViewById(R.id.btnProfile);
         buttonLocation = findViewById(R.id.btnCurrentLocation);
