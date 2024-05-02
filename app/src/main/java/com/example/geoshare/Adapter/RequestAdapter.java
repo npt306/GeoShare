@@ -1,10 +1,12 @@
 package com.example.geoshare.Adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,7 +52,9 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
     public void onBindViewHolder(@NonNull RequestAdapter.ViewHolder holder, int position) {
         User friend = mRequest.get(position);
         holder.username.setText(friend.getUsername());
-        holder.pendingFriendID.setText(friend.getId());
+        String truncatedId = truncateId(friend.getId());
+        holder.pendingFriendID.setText(truncatedId);
+        holder.pendingFriendID.setTextColor(Color.parseColor("#7B7B7B"));
         if(friend.getImageURL().equals("default")){
 //            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
         }
@@ -154,7 +158,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView username, pendingFriendID;
         public ImageView profile_image;
-        public ImageView buttonAccept, buttonReject;
+        public Button buttonAccept, buttonReject;
         public ViewHolder(View itemView){
             super(itemView);
             username = itemView.findViewById(R.id.request_friend_username);
@@ -163,6 +167,18 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
             buttonAccept = itemView.findViewById(R.id.button_request_accept);
             buttonReject = itemView.findViewById(R.id.button_request_reject);
 
+        }
+    }
+    private String truncateId(String id) {
+        // Define your desired length for the ID
+        int maxLength = 10; // Change this value to your desired length
+
+        // Check if the ID is longer than the maximum length
+        if (id.length() > maxLength) {
+            // Truncate the ID
+            return id.substring(0, maxLength) + "...";
+        } else {
+            return id; // Return the original ID if it's within the maximum length
         }
     }
 }

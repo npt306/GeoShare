@@ -25,7 +25,6 @@ public class Setting extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), MapSetting.class);
                 startActivity(intent);
-                finish();
             }
         });
         selectPremiumUpgrade.setOnClickListener(new View.OnClickListener() {
@@ -33,7 +32,6 @@ public class Setting extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), PremiumUpgrade.class);
                 startActivity(intent);
-                finish();
             }
         });
         backButton.setOnClickListener(new View.OnClickListener() {

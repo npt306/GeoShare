@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,7 +65,15 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
                         }
                     });
         }
-        holder.friend_viewProfile_btn.setOnClickListener(new View.OnClickListener() {
+//        holder.friend_viewProfile_btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(mContext.getApplicationContext(), FriendProfile.class);
+//                intent.putExtra("friendID", friend.getId());
+//                mContext.startActivity(intent);
+//            }
+//        });
+        holder.friendLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext.getApplicationContext(), FriendProfile.class);
@@ -99,12 +108,14 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
         public TextView username;
         public ImageView profile_image;
         public Button friend_viewProfile_btn, delete_friend_btn;
+        public RelativeLayout friendLayout;
         public ViewHolder(View itemView){
             super(itemView);
 
             username = itemView.findViewById(R.id.invite_friend_username);
             profile_image = itemView.findViewById(R.id.friend_profile_image);
-            friend_viewProfile_btn = itemView.findViewById(R.id.friend_viewProfile_button);
+//            friend_viewProfile_btn = itemView.findViewById(R.id.friend_viewProfile_button);
+            friendLayout = itemView.findViewById(R.id.layoutFriend);
             delete_friend_btn = itemView.findViewById(R.id.friend_unfriend_button);
         }
     }

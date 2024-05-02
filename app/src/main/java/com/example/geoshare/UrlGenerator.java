@@ -9,6 +9,10 @@ public class UrlGenerator {
      * @param dest a finish location
      * @return query url for api
      */
+
+//    private static String key = "AIzaSyCGc2dm5WJgaBbVaAYeqStrIqnV6oVEHzg";
+    private static String key = "AIzaSyBzxW5txxZHhPZCjPrOvrjCE8awoF3IP50"; // newest
+
     public static String getDirectionsUrl(LatLng origin, LatLng dest) {
 
         // Origin of route
@@ -28,7 +32,7 @@ public class UrlGenerator {
 
         // Building the url to the web service
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters
-                + "&key=AIzaSyCGc2dm5WJgaBbVaAYeqStrIqnV6oVEHzg";
+                + "&key=" + key;
 
         return url;
     }
@@ -42,7 +46,7 @@ public class UrlGenerator {
         // Building the url to the web service
         keyword = keyword.replace(" ", "%20");
         String url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + keyword
-                + "&key=AIzaSyCGc2dm5WJgaBbVaAYeqStrIqnV6oVEHzg";
+                + "&key=" + key;
 
         return url;
     }

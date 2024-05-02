@@ -333,14 +333,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    public void getDirection(LatLng origin, LatLng dest) {
-        // Getting URL to the Google Directions API
-        Log.d("DEBUG TAG", "Preparing to draw path");
-        String url = UrlGenerator.getDirectionsUrl(origin, dest);
-        // Start downloading json data from Google Directions API
-        // and draw routes
-        new UrlDownloader().execute(url);
-
+    public void changeSearchIcon() {
         // change search button
         buttonSearch.setImageDrawable(ContextCompat.getDrawable(
                 MainActivity.this, R.drawable.ic_search_close));
@@ -353,6 +346,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             LocationManager.getInstance().startLocationUpdates();
             LocationManager.getInstance().getLocationForFriends();
+            LocationManager.getInstance().getLocationForCommunity();
         }
     }
 }
