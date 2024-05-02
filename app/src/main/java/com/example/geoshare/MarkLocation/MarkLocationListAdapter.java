@@ -58,6 +58,7 @@ public class MarkLocationListAdapter extends RecyclerView.Adapter<MarkLocationLi
             @Override
             public void onClick(View view) {
                 MarkLocationDatabase.getInstance().deleteMarkerLocation(marker, mContext);
+
             }
         });
     }

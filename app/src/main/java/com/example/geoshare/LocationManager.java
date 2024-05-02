@@ -65,14 +65,12 @@ public class LocationManager {
 
     public void startLocationUpdates() {
 
-        if (ActivityCompat.checkSelfPermission(MainActivity.getInstance(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(MainActivity.getInstance(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(MainActivity.getInstance(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.getInstance(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
 //        MarkerManager.getInstance().reloadMarker();
-        Log.d("Loacation Manager","location request");
-        LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 100)
-                .build();
+        Log.d("Loacation Manager", "location request");
+        LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 100).build();
 
         LocationCallback locationCallback = new LocationCallback() {
             @Override
@@ -92,16 +90,14 @@ public class LocationManager {
             }
         };
 
-        fusedLocationProviderClient.requestLocationUpdates(locationRequest,
-                locationCallback,
-                Looper.getMainLooper());
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
     }
 
     private void updateCurrentLocationMarker(Location location) {
 
         FirebaseUser firebaseUser = FirebaseSingleton.getInstance().getFirebaseAuth().getCurrentUser();
         Log.d("check login", String.valueOf(firebaseUser));
-        if(firebaseUser == null){
+        if (firebaseUser == null) {
             return;
         }
 
@@ -109,7 +105,7 @@ public class LocationManager {
         if (!getLocationVisibility()) {
             return;
         }
-        Log.d("Loacation Manager","update current location");
+        Log.d("Loacation Manager", "update current location");
 
 //        currentLocation = location;
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -121,7 +117,7 @@ public class LocationManager {
     private void updateLocationToFirebase(double latitude, double longitude) {
         FirebaseUser firebaseUser = FirebaseSingleton.getInstance().getFirebaseAuth().getCurrentUser();
         Log.d("check login", String.valueOf(firebaseUser));
-        if(firebaseUser == null){
+        if (firebaseUser == null) {
             return;
         }
         String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
@@ -132,8 +128,7 @@ public class LocationManager {
 
         long MIN_DISTANCE_FOR_UPDATE = 5;
         if (currentLocation == null || newLocation.distanceTo(currentLocation) > MIN_DISTANCE_FOR_UPDATE) {
-            if (currentLocation == null)
-                currentLocation = new Location("gps");
+            if (currentLocation == null) currentLocation = new Location("gps");
 
             currentLocation.setLatitude(latitude);
             currentLocation.setLongitude(longitude);
@@ -196,22 +191,58 @@ public class LocationManager {
                     }
                 }
             }
-        });    }
+        });
+    }
 
-    public Location getCurrentLocation(){
+    public void getLocationForCommunity() {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference communityRef = firebaseDatabase.getReference("Community");
+        DatabaseReference communityListRef = firebaseDatabase.getReference("UsersCommunity");
+        String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+
+        communityListRef.child(uid).child("CommunityList").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                List<String> communityIds = (List<String>) task.getResult().getValue();
+                if (communityIds != null) {
+                    for (String communityId : communityIds) {
+                        communityRef.child(communityId).child("membersList").get().addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()) {
+                                List<String> memberIds = (List<String>) task1.getResult().getValue();
+                                if (memberIds != null) {
+                                    for (String memberId : memberIds) {
+                                        databaseRef.child(memberId).get().addOnCompleteListener(task2 -> {
+                                            if (task2.isSuccessful() && !memberId.equals("empty")) {
+                                                Log.d("LocationManager", "Community member location updated: " + task2.getResult().toString());
+
+                                                Location memberLocation = new Location("");
+                                                memberLocation.setLatitude((Double) task2.getResult().child("latitude").getValue());
+                                                memberLocation.setLongitude((Double) task2.getResult().child("longitude").getValue());
+
+                                                displayCommunityLocation(memberId, memberLocation);
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    }
+
+    public Location getCurrentLocation() {
         return currentLocation;
     }
 
     public void updateFriendLocation(String friendId, Location location) {
         FirebaseUser firebaseUser = FirebaseSingleton.getInstance().getFirebaseAuth().getCurrentUser();
-        Log.d("check login", String.valueOf(firebaseUser));
-        if(firebaseUser == null){
+
+        if (firebaseUser == null) {
             return;
         }
-        Log.d("LocationManager", "FriendID: " + friendId + " Location: " + location.toString());
 
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-
         MarkerManager.getInstance().createMarker(latLng, friendId);
 
         databaseRef.child(friendId).addValueEventListener(new ValueEventListener() {
@@ -234,6 +265,9 @@ public class LocationManager {
                 // Xử lý lỗi nếu có
             }
         });
+    }
 
+    public void displayCommunityLocation(String memberId, Location location) {
+        MarkerManager.getInstance().createMarker(new LatLng(location.getLatitude(), location.getLongitude()), memberId);
     }
 }

@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.geoshare.Database.RealtimeDatabase.MarkLocationDatabase;
 import com.example.geoshare.MainActivity;
+import com.example.geoshare.MarkerManager;
 import com.example.geoshare.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -184,10 +185,14 @@ public class MarkLocation implements GoogleMap.OnMapLongClickListener {
         });
     }
 
+    List<Marker> oldMarkerList =new ArrayList<>();
     public void displayMarkers(List<MarkerLocationModel> markerList) {
+        for(Marker oldMarker: oldMarkerList){
+            oldMarker.remove();
+        }
         for (MarkerLocationModel marker : markerList) {
             // Thêm marker vào bản đồ
-            maps.addMarker(typeIconMarker(marker));
+            oldMarkerList.add(maps.addMarker(typeIconMarker(marker)));
         }
     }
     public MarkerOptions typeIconMarker(MarkerLocationModel marker){

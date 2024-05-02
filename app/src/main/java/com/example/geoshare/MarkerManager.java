@@ -1,6 +1,7 @@
 package com.example.geoshare;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -275,6 +276,7 @@ public class MarkerManager {
         TextView speed;
         TextView totalFriend;
         Button buttonUpdateStatus;
+        Button buttonProfile;
         ImageView buttonClose;
 
         if(markerId.equals(Authentication.getInstance().getCurrentUserId())){
@@ -314,6 +316,15 @@ public class MarkerManager {
             dialogView = LayoutInflater.from(callerContext).inflate(R.layout.dialog_friend_profile, null);
             status = dialogView.findViewById(R.id.status_dialog_profile);
             status.setEnabled(false);
+            buttonProfile = dialogView.findViewById(R.id.button_profile_dialog_profile);
+            buttonProfile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(callerContext.getApplicationContext(), FriendProfile.class);
+                    intent.putExtra("friendID", markerId);
+                    callerContext.startActivity(intent);
+                }
+            });
         }
         builder.setView(dialogView);
 

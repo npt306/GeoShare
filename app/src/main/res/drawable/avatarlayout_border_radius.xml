@@ -4,7 +4,7 @@
     <solid android:color="#2D383E"/> <!-- Replace #yourCustomColor with your color code -->
 
     <!-- Define the border radius -->
-    <corners android:radius="25dp"/> <!-- Set your desired radius here -->
+    <corners android:radius="10dp"/> <!-- Set your desired radius here -->
 
     <!-- If you want to add border, uncomment the following lines -->
     <!-- <stroke android:width="2dp" android:color="#yourBorderColor"/> -->

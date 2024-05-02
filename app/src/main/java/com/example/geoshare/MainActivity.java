@@ -352,6 +352,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             LocationManager.getInstance().startLocationUpdates();
             LocationManager.getInstance().getLocationForFriends();
+            LocationManager.getInstance().getLocationForCommunity();
         }
     }
 }

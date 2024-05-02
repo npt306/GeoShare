@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +29,8 @@ import com.bumptech.glide.Glide;
 import com.example.geoshare.Database.Authentication.Authentication;
 import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
 import com.example.geoshare.Database.Storage.Storage;
+import com.example.geoshare.Fragment.InviteFragment;
+import com.example.geoshare.Model.User;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -50,13 +53,15 @@ public class FriendProfile extends AppCompatActivity {
     ImageButton buttonProfileBack;
     CircleImageView imageViewUser;
     TextView txtId, txtUsername, txtDob;
-    Button btnReport;
+    Button btnReport, btnAddFriend, btnUnfriend;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_profile);
 
         buttonProfileBack = findViewById(R.id.back_button);
+        btnAddFriend = findViewById(R.id.btnAddFriend);
+        btnUnfriend = findViewById(R.id.btnUnfriend);
 
         txtId = findViewById(R.id.user_id);
         txtUsername = findViewById(R.id.user_name);
@@ -108,6 +113,49 @@ public class FriendProfile extends AppCompatActivity {
                     // Xử lý lỗi nếu cần
                 }
             });
+
+            FirebaseUser currentUser = Authentication.getInstance().getCurrentUser();
+            DatabaseReference reference = RealtimeDatabase.getInstance().getFriendsReference().child(currentUser.getUid());
+            reference.child("friendList").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    boolean checkFriend = false;
+                    for (DataSnapshot friendSnapshot : dataSnapshot.getChildren()) {
+                        String friend = friendSnapshot.getValue(String.class);
+                        if(!friend.equals("empty")) {
+                            if(friend.equals(friendID)){
+                                checkFriend = true;
+                                break;
+                            }
+                        }
+                    }
+                    if(checkFriend){
+                        btnAddFriend.setVisibility(View.GONE);
+                    }
+                    else {
+                        btnUnfriend.setVisibility(View.GONE);
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // Xử lý lỗi nếu có
+                }
+            });
+
+            btnAddFriend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DataOutput.inviteNewFriend(friendID);
+                }
+            });
+
+            btnUnfriend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DataOutput.deleteFriend(friendID);
+                }
+            });
+
         }
         else {
             // Người dùng chưa đăng nhập, xử lý tương ứng
