@@ -371,6 +371,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .setPositiveButton("OK", (dialog, which) -> {
                     // You can perform any action on OK click if needed
                     dialog.dismiss();
+                    finish();
                 })
                 .setCancelable(false); // Prevent dialog from being dismissed by tapping outside
 
