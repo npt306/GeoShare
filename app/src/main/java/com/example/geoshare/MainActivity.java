@@ -55,7 +55,7 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
     FirebaseUser firebaseUser;
-    ImageButton buttonProfile, buttonInvite, buttonLocation, buttonChat, buttonCommunity, buttonSearch, buttonSetting;
+    ImageButton buttonProfile, buttonInvite, buttonLocation, buttonChat, buttonCommunity, buttonGhost, buttonSearch, buttonSetting;
     private GoogleMap maps;
     private final int FINE_PERMISSION_CODE = 1;
     private long pressedTime;
@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Polyline currentPolyline = null;
     private List<String> searchHistoryList;
     private ConnectivityReceiver connectivityReceiver;
+    private boolean checkGhost;
 
     public void setCurrentPolyline(Polyline polyline) {
         if (this.currentPolyline != null) this.currentPolyline.remove();
@@ -103,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkInternetConnection();
+        checkGhost = false;
         firebaseUser = FirebaseSingleton.getInstance().getFirebaseAuth().getCurrentUser();
         if (firebaseUser == null) {
             Intent intent = new Intent(getApplicationContext(), SignIn.class);
@@ -161,6 +163,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         buttonSearch = findViewById(R.id.btnSearch);
         buttonCommunity = findViewById(R.id.btnCommunity);
         buttonSetting = findViewById(R.id.btnSetting);
+        buttonGhost = findViewById(R.id.btnGhost);
+        buttonGhost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (checkGhost==false) {
+                    buttonGhost.setImageResource(R.drawable.ghost);
+                    checkGhost = true;
+                } else {
+                    buttonGhost.setImageResource(R.drawable.ic_ghost3);
+                    checkGhost = false;
+                }
+            }
+        });
         buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
