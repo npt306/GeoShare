@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -50,6 +51,7 @@ public class MarkLocation implements GoogleMap.OnMapLongClickListener {
     RadioGroup radioGroupMarkLocation;
     private Marker marker;
     Button buttonMarkLocation, buttonMarkerList;
+    ImageView buttonRoute;
     String selected="";
 
     public MarkLocation(MainActivity activity, GoogleMap maps) {
@@ -80,6 +82,7 @@ public class MarkLocation implements GoogleMap.OnMapLongClickListener {
         buttonMarkLocation = view.findViewById(R.id.button_mark_location);
         buttonMarkerList = view.findViewById(R.id.button_marker_list);
         radioGroupMarkLocation = view.findViewById(R.id.mark_location_radio_group);
+        buttonRoute = view.findViewById(R.id.mark_location_route_button);
 
         buttonMarkLocation.setOnClickListener(v -> {
 
@@ -103,6 +106,15 @@ public class MarkLocation implements GoogleMap.OnMapLongClickListener {
 
         });
 
+        buttonRoute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bottomSheetDialog.dismiss();
+                Toast.makeText(MainActivity.getInstance(), "Drawing directions. Please wait!", Toast.LENGTH_SHORT).show();
+                Search.startFindingDirection(point);
+            }
+        });
+
         buttonMarkerList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,14 +132,14 @@ public class MarkLocation implements GoogleMap.OnMapLongClickListener {
                     selected = radioButton.getText().toString();
 
                     // direction
-                    if (selected.equals("Direction")){
-//                    point;
-                        bottomSheetDialog.dismiss();
-                        Toast.makeText(MainActivity.getInstance(), "Drawing directions. Please wait!", Toast.LENGTH_SHORT).show();
-                        Search.startFindingDirection(point);
-
-                        return;
-                    }
+//                    if (selected.equals("Direction")){
+////                    point;
+//                        bottomSheetDialog.dismiss();
+//                        Toast.makeText(MainActivity.getInstance(), "Drawing directions. Please wait!", Toast.LENGTH_SHORT).show();
+//                        Search.startFindingDirection(point);
+//
+//                        return;
+//                    }
                 }
             }
         });

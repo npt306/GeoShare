@@ -48,16 +48,18 @@
                 android:orientation="horizontal"
                 android:gravity="left"
                 >
+
                 <RadioButton
-                    android:background="@drawable/mark_location_radio_selector"
-                    android:drawableTop="@drawable/ic_home"
-                    android:textColor="@color/primary_text"
-                    android:button="@android:color/transparent"
-                    android:textAlignment="center"
-                    android:textSize="10sp"
-                    android:text="@string/home"
                     android:layout_width="100dp"
-                    android:layout_height="100dp"/>
+                    android:layout_height="100dp"
+                    android:background="@drawable/mark_location_radio_selector"
+                    android:button="@android:color/transparent"
+                    android:drawableTop="@drawable/ic_home"
+                    android:text="@string/home"
+                    android:textAlignment="center"
+                    android:textColor="@color/primary_text"
+                    android:textSize="10sp" />
+
                 <RadioButton
                     android:background="@drawable/mark_location_radio_selector"
                     android:drawableTop="@drawable/ic_school"
@@ -89,16 +91,16 @@
                     android:text="@string/restaurant"
                     android:layout_width="100dp"
                     android:layout_height="100dp"/>
-                <RadioButton
-                    android:background="@drawable/mark_location_radio_selector"
-                    android:drawableTop="@drawable/ic_search2"
-                    android:textColor="@color/primary_text"
-                    android:button="@android:color/transparent"
-                    android:textAlignment="center"
-                    android:textSize="10sp"
-                    android:text="@string/direction"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"/>
+<!--                <RadioButton-->
+<!--                    android:background="@drawable/mark_location_radio_selector"-->
+<!--                    android:drawableTop="@drawable/ic_search2"-->
+<!--                    android:textColor="@color/primary_text"-->
+<!--                    android:button="@android:color/transparent"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:textSize="10sp"-->
+<!--                    android:text="@string/direction"-->
+<!--                    android:layout_width="100dp"-->
+<!--                    android:layout_height="100dp"/>-->
             </RadioGroup>
         </HorizontalScrollView>
     </LinearLayout>
@@ -106,10 +108,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal">
         <Button
             android:id="@+id/button_marker_list"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:layout_width="150dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -117,7 +120,7 @@
             android:background="@drawable/button_bottom_sheet_dialog_background"
             android:text="Marker List"/>
         <Button
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:id="@+id/button_mark_location"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
@@ -125,6 +128,15 @@
             android:textColor="#000000"
             android:background="@drawable/button_bottom_sheet_dialog_background"
             android:text="Mark location"/>
+        <ImageView
+            android:id="@+id/mark_location_route_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:src="@drawable/ic_route"
+            android:background="@drawable/button_bottom_sheet_dialog_background"
+            />
     </LinearLayout>
 
 </LinearLayout>
