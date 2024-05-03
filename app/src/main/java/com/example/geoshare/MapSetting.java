@@ -32,7 +32,7 @@ public class MapSetting extends AppCompatActivity {
         // Initialize views
         lightButton = findViewById(R.id.lightButton);
         darkButton = findViewById(R.id.darkButton);
-        satelliteButton = findViewById(R.id.satiliteButton);
+        satelliteButton = findViewById(R.id.satilliteButton);
         imageView = findViewById(R.id.mapImage);
         backButton = findViewById(R.id.back_button);
 

@@ -75,53 +75,61 @@
                 android:background="@drawable/map_holder"
                 android:padding="10dp"
                 android:layout_marginTop="15dp">
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="20dp">
-                <ImageView
-                    android:id="@+id/mapImage"
-                    android:layout_width="fill_parent"
-                    android:layout_height="274dp"
-                    android:background="@drawable/image_map_corner"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/dark_map" />
-            </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="20dp">
+
+                    <ImageView
+                        android:id="@+id/mapImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/dark_map" />
+
+                </androidx.cardview.widget.CardView>
+
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/action_layout"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:background="@drawable/map_holder"
                 android:padding="10dp"
                 android:layout_marginTop="15dp">
+
                 <Button
-                    android:layout_width="110dp"
-                    android:layout_height="40dp"
-                    android:layout_marginRight="15dp"
                     android:id="@+id/lightButton"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:layout_marginRight="8dp"
                     android:text="Light"
                     android:textColor="@drawable/text_color_default"
                     android:background="@drawable/button_default"/>
 
                 <Button
                     android:id="@+id/darkButton"
-                    android:layout_width="110dp"
+                    android:layout_width="0dp"
                     android:layout_height="40dp"
-                    android:layout_marginRight="15dp"
-                    android:background="@drawable/button_default"
+                    android:layout_weight="1"
+                    android:layout_marginRight="8dp"
                     android:text="Dark"
-                    android:textColor="@drawable/text_color_default" />
+                    android:textColor="@drawable/text_color_default"
+                    android:background="@drawable/button_default" />
 
                 <Button
-                    android:layout_width="110dp"
+                    android:id="@+id/satilliteButton"
+                    android:layout_width="0dp"
                     android:layout_height="40dp"
-                    android:id="@+id/satiliteButton"
-                    android:text="Satilite"
+                    android:layout_weight="1"
+                    android:text="Satellite"
                     android:textColor="@drawable/text_color_default"
                     android:background="@drawable/button_default"/>
             </LinearLayout>
+
         </LinearLayout>
 
         <!-- Repeat the pattern for Name and Email with edit buttons -->
