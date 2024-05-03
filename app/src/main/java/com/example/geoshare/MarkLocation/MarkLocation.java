@@ -23,8 +23,8 @@ import androidx.core.content.ContextCompat;
 
 import com.example.geoshare.Database.RealtimeDatabase.MarkLocationDatabase;
 import com.example.geoshare.MainActivity;
-import com.example.geoshare.MarkerManager;
 import com.example.geoshare.R;
+import com.example.geoshare.Search;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -115,6 +115,16 @@ public class MarkLocation implements GoogleMap.OnMapLongClickListener {
                 if(i != -1){
                     RadioButton radioButton = view.findViewById(i);
                     selected = radioButton.getText().toString();
+
+                    // direction
+                    if (selected.equals("Direction")){
+//                    point;
+                        bottomSheetDialog.dismiss();
+                        Toast.makeText(MainActivity.getInstance(), "Drawing directions. Please wait!", Toast.LENGTH_SHORT).show();
+                        Search.startFindingDirection(point);
+
+                        return;
+                    }
                 }
             }
         });
