@@ -5,12 +5,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -76,6 +75,7 @@ public class Search extends AppCompatActivity {
             public void onPlaceSelected(@NonNull Place place) {
                 Log.i("DEBUG TAG", "Place: " + place.getName() + ", " + place.getLatLng());
                 addSearchToHistory(place.getName());
+                Toast.makeText(Search.this, "Drawing directions. Please wait!", Toast.LENGTH_SHORT).show();
                 startFindingDirection(place.getLatLng());
             }
 
@@ -142,7 +142,7 @@ public class Search extends AppCompatActivity {
         }
     }
 
-    private void startFindingDirection(LatLng destination){
+    public static void startFindingDirection(LatLng destination){
         if (destination == null) return;
 
         // Get 2 locations
