@@ -53,7 +53,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, ConnectivityReceiver.ConnectivityListener {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
     FirebaseUser firebaseUser;
     ImageButton buttonProfile, buttonInvite, buttonLocation, buttonChat, buttonCommunity, buttonSearch, buttonSetting;
     private GoogleMap maps;
@@ -102,9 +102,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        connectivityReceiver = new ConnectivityReceiver(this);
-        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(connectivityReceiver, filter);
+        checkInternetConnection();
         firebaseUser = FirebaseSingleton.getInstance().getFirebaseAuth().getCurrentUser();
         if (firebaseUser == null) {
             Intent intent = new Intent(getApplicationContext(), SignIn.class);
@@ -370,67 +368,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-    @Override
-    public void onNetworkConnectionChanged(boolean isConnected) {
-        if (isConnected) {
-            Log.e("MainActivity","Wifi reconnected");
-            onWifiReconnected();
-        } else {
-            showNoInternetDialog();
-        }
-    }
-    @Override
-    public void onWifiReconnected() {
-
-        firebaseUser = FirebaseSingleton.getInstance().getFirebaseAuth().getCurrentUser();
-        if (firebaseUser == null) {
-            Intent intent = new Intent(getApplicationContext(), SignIn.class);
-            startActivity(intent);
-            finish();
-        }
-
-        // check if user is an admin
-        DatabaseReference userRef = RealtimeDatabase.getInstance().getUsersReference()
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-
-        userRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // check admin
-                String valueAdmin = snapshot.child("isAdmin").getValue(String.class);
-
-                if (Objects.equals(valueAdmin, "true")) {
-                    Toast.makeText(MainActivity.this, "This is an admin account, redirecting...", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(MainActivity.this, AdminActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-
-                // check ban
-                String strUnbanDate = snapshot.child("unbanDate").getValue(String.class);
-
-                if (strUnbanDate != null) {
-                    checkBan(strUnbanDate);
-                }
-
-                createView();
-
-                if (firebaseUser != null) {
-                    Intent batteryService = new Intent(MainActivity.this, BatteryService.class);
-                    startService(batteryService);
-                }
-
-                fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
-                getLastLocation();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-    }
     public void changeSearchIcon() {
         // change search button
         buttonSearch.setImageDrawable(ContextCompat.getDrawable(
@@ -441,6 +378,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onResume() {
         super.onResume();
+        checkInternetConnection();
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             LocationManager.getInstance().startLocationUpdates();
             LocationManager.getInstance().getLocationForFriends();
