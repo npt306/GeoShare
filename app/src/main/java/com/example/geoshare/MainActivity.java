@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private List<String> searchHistoryList;
 
     public void setCurrentPolyline(Polyline polyline) {
+        if (this.currentPolyline != null) this.currentPolyline.remove();
         this.currentPolyline = polyline;
     }
 
