@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Polyline currentPolyline = null;
     private List<String> searchHistoryList;
     private ConnectivityReceiver connectivityReceiver;
-    private boolean checkGhost;
+    public boolean checkGhost;
 
     public void setCurrentPolyline(Polyline polyline) {
         if (this.currentPolyline != null) this.currentPolyline.remove();
@@ -168,13 +168,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         buttonGhost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (checkGhost == false) {
+                if (!checkGhost) {
                     buttonGhost.setImageResource(R.drawable.ghost);
                     checkGhost = true;
                 } else {
                     buttonGhost.setImageResource(R.drawable.ic_ghost3);
                     checkGhost = false;
                 }
+                LocationManager.getInstance().setLocationVisibility(!checkGhost);
             }
         });
         buttonSearch.setOnClickListener(new View.OnClickListener() {

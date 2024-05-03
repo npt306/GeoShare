@@ -1,7 +1,6 @@
 package com.example.geoshare;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Handler;
@@ -11,7 +10,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
-import com.example.geoshare.Database.Authentication.Authentication;
 import com.example.geoshare.Database.FirebaseSingleton;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -20,9 +18,6 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,7 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class LocationManager {
     private static volatile LocationManager instance;
@@ -64,28 +59,22 @@ public class LocationManager {
     }
 
     public void startLocationUpdates() {
-
         if (ActivityCompat.checkSelfPermission(MainActivity.getInstance(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.getInstance(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-//        MarkerManager.getInstance().reloadMarker();
-        Log.d("Loacation Manager", "location request");
+
         LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 100).build();
 
         LocationCallback locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(@NonNull LocationResult locationResult) {
                 for (Location location : locationResult.getLocations()) {
-                    // Update the current location marker on the map
-
                     updateCurrentLocationMarker(location);
 
-                    // Update Firebase with a delay
                     handler.removeCallbacksAndMessages(null);
                     handler.postDelayed(() -> updateLocationToFirebase(location.getLatitude(), location.getLongitude()), UPDATE_INTERVAL_MS);
 
                     UPDATE_INTERVAL_MS = 100;
-                    // UPDATE_INTERVAL_MS = TimeUnit.MINUTES.toMillis(1);
                 }
             }
         };
@@ -94,20 +83,16 @@ public class LocationManager {
     }
 
     private void updateCurrentLocationMarker(Location location) {
-
         FirebaseUser firebaseUser = FirebaseSingleton.getInstance().getFirebaseAuth().getCurrentUser();
-        Log.d("check login", String.valueOf(firebaseUser));
+
         if (firebaseUser == null) {
             return;
         }
 
+//        if (!getLocationVisibility()) {
+//            return;
+//        }
 
-        if (!getLocationVisibility()) {
-            return;
-        }
-        Log.d("Loacation Manager", "update current location");
-
-//        currentLocation = location;
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
 
@@ -116,10 +101,11 @@ public class LocationManager {
 
     private void updateLocationToFirebase(double latitude, double longitude) {
         FirebaseUser firebaseUser = FirebaseSingleton.getInstance().getFirebaseAuth().getCurrentUser();
-        Log.d("check login", String.valueOf(firebaseUser));
+
         if (firebaseUser == null) {
             return;
         }
+
         String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
 
         Location newLocation = new Location("gps");
@@ -136,6 +122,7 @@ public class LocationManager {
                 put("latitude", latitude);
                 put("longitude", longitude);
                 put("time", System.currentTimeMillis());
+                put("visible", "true");
             }});
 
             Log.d("LocationManager", "Location updated to Firebase: " + newLocation.toString());
@@ -146,24 +133,19 @@ public class LocationManager {
         }
     }
 
-    public Boolean getLocationVisibility() {
-//        String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-//        try {
-//            Task<DataSnapshot> task = databaseRef.child(uid).get();
-//            Tasks.await(task);
-//            DataSnapshot dataSnapshot = task.getResult();
-//            return (Boolean) Objects.requireNonNull(dataSnapshot.child("visible").getValue());
-//        } catch (ExecutionException | InterruptedException e) {
-//            Log.e("LocationManager", "Error getting location visibility: " + e.getMessage());
-//        }
-        return true;
+    public void getLocationVisibility() {
+
     }
 
 
     public void setLocationVisibility(boolean visible) {
         String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
         databaseRef.child(uid).updateChildren(new HashMap<String, Object>() {{
-            put("visible", visible);
+            if (visible) {
+                put("visible", "true");
+            } else {
+                put("visible", "false");
+            }
         }});
     }
 
