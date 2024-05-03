@@ -1,10 +1,14 @@
 package com.example.geoshare;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -49,7 +53,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, ConnectivityReceiver.ConnectivityListener {
     FirebaseUser firebaseUser;
     ImageButton buttonProfile, buttonInvite, buttonLocation, buttonChat, buttonCommunity, buttonSearch, buttonSetting;
     private GoogleMap maps;
@@ -59,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Polyline currentPolyline = null;
     private List<String> searchHistoryList;
+    private ConnectivityReceiver connectivityReceiver;
 
     public void setCurrentPolyline(Polyline polyline) {
         if (this.currentPolyline != null) this.currentPolyline.remove();
@@ -97,7 +102,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        connectivityReceiver = new ConnectivityReceiver(this);
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(connectivityReceiver, filter);
         firebaseUser = FirebaseSingleton.getInstance().getFirebaseAuth().getCurrentUser();
         if (firebaseUser == null) {
             Intent intent = new Intent(getApplicationContext(), SignIn.class);
@@ -146,7 +153,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Unregister connectivity receiver
+        unregisterReceiver(connectivityReceiver);
+    }
 
     private void createView() {
         searchHistoryList = new ArrayList<>();
@@ -336,8 +348,89 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
     }
+    private void checkInternetConnection() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
 
+        if (!isConnected) {
+            showNoInternetDialog();
+        }
+    }
+    private void showNoInternetDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("No Internet Connection")
+                .setMessage("Please check your internet connection and try again.")
+                .setPositiveButton("OK", (dialog, which) -> {
+                    // You can perform any action on OK click if needed
+                    dialog.dismiss();
+                })
+                .setCancelable(false); // Prevent dialog from being dismissed by tapping outside
 
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if (isConnected) {
+            Log.e("MainActivity","Wifi reconnected");
+            onWifiReconnected();
+        } else {
+            showNoInternetDialog();
+        }
+    }
+    @Override
+    public void onWifiReconnected() {
+
+        firebaseUser = FirebaseSingleton.getInstance().getFirebaseAuth().getCurrentUser();
+        if (firebaseUser == null) {
+            Intent intent = new Intent(getApplicationContext(), SignIn.class);
+            startActivity(intent);
+            finish();
+        }
+
+        // check if user is an admin
+        DatabaseReference userRef = RealtimeDatabase.getInstance().getUsersReference()
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // check admin
+                String valueAdmin = snapshot.child("isAdmin").getValue(String.class);
+
+                if (Objects.equals(valueAdmin, "true")) {
+                    Toast.makeText(MainActivity.this, "This is an admin account, redirecting...", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, AdminActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+
+                // check ban
+                String strUnbanDate = snapshot.child("unbanDate").getValue(String.class);
+
+                if (strUnbanDate != null) {
+                    checkBan(strUnbanDate);
+                }
+
+                createView();
+
+                if (firebaseUser != null) {
+                    Intent batteryService = new Intent(MainActivity.this, BatteryService.class);
+                    startService(batteryService);
+                }
+
+                fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
+                getLastLocation();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
     public void changeSearchIcon() {
         // change search button
         buttonSearch.setImageDrawable(ContextCompat.getDrawable(
