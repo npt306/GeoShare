@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 
+import com.example.geoshare.Database.Authentication.Authentication;
 import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
 import com.google.firebase.database.DatabaseReference;
 
@@ -32,7 +33,9 @@ public class BatteryStatusListener {
     };
 
     private void updateBatteryStatusOnFirebase(int batteryPercentage) {
-        database.setValue(String.valueOf(batteryPercentage));
+        if(Authentication.getInstance().getCurrentUser() != null){
+            database.setValue(String.valueOf(batteryPercentage));
+        }
     }
 
     public void unregisterReceiver() {

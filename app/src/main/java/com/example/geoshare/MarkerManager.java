@@ -14,7 +14,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
-import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,7 +41,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -257,14 +255,19 @@ public class MarkerManager {
             public boolean onMarkerClick(@NonNull Marker m) {
                 String tag = (String) m.getTag();
                 assert tag != null;
-                showCustomDialog(tag, m.getPosition());
+                if(tag.equals("MarkLocation")){
+
+                }
+                else {
+                    showUserCustomDialog(tag, m.getPosition());
+                }
                 return true;
             }
         });
     }
 
     // Hiển thị custom dialog khi nhấn vào marker
-    private void showCustomDialog(String markerId, LatLng position) {
+    private void showUserCustomDialog(String markerId, LatLng position) {
         Log.d("show diaglog profile", markerId + "click");
 
         // Viết code để hiển thị custom dialog ở đây

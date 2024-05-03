@@ -50,7 +50,7 @@ public class MarkLocation implements GoogleMap.OnMapLongClickListener {
     RadioGroup radioGroupMarkLocation;
     private Marker marker;
     Button buttonMarkLocation, buttonMarkerList;
-    String selected;
+    String selected="";
 
     public MarkLocation(MainActivity activity, GoogleMap maps) {
         this.activity = activity;
@@ -90,7 +90,10 @@ public class MarkLocation implements GoogleMap.OnMapLongClickListener {
 //                maps.addMarker(new MarkerOptions().position(point).title(selected));
                 String address = getAddressFromLatLng(point);
                 MarkerLocationModel marker = new MarkerLocationModel(point, selected, address);
-                maps.addMarker((typeIconMarker(marker)));
+                Marker newMarker = maps.addMarker((typeIconMarker(marker)));
+                newMarker.setTag("MarkLocation");
+                newMarker.setTitle(selected);
+                oldMarkerList.add(newMarker);
                 MarkLocationDatabase.getInstance().addNewMarkerLocation(marker);
                 bottomSheetDialog.dismiss();
             }
@@ -200,9 +203,13 @@ public class MarkLocation implements GoogleMap.OnMapLongClickListener {
         for(Marker oldMarker: oldMarkerList){
             oldMarker.remove();
         }
+        oldMarkerList.clear();
         for (MarkerLocationModel marker : markerList) {
             // Thêm marker vào bản đồ
-            oldMarkerList.add(maps.addMarker(typeIconMarker(marker)));
+            Marker addMarker = maps.addMarker(typeIconMarker(marker));
+            addMarker.setTag("MarkLocation");
+            addMarker.setTitle(marker.getTypeMarker());
+            oldMarkerList.add(addMarker);
         }
     }
     public MarkerOptions typeIconMarker(MarkerLocationModel marker){
