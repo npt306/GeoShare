@@ -1,5 +1,9 @@
 package com.example.geoshare;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -261,7 +265,7 @@ public class MarkerManager {
                 String tag = (String) m.getTag();
                 assert tag != null;
                 if(tag.equals("MarkLocation")){
-
+                    showMarkLocationDialog(m.getPosition());
                 }
                 else {
                     showUserCustomDialog(tag, m.getPosition());
@@ -272,8 +276,59 @@ public class MarkerManager {
     }
 
     // Hiển thị custom dialog khi nhấn vào marker
+    private void showMarkLocationDialog(LatLng postition){
+        AlertDialog.Builder builder = new AlertDialog.Builder(callerContext);
+        View dialogView;
+        TextView txtAddress;
+        Button buttonRoute, buttonCopy;
+        ImageView buttonClose;
+
+        dialogView = LayoutInflater.from(callerContext).inflate(R.layout.dialog_mark_location_detail, null);
+        builder.setView(dialogView);
+
+        AlertDialog dialog = builder.create();
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        txtAddress = dialogView.findViewById(R.id.address_dialog_mark_location);
+        buttonRoute = dialogView.findViewById(R.id.button_view_route_dialog_mark_location);
+        buttonClose = dialogView.findViewById(R.id.button_close_dialog_mark_location);
+        buttonCopy = dialogView.findViewById(R.id.button_copy_address_dialog_mark_location);
+
+        String address = getAddressFromLatLng(postition);
+        txtAddress.setText(address);
+
+        buttonRoute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                Toast.makeText(MainActivity.getInstance(), "Drawing directions. Please wait!", Toast.LENGTH_SHORT).show();
+                Search.startFindingDirection(postition);
+            }
+        });
+
+        buttonCopy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                copyToClipboard(String.valueOf(txtAddress.getText()));
+            }
+        });
+
+        buttonClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+    private void copyToClipboard(String text) {
+        ClipboardManager clipboard = (ClipboardManager) callerContext.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("address", text);
+        clipboard.setPrimaryClip(clip);
+        Toast.makeText(callerContext, "Copied to cache", Toast.LENGTH_SHORT).show();
+    }
     private void showUserCustomDialog(String markerId, LatLng position) {
-        Log.d("show diaglog profile", markerId + "click");
+        Log.d("show dialog profile", markerId + "click");
 
         // Viết code để hiển thị custom dialog ở đây
 

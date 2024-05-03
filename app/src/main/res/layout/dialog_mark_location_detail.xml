@@ -12,17 +12,17 @@
         android:background="@drawable/dialog_profile_background"
         android:padding="20dp">
 
-        <EditText
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:text=""
+            android:textSize="18sp"
             android:padding="10dp"
-            android:id="@+id/status_dialog_profile"
+            android:id="@+id/address_dialog_mark_location"
             android:background="@drawable/status_border_dialog_profile"
             android:layout_marginTop="20dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
             android:layout_marginBottom="10dp"
             />
 
@@ -31,12 +31,25 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <Button
-                android:layout_margin="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Update status"
+                android:layout_weight="1"
+                android:text="Copy address"
                 android:textColor="@color/white"
-                android:id="@+id/button_update_status_dialog_profile"
+                android:id="@+id/button_copy_address_dialog_mark_location"
+                android:background="@drawable/status_border_dialog_profile"/>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_margin="5dp"
+                />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="View route"
+                android:textColor="@color/white"
+                android:id="@+id/button_view_route_dialog_mark_location"
                 android:background="@drawable/status_border_dialog_profile"/>
         </LinearLayout>
         <!--        <LinearLayout-->
@@ -75,7 +88,7 @@
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:id="@+id/button_close_dialog_profile"
+            android:id="@+id/button_close_dialog_mark_location"
             android:background="@android:color/transparent"
             android:src="@drawable/ic_close2"/>
     </LinearLayout>
