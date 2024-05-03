@@ -49,7 +49,7 @@ public class UrlDownloader extends AsyncTask<String, Void, String>{
                 Log.d("DEBUG TAG", "API Directions");
 
                 // wait for screen to change to MainActivity
-                Search.getInstance().finish();
+                if (Search.getInstance() != null) Search.getInstance().finish();
                 SystemClock.sleep(2000);
 
                 new DirectionsResultParserTask().execute(result);
