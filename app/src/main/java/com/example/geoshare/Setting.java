@@ -9,6 +9,8 @@ import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.ads.AdView;
+
 public class Setting extends AppCompatActivity {
     LinearLayout selectMapSetting, selectPremiumUpgrade;
     ImageButton backButton;
@@ -19,6 +21,9 @@ public class Setting extends AppCompatActivity {
         selectMapSetting = findViewById(R.id.layout_mapsetting);
         selectPremiumUpgrade = findViewById(R.id.layout_premium);
         backButton = findViewById(R.id.back_button);
+
+        AdView mAdView = findViewById(R.id.adView);
+        AdManager.loadBannerAd(mAdView);
 
         selectMapSetting.setOnClickListener(new View.OnClickListener() {
             @Override

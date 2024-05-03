@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,6 +36,9 @@ public class MapSetting extends AppCompatActivity {
         satelliteButton = findViewById(R.id.satilliteButton);
         imageView = findViewById(R.id.mapImage);
         backButton = findViewById(R.id.back_button);
+
+        AdView mAdView = findViewById(R.id.adView);
+        AdManager.loadBannerAd(mAdView);
 
         // Get the current map style from Firebase
         getCurrentMapStyleForFirebase();

@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -31,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SignUp extends AppCompatActivity {
-    EditText editTextEmail,editTextSignUpDob, editTextPassword, editTextConfirmPassword, editTextUsername;
+    EditText editTextEmail, editTextSignUpDob, editTextPassword, editTextConfirmPassword, editTextUsername;
     Button buttonSignUp, buttonBack;
     private FirebaseAuth mAuth;
     LinearLayout layout;
@@ -49,7 +50,7 @@ public class SignUp extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         // Initialize Firebase Auth
@@ -61,6 +62,9 @@ public class SignUp extends AppCompatActivity {
         editTextUsername = findViewById(R.id.editTextSignUpUsername);
         buttonSignUp = findViewById(R.id.btnRegister);
         layout = findViewById(R.id.signUpLayout);
+
+        AdView mAdView = findViewById(R.id.adView);
+        AdManager.loadBannerAd(mAdView);
 
         layout.setOnTouchListener((v, event) -> {
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -105,23 +109,23 @@ public class SignUp extends AppCompatActivity {
                 dob = String.valueOf(editTextSignUpDob.getText());
                 password = String.valueOf(editTextPassword.getText());
                 confirmPassword = String.valueOf(editTextConfirmPassword.getText());
-                if(TextUtils.isEmpty(email)){
+                if (TextUtils.isEmpty(email)) {
                     show_notification("Enter email");
                     return;
                 }
-                if(TextUtils.isEmpty(username)){
+                if (TextUtils.isEmpty(username)) {
                     show_notification("Enter username");
                     return;
                 }
-                if(TextUtils.isEmpty(password)){
+                if (TextUtils.isEmpty(password)) {
                     show_notification("Enter password");
                     return;
                 }
-                if(TextUtils.isEmpty(confirmPassword)){
+                if (TextUtils.isEmpty(confirmPassword)) {
                     show_notification("Enter confirm password");
                     return;
                 }
-                if(!password.equals(confirmPassword)){
+                if (!password.equals(confirmPassword)) {
                     show_notification("Incorrect password");
                     editTextPassword.setText("");
                     editTextConfirmPassword.setText("");
@@ -138,16 +142,16 @@ public class SignUp extends AppCompatActivity {
                                     String id = user.getUid();
 
                                     DatabaseReference usersRef = database.getReference("Users").child(id);
-                                    Map<String,String> userData = new HashMap<>();
+                                    Map<String, String> userData = new HashMap<>();
                                     userData.put("id", id);
                                     userData.put("username", username);
                                     userData.put("imageURL", "default");
-                                    userData.put("status","");
+                                    userData.put("status", "");
                                     userData.put("dob", dob);
                                     usersRef.setValue(userData);
 
                                     DatabaseReference friendsRef = database.getReference("Friends").child(id);
-                                    Map<String,Object> userFriends = new HashMap<>();
+                                    Map<String, Object> userFriends = new HashMap<>();
                                     userFriends.put("friendList", Arrays.asList(new String[]{"empty"}));
                                     userFriends.put("pendingList", Arrays.asList(new String[]{"empty"}));
                                     userFriends.put("inviteSentList", Arrays.asList(new String[]{"empty"}));
@@ -185,7 +189,8 @@ public class SignUp extends AppCompatActivity {
             }
         });
     }
-    void show_notification(String message){
+
+    void show_notification(String message) {
         Toast.makeText(SignUp.this, message, Toast.LENGTH_SHORT).show();
     }
 }

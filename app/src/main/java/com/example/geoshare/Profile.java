@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.example.geoshare.Database.Authentication.Authentication;
 import com.example.geoshare.Database.RealtimeDatabase.RealtimeDatabase;
 import com.example.geoshare.Database.Storage.Storage;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -57,9 +58,6 @@ public class Profile extends AppCompatActivity {
                     Glide.with(getApplicationContext()).load(image).into(imageViewUser);
                     DataOutput.updateNewImage(image);
                 }
-                else {
-                    Toast.makeText(Profile.this, "null con me no roi dm", Toast.LENGTH_SHORT).show();
-                }
             }
         }
     });
@@ -84,6 +82,8 @@ public class Profile extends AppCompatActivity {
         txtUsername = findViewById(R.id.user_name);
         txtDob = findViewById(R.id.user_dob);
 
+        AdView mAdView = findViewById(R.id.adView);
+        AdManager.loadBannerAd(mAdView);
 
         buttonSelectImage.setOnClickListener(new View.OnClickListener() {
             @Override

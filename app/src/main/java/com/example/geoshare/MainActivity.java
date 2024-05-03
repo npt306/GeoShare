@@ -53,7 +53,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     FirebaseUser firebaseUser;
     ImageButton buttonProfile, buttonInvite, buttonLocation, buttonChat, buttonCommunity, buttonGhost, buttonSearch, buttonSetting;
     private GoogleMap maps;
@@ -83,14 +83,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return currentPolyline;
     }
 
-    public List<String> getSearchHistoryList() { return searchHistoryList; }
+    public List<String> getSearchHistoryList() {
+        return searchHistoryList;
+    }
 
     private static MainActivity instance;
 
 
     public MainActivity() {
         instance = this;
-        Log.d("Mainactivity", "tao moi");
     }
 
 
@@ -167,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         buttonGhost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (checkGhost==false) {
+                if (checkGhost == false) {
                     buttonGhost.setImageResource(R.drawable.ghost);
                     checkGhost = true;
                 } else {
@@ -314,7 +315,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void focusToMyLocation() {
         getLastLocation();
-        
+
         CameraPosition camPos = new CameraPosition.Builder()
                 .target(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
                 .zoom(17)
@@ -355,6 +356,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
     }
+
     private void checkInternetConnection() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
@@ -364,6 +366,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             showNoInternetDialog();
         }
     }
+
     private void showNoInternetDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("No Internet Connection")
@@ -378,6 +381,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
     public void changeSearchIcon() {
         // change search button
         buttonSearch.setImageDrawable(ContextCompat.getDrawable(
@@ -388,7 +392,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onResume() {
         super.onResume();
-        checkInternetConnection();
+         checkInternetConnection();
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             LocationManager.getInstance().startLocationUpdates();
             LocationManager.getInstance().getLocationForFriends();

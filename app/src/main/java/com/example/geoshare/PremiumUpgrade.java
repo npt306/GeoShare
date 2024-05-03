@@ -8,6 +8,8 @@ import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.ads.AdView;
+
 public class PremiumUpgrade extends AppCompatActivity {
     ImageButton backButton;
     @Override
@@ -15,6 +17,9 @@ public class PremiumUpgrade extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.upgrade_premium);
         backButton = findViewById(R.id.back_button);
+
+        AdView mAdView = findViewById(R.id.adView);
+        AdManager.loadBannerAd(mAdView);
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override

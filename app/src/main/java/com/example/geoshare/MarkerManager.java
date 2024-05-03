@@ -14,6 +14,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,7 +68,6 @@ public class MarkerManager {
     }
 
     public MarkerManager(Context callerContext) {
-        Log.d("Marker manager","vo dc");
         this.callerContext = (MainActivity) callerContext;
         this.markerHashMap = new HashMap<>();
     }
@@ -134,6 +134,11 @@ public class MarkerManager {
                     Objects.requireNonNull(oldMarker).setPosition(location);
 //                    googleMap.addMarker(markerOptions);
                 } else {
+                    if (googleMap == null) {
+                        googleMap = MainActivity.getInstance().getMaps();
+                        createMarker(location, markerId);
+                        return;
+                    }
                     Marker newMarker = googleMap.addMarker(markerOptions);
                     assert newMarker != null;
                     newMarker.setTag(markerId);
