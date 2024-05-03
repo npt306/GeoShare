@@ -13,6 +13,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
@@ -37,8 +38,19 @@ public class MapSetting extends AppCompatActivity {
         imageView = findViewById(R.id.mapImage);
         backButton = findViewById(R.id.back_button);
 
-        AdView mAdView = findViewById(R.id.adView);
-        AdManager.loadBannerAd(mAdView);
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        String userId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
+
+        DatabaseReference reference = firebaseDatabase.getReference("Premium").child(userId);
+        reference.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult().getValue() == null) {
+                    AdView mAdView = findViewById(R.id.adView);
+                    AdManager.loadBannerAd(mAdView);
+                }
+            }
+        });
 
         // Get the current map style from Firebase
         getCurrentMapStyleForFirebase();
@@ -135,5 +147,23 @@ public class MapSetting extends AppCompatActivity {
         String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
 
         firebaseDatabase.getReference("MapStyle").child(uid).setValue(mapStyle);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        String userId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
+
+        DatabaseReference reference = firebaseDatabase.getReference("Premium").child(userId);
+        reference.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult().getValue() != null) {
+                    AdView mAdView = findViewById(R.id.adView);
+                    mAdView.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 }

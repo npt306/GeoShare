@@ -58,6 +58,9 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     // Declare the dependency for the Cloud Firestore library
     // When using the BoM, you don't specify versions in Firebase library dependencies
+    // Stripe Android SDK
+    implementation("com.stripe:stripe-android:20.41.0")
+    implementation("com.google.firebase:firebase-functions-ktx:20.4.0")
     implementation(libs.firebase.firestore)
     implementation(libs.flexbox)
     implementation(libs.places)

@@ -32,6 +32,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
@@ -82,8 +83,19 @@ public class Profile extends AppCompatActivity {
         txtUsername = findViewById(R.id.user_name);
         txtDob = findViewById(R.id.user_dob);
 
-        AdView mAdView = findViewById(R.id.adView);
-        AdManager.loadBannerAd(mAdView);
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        String userId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
+
+        DatabaseReference reference = firebaseDatabase.getReference("Premium").child(userId);
+        reference.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult().getValue() == null) {
+                    AdView mAdView = findViewById(R.id.adView);
+                    AdManager.loadBannerAd(mAdView);
+                }
+            }
+        });
 
         buttonSelectImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,16 +205,15 @@ public class Profile extends AppCompatActivity {
             }
         });
 
-        FirebaseAuth mAuth = Authentication.getInstance().getFirebaseAuth();
         FirebaseUser currentUser = Authentication.getInstance().getCurrentUser();
 
         if (currentUser != null) {
-            String userId = currentUser.getUid();
+            String userID = currentUser.getUid();
             String email = currentUser.getEmail();
-            txtId.setText(userId);
+            txtId.setText(userID);
             txtEmail.setText(email);
             // Sử dụng userId và email ở đây
-        DatabaseReference usersRef = RealtimeDatabase.getInstance().getUsersReference().child(userId);
+        DatabaseReference usersRef = RealtimeDatabase.getInstance().getUsersReference().child(userID);
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -278,5 +289,23 @@ public class Profile extends AppCompatActivity {
         });
 
         dialog.show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        String userId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
+
+        DatabaseReference reference = firebaseDatabase.getReference("Premium").child(userId);
+        reference.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult().getValue() != null) {
+                    AdView mAdView = findViewById(R.id.adView);
+                    mAdView.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 }

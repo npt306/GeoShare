@@ -62,6 +62,7 @@
         <activity android:name=".Setting"/>
         <activity android:name=".MapSetting"/>
         <activity android:name=".PremiumUpgrade"/>
+        <activity android:name=".CheckoutActivity"/>
         <activity android:name=".CaptureAct"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
