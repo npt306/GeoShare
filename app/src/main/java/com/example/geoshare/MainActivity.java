@@ -1,10 +1,14 @@
 package com.example.geoshare;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -49,7 +53,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
     FirebaseUser firebaseUser;
     ImageButton buttonProfile, buttonInvite, buttonLocation, buttonChat, buttonCommunity, buttonSearch, buttonSetting;
     private GoogleMap maps;
@@ -59,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Polyline currentPolyline = null;
     private List<String> searchHistoryList;
+    private ConnectivityReceiver connectivityReceiver;
 
     public void setCurrentPolyline(Polyline polyline) {
         if (this.currentPolyline != null) this.currentPolyline.remove();
@@ -97,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        checkInternetConnection();
         firebaseUser = FirebaseSingleton.getInstance().getFirebaseAuth().getCurrentUser();
         if (firebaseUser == null) {
             Intent intent = new Intent(getApplicationContext(), SignIn.class);
@@ -146,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
-
 
     private void createView() {
         searchHistoryList = new ArrayList<>();
@@ -336,8 +340,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
     }
+    private void checkInternetConnection() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
 
+        if (!isConnected) {
+            showNoInternetDialog();
+        }
+    }
+    private void showNoInternetDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("No Internet Connection")
+                .setMessage("Please check your internet connection and try again.")
+                .setPositiveButton("OK", (dialog, which) -> {
+                    // You can perform any action on OK click if needed
+                    dialog.dismiss();
+                    finish();
+                })
+                .setCancelable(false); // Prevent dialog from being dismissed by tapping outside
 
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
     public void changeSearchIcon() {
         // change search button
         buttonSearch.setImageDrawable(ContextCompat.getDrawable(
@@ -348,6 +373,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onResume() {
         super.onResume();
+        checkInternetConnection();
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             LocationManager.getInstance().startLocationUpdates();
             LocationManager.getInstance().getLocationForFriends();
