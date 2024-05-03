@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,7 +24,6 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -112,8 +112,8 @@ public class Search extends AppCompatActivity {
                     public void onClick(View v) {
                         String selectedQuery = searchHistoryList.get(position);
                         autocompleteFragment.setText(selectedQuery);
-//                        EditText autocompleteEditText = (EditText) autocompleteFragment.getView().findViewById(com.google.android.libraries.places.R.id.places_autocomplete_search_bar);
-//                        autocompleteEditText.requestLayout();
+                        EditText autocompleteEditText = (EditText) autocompleteFragment.getView().findViewById(com.google.android.libraries.places.R.id.places_autocomplete_search_input);
+                        autocompleteEditText.performClick();
 
                     }
                 });
