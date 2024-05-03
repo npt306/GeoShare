@@ -2,6 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:foreground="@drawable/card_foreground"
     android:layout_weight="45"
     android:clickable="true"
@@ -16,7 +17,8 @@
         android:padding="10dp"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:background="#101D25">
+
+        android:background="@drawable/community_linearlayout">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/community_image"
