@@ -23,10 +23,14 @@ public class BanListItem implements Serializable {
         this.unbanDate = unbanDate;
         this.reportDescription = reportDescription;
         this.banReasons = banReasons;
-        try {
-            this.URIImage = new URI(UriImage.toString());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
+        if (UriImage == null){
+            this.URIImage = null;
+        } else {
+            try {
+                this.URIImage = new URI(UriImage.toString());
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -38,5 +42,7 @@ public class BanListItem implements Serializable {
     public String getReportDescription() { return reportDescription; }
     public ArrayList<String> getBanReasons() { return banReasons; }
     public URI getURIImage() { return URIImage; }
-    public Uri getUriImage() { return Uri.parse(URIImage.toString()); }
+    public Uri getUriImage() {
+        if (URIImage == null) return null;
+        return Uri.parse(URIImage.toString()); }
 }
