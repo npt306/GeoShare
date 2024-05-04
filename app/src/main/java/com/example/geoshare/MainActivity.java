@@ -129,6 +129,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     startActivity(intent);
                     finish();
                 }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        // check if user is banned
+        DatabaseReference banUserRef = RealtimeDatabase.getInstance().getBannedUsersReference()
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        banUserRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 // check ban
                 String strUnbanDate = snapshot.child("unbanDate").getValue(String.class);
