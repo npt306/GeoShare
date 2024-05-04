@@ -60,7 +60,7 @@ public class InviteAdapter extends RecyclerView.Adapter<InviteAdapter.ViewHolder
 //                Toast.makeText(mContext, "Invite button clicked for user: " + user.getUsername(), Toast.LENGTH_SHORT).show();
                 // Gửi yêu cầu kết bạn đến ID tương ứng
 //                acceptFriendRequest(user.getId());
-                DataOutput.acceptNewFriend(String.valueOf(holder.pendingFriendID.getText()));
+                DataOutput.acceptNewFriend(String.valueOf(user.getId()));
 
             }
         });
