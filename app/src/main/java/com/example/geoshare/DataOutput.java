@@ -187,6 +187,7 @@ public class DataOutput {
 
             }
         });
+        Log.d("friend", friendId);
 
         DatabaseReference friendIDRef = database.getReference("Friends").child(friendId);
         friendIDRef.child("friendList").addListenerForSingleValueEvent(new ValueEventListener() {

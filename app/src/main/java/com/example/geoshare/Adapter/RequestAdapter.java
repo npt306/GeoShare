@@ -74,7 +74,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
             public void onClick(View v) {
                 // Xử lý sự kiện khi button được nhấn
 //                Toast.makeText(mContext, "Invite button clicked for user: " + user.getUsername(), Toast.LENGTH_SHORT).show();
-                DataOutput.acceptNewFriend(String.valueOf(holder.pendingFriendID.getText()));
+                DataOutput.acceptNewFriend(String.valueOf(friend.getId()));
 
             }
         });
